@@ -1,4 +1,4 @@
-import React,{ Component } from 'react';
+import React,{ Component, Fragment } from 'react';
 import './flowy.css';
 
 export default class SketchPad extends Component {
@@ -6,6 +6,7 @@ export default class SketchPad extends Component {
         super(props);
         this.tempblock2= undefined;
         this.canvasRef = React.createRef();
+        this.chartData = null;
     }
     componentDidMount(){
         this.flowy(this.canvasRef.current, this.drag, this.release, this.snapping);
@@ -73,7 +74,7 @@ export default class SketchPad extends Component {
         this.load = function() {
             if (!loaded)
                 loaded = true;
-            else 
+            else
                 return;
             var blocks = [];
             var blockstemp = [];
@@ -129,7 +130,7 @@ export default class SketchPad extends Component {
                 blocks = [];
                 canvas_div.innerHTML = "<div class='indicator invisible'></div>";
             }
-            
+
             this.beginDrag = function(event) {
                 if (event.targetTouches) {
                     mouse_x = event.changedTouches[0].clientX;
@@ -165,13 +166,13 @@ export default class SketchPad extends Component {
             document.addEventListener("mousedown",touchblock, false);
             document.addEventListener("touchstart",touchblock, false);
             document.addEventListener("mouseup", touchblock, false);
-    
+
             this.touchDone = function() {
                 dragblock = false;
             }
             document.addEventListener('mousedown',this.beginDrag);
             document.addEventListener('touchstart',this.beginDrag);
-            
+
             this.endDrag = function(event) {
                 if (event.which != 3 && (active || rearrange)) {
                     dragblock = false;
@@ -248,10 +249,10 @@ export default class SketchPad extends Component {
                     }
                 }
             }
-            
+
             document.addEventListener("mouseup", this.endDrag, false);
             document.addEventListener("touchend", this.endDrag, false);
-            
+
             function snap(drag, i, blocko) {
                                 if (!rearrange) {
                                     canvas_div.appendChild(drag);
@@ -296,10 +297,10 @@ export default class SketchPad extends Component {
                                             arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) - (canvas_div.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop;
                                             canvas_div.appendChild(blockParent);
                                             canvas_div.appendChild(arrowParent);
-    
+
                                             blockstemp[w].x = (blockParent.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(blockParent).width) / 2) + canvas_div.scrollLeft;
                                             blockstemp[w].y = (blockParent.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(blockParent).height) / 2) + canvas_div.scrollTop;
-    
+
                                         }
                                     }
                                     blocks = blocks.concat(blockstemp);
@@ -363,7 +364,7 @@ export default class SketchPad extends Component {
                                 rearrangeMe();
                                 checkOffset();
             }
-            
+
             function touchblock(event) {
                 dragblock = false;
                 if (hasParentClass(event.target, "block")) {
@@ -387,14 +388,14 @@ export default class SketchPad extends Component {
                     }
                 }
             }
-    
+
             function hasParentClass(element, classname) {
                 if (element.className) {
                     if (element.className.split(' ').indexOf(classname)>=0) return true;
                 }
                 return element.parentNode && hasParentClass(element.parentNode, classname);
             }
-            
+
             this.moveBlock = function(event) {
                 if (event.targetTouches) {
                     mouse_x = event.targetTouches[0].clientX;
@@ -489,10 +490,10 @@ export default class SketchPad extends Component {
                     }
                 }
             }
-            
+
             document.addEventListener("mousemove", this.moveBlock, false);
             document.addEventListener("touchmove", this.moveBlock, false);
-    
+
             function checkOffset() {
                 offsetleft = blocks.map(a => a.x);
                 var widths = blocks.map(a => a.width);
@@ -521,7 +522,7 @@ export default class SketchPad extends Component {
                     offsetleftold = offsetleft;
                 }
             }
-    
+
             function fixOffset() {
                 if (offsetleftold < (canvas_div.getBoundingClientRect().left + window.scrollX)) {
                     lastevent = false;
@@ -529,7 +530,7 @@ export default class SketchPad extends Component {
                     for (var w = 0; w < blocks.length; w++) {
                         document.querySelector(".blockid[value='" + blocks.filter(a => a.id == blocko[w])[0].id + "']").parentNode.style.left = blocks.filter(a => a.id == blocko[w])[0].x - (blocks.filter(a => a.id == blocko[w])[0].width / 2) - offsetleftold - 20;
                         blocks.filter(a => a.id == blocko[w])[0].x = (document.querySelector(".blockid[value='" + blocks.filter(a => a.id == blocko[w])[0].id + "']").parentNode.getBoundingClientRect().left + window.scrollX) + (blocks.filter(a => a.id == blocko[w])[0].width / 2);
-    
+
                         if (blocks.filter(a => a.id == blocko[w])[0].parent != -1) {
                             var arrowhelp = blocks.filter(a => a.id == blocko[w])[0];
                             var arrowx = arrowhelp.x - blocks.filter(a => a.id == blocks.filter(a => a.id == blocko[w])[0].parent)[0].x;
@@ -543,7 +544,7 @@ export default class SketchPad extends Component {
                     offsetleftold = 0;
                 }
             }
-    
+
             function rearrangeMe() {
                 var result = blocks.map(a => a.parent);
                 for (var z = 0; z < result.length; z++) {
@@ -606,36 +607,40 @@ export default class SketchPad extends Component {
             }
         }
         this.load();
-    
+
         function blockGrabbed(block) {
             grab(block);
         }
-    
+
         function blockReleased() {
             release();
         }
-    
+
         function blockSnap(drag, first, parent) {
             return snapping(drag, first, parent);
         }
-        
-        function addEventListenerMulti(type, listener, capture, selector) {
-            var nodes = document.querySelectorAll(selector);
-            for (var i=0; i < nodes.length; i++) {
-                nodes[i].addEventListener(type, listener, capture);
-            }
-        }
-        
-        function removeEventListenerMulti(type, listener, capture, selector) {
-            var nodes = document.querySelectorAll(selector);
-            for (var i = 0; i < nodes.length; i++) {
-                nodes[i].removeEventListener(type, listener, capture);
-            }
-        }
+
+
     }
+
+    exportData= e => {
+        this.chartData = JSON.stringify(this.output());
+        console.log("output-->",this.chartData);
+        this.deleteBlocks();
+    }
+
+    importData = e => {
+        this.import(JSON.parse(this.chartData));
+    }
+
     render() {
         return(
-            <div id="canvas" ref={this.canvasRef}></div>
+            <Fragment>
+                <div id="canvas" ref={this.canvasRef}></div>
+                <div className="export-flowy-data" onClick={this.exportData}>Export</div>
+                <div className="import-flowy-data" onClick={this.importData}>Import</div>
+            </Fragment>
+
         )
     }
 }
