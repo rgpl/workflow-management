@@ -236,7 +236,7 @@ export default class Draftbench extends React.Component {
 
 
         return(
-            <EuiPage>
+            <EuiPage className="full-height">
                 <EuiPageBody>
                     <EuiHeader>
                         <EuiHeaderSection grow={false}>
