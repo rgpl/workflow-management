@@ -127,7 +127,7 @@ export default class SketchPad extends Component {
                     attr: []
                 });
                 let blockParent = document.querySelector(".blockid[value='" + this.blocks[i].id + "']").parentNode;
-                blockParent.querySelectorAll("input").forEach(function(block) {
+                blockParent.querySelectorAll("input").forEach((block) => {
                     let json_name = block.getAttribute("name");
                     let json_value = block.value;
                     json_data.blocks[i].data.push({
@@ -455,7 +455,7 @@ export default class SketchPad extends Component {
     checkOffset = () => {
         this.offsetleft = this.blocks.map(a => a.x);
         let widths = this.blocks.map(a => a.width);
-        let mathmin = this.offsetleft.map(function(item, index) {
+        let mathmin = this.offsetleft.map((item, index) => {
             return item - (widths[index] / 2);
         })
         this.offsetleft = Math.min.apply(Math, mathmin);
@@ -525,7 +525,7 @@ export default class SketchPad extends Component {
             this.drag.classList.add("dragging");
             let blockid = parseInt(this.drag.querySelector(".blockid").value);
             this.blockstemp.push(this.blocks.filter(a => a.id == blockid)[0]);
-            this.blocks = this.blocks.filter(function(e) {
+            this.blocks = this.blocks.filter((e) => {
                 return e.id != blockid
             });
             if (blockid != 0) {
@@ -560,13 +560,13 @@ export default class SketchPad extends Component {
             }
             for (let i = 0; i < this.blocks.filter(a => a.parent == blockid).length; i++) {
                 let blocknumber = this.blocks.filter(a => a.parent == blockid)[i];
-                this.blocks = this.blocks.filter(function(e) {
+                this.blocks = this.blocks.filter((e) => {
                     return e.id != blocknumber
                 });
             }
             for (let i = 0; i < allids.length; i++) {
                 let blocknumber = allids[i];
-                this.blocks = this.blocks.filter(function(e) {
+                this.blocks = this.blocks.filter((e) => {
                     return e.id != blocknumber
                 });
             }
