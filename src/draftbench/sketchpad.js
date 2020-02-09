@@ -1,49 +1,81 @@
 import React,{ Component, Fragment } from 'react';
 import './flowy.css';
+import eyeblue from './assets/eyeblue.svg';
+import more from './assets/more.svg';
+import actionblue from './assets/actionblue.svg';
+import timeblue from './assets/timeblue.svg';
+import errorblue from './assets/errorblue.svg';
+import databaseorange from './assets/databaseorange.svg';
+import twitterorange from './assets/twitterorange.svg';
+import actionorange from './assets/actionorange.svg';
+import logred from './assets/logred.svg';
+import errorred from './assets/errorred.svg';
+
 
 export default class SketchPad extends Component {
+
     constructor(props){
         super(props);
         this.tempblock2= undefined;
+        this.loaded = false;
+        this.blocks = [];
+        this.blockstemp = [];
+        this.canvas_div = undefined;
+        this.active = false;
+        this.paddingx = undefined
+        this.paddingy = undefined;
+        this.offsetleft = 0;
+        this.offsetleftold = 0;
+        this.rearrange = false;
+        this.lastevent = false;
+        this.dragx = undefined;
+        this.dragy = undefined;
+        this.original = undefined;
+        this.drag = undefined;
+        this.mouse_x = undefined;
+        this.mouse_y = undefined;
+        this.dragblock = false;
         this.canvasRef = React.createRef();
         this.chartData = null;
     }
+
     componentDidMount(){
-        this.flowy(this.canvasRef.current, this.drag, this.release, this.snapping);
+        this.flowy(this.canvasRef.current);
     }
 
-    snapping=(drag, first)=>  {
-        var grab = drag.querySelector(".grabme");
+    snapping=(first)=>  {
+
+        let grab = this.drag.querySelector(".grabme");
         grab.parentNode.removeChild(grab);
-        var blockin = drag.querySelector(".blockin");
+        let blockin = this.drag.querySelector(".blockin");
         blockin.parentNode.removeChild(blockin);
-        if (drag.querySelector(".blockelemtype").value == "1") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/eyeblue.svg'><p class='blockyname'>New visitor</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>When a <span>new visitor</span> goes to <span>Site 1</span></div>";
-        } else if (drag.querySelector(".blockelemtype").value == "2") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/actionblue.svg'><p class='blockyname'>Action is performed</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>When <span>Action 1</span> is performed</div>";
-        } else if (drag.querySelector(".blockelemtype").value == "3") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/timeblue.svg'><p class='blockyname'>Time has passed</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>When <span>10 seconds</span> have passed</div>";
-        } else if (drag.querySelector(".blockelemtype").value == "4") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/errorblue.svg'><p class='blockyname'>Error prompt</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>When <span>Error 1</span> is triggered</div>";
-        } else if (drag.querySelector(".blockelemtype").value == "5") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/databaseorange.svg'><p class='blockyname'>New database entry</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Add <span>Data object</span> to <span>Database 1</span></div>";
-        } else if (drag.querySelector(".blockelemtype").value == "6") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/databaseorange.svg'><p class='blockyname'>Update database</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Update <span>Database 1</span></div>";
-        } else if (drag.querySelector(".blockelemtype").value == "7") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/actionorange.svg'><p class='blockyname'>Perform an action</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Perform <span>Action 1</span></div>";
-        } else if (drag.querySelector(".blockelemtype").value == "8") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/twitterorange.svg'><p class='blockyname'>Make a tweet</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Tweet <span>Query 1</span> with the account <span>@alyssaxuu</span></div>";
-        } else if (drag.querySelector(".blockelemtype").value == "9") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/logred.svg'><p class='blockyname'>Add new log entry</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Add new <span>success</span> log entry</div>";
-        } else if (drag.querySelector(".blockelemtype").value == "10") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/logred.svg'><p class='blockyname'>Update logs</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Edit <span>Log Entry 1</span></div>";
-        } else if (drag.querySelector(".blockelemtype").value == "11") {
-            drag.innerHTML += "<div class='blockyleft'><img src='assets/errorred.svg'><p class='blockyname'>Prompt an error</p></div><div class='blockyright'><img src='assets/more.svg'></div><div class='blockydiv'></div><div class='blockyinfo'>Trigger <span>Error 1</span></div>";
+        if (this.drag.querySelector(".blockelemtype").value == "1") {
+            this.drag.innerHTML += "<div class='blockyleft'><img src="+eyeblue+"><p class='blockyname'>New visitor</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>When a <span>new visitor</span> goes to <span>Site 1</span></div>";
+        } else if (this.drag.querySelector(".blockelemtype").value == "2") {
+            this.drag.innerHTML += "<div class='blockyleft'><img src="+actionblue+"><p class='blockyname'>Action is performed</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>When <span>Action 1</span> is performed</div>";
+        } else if (this.drag.querySelector(".blockelemtype").value == "3") {
+            this.drag.innerHTML += "<div class='blockyleft'><img src="+timeblue+"><p class='blockyname'>Time has passed</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>When <span>10 seconds</span> have passed</div>";
+        } else if (this.drag.querySelector(".blockelemtype").value == "4") {
+            this.drag.innerHTML += "<div class='blockyleft'><img src="+errorblue+"><p class='blockyname'>Error prompt</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>When <span>Error 1</span> is triggered</div>";
+        } else if (this.drag.querySelector(".blockelemtype").value == "5") {
+            this.drag.innerHTML += "<div class='blockyleft'><img src="+databaseorange+"><p class='blockyname'>New database entry</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Add <span>Data object</span> to <span>Database 1</span></div>";
+        } else if (this.drag.querySelector(".blockelemtype").value == "6") {
+            this.drag.innerHTML += "<div class='blockyleft'><img src="+databaseorange+"><p class='blockyname'>Update database</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Update <span>Database 1</span></div>";
+        } else if (this.drag.querySelector(".blockelemtype").value == "7") {
+            this.drag.innerHTML += "<div class='blockyleft'><img src="+actionorange+"><p class='blockyname'>Perform an action</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Perform <span>Action 1</span></div>";
+        } else if (this.drag.querySelector(".blockelemtype").value == "8") {
+            this.drag.innerHTML += "<div class='blockyleft'><img src="+twitterorange+"><p class='blockyname'>Make a tweet</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Tweet <span>Query 1</span> with the account <span>@alyssaxuu</span></div>";
+        } else if (this.drag.querySelector(".blockelemtype").value == "9") {
+            this.drag.innerHTML += "<div class='blockyleft'><img src="+logred+"><p class='blockyname'>Add new log entry</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Add new <span>success</span> log entry</div>";
+        } else if (this.drag.querySelector(".blockelemtype").value == "10") {
+            this.drag.innerHTML += "<div class='blockyleft'><img src="+logred+"><p class='blockyname'>Update logs</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Edit <span>Log Entry 1</span></div>";
+        } else if (this.drag.querySelector(".blockelemtype").value == "11") {
+            this.drag.innerHTML += "<div class='blockyleft'><img src="+errorred+"><p class='blockyname'>Prompt an error</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Trigger <span>Error 1</span></div>";
         }
         return true;
     }
 
-    drag=(block)=> {
+    pull=(block)=> {
         block.classList.add("blockdisabled");
         this.tempblock2 = block;
     }
@@ -52,574 +84,591 @@ export default class SketchPad extends Component {
         this.tempblock2.classList.remove("blockdisabled");
     }
 
-    flowy(canvas, grab, release, snapping, spacing_x, spacing_y) {
-        if (!grab) {
-            grab = function() {};
-        }
-        if (!release) {
-            release = function() {};
-        }
-        if (!snapping) {
-            snapping = function() {
-                return true;
-            };
-        }
+    flowy(canvas, spacing_x, spacing_y) {
+
         if (!spacing_x) {
             spacing_x = 20;
         }
         if (!spacing_y) {
             spacing_y = 80;
         }
-        let loaded = false;
-        this.load = function() {
-            if (!loaded)
-                loaded = true;
-            else
-                return;
-            var blocks = [];
-            var blockstemp = [];
-            var canvas_div = canvas;
-            var active = false;
-            var paddingx = spacing_x;
-            var paddingy = spacing_y;
-            var offsetleft = 0;
-            var offsetleftold = 0;
-            var rearrange = false;
-            var lastevent = false;
-            var drag, dragx, dragy, original;
-            var mouse_x, mouse_y;
-            var dragblock = false;
-            var el = document.createElement("DIV");
-            el.classList.add('indicator');
-            el.classList.add('invisible');
-            canvas_div.appendChild(el);
-            this.import = function(output) {
-                canvas_div.innerHTML = JSON.parse(output.html);
-                blocks = output.blockarr;
+
+
+        this.load(canvas, spacing_x, spacing_y);
+
+    }
+
+    blockGrabbed = (block) => {
+        this.pull(block);
+    }
+
+    blockReleased() {
+        this.release();
+    }
+
+    blockSnap(first, parent) {
+        return this.snapping(first, parent);
+    }
+
+    import = (output) => {
+        this.canvas_div.innerHTML = JSON.parse(output.html);
+        this.blocks = output.blockarr;
+    }
+
+    output = () => {
+        let html_ser = JSON.stringify(this.canvas_div.innerHTML);
+        let json_data = {html:html_ser, blockarr:this.blocks, blocks:[]};
+        if (this.blocks.length > 0) {
+            for (let i = 0; i < this.blocks.length; i++) {
+                json_data.blocks.push({
+                    id: this.blocks[i].id,
+                    parent: this.blocks[i].parent,
+                    data: [],
+                    attr: []
+                });
+                let blockParent = document.querySelector(".blockid[value='" + this.blocks[i].id + "']").parentNode;
+                blockParent.querySelectorAll("input").forEach(function(block) {
+                    let json_name = block.getAttribute("name");
+                    let json_value = block.value;
+                    json_data.blocks[i].data.push({
+                        name: json_name,
+                        value: json_value
+                    });
+                });
+                Array.prototype.slice.call(blockParent.attributes).forEach((attribute) => {
+                    let jsonobj = {};
+                    jsonobj[attribute.name] = attribute.value;
+                    json_data.blocks[i].attr.push(jsonobj);
+                });
             }
-            this.output = function() {
-                var html_ser = JSON.stringify(canvas_div.innerHTML);
-                var json_data = {html:html_ser, blockarr:blocks, blocks:[]};
-                if (blocks.length > 0) {
-                    for (var i = 0; i < blocks.length; i++) {
-                        json_data.blocks.push({
-                            id: blocks[i].id,
-                            parent: blocks[i].parent,
-                            data: [],
-                            attr: []
-                        });
-                        var blockParent = document.querySelector(".blockid[value='" + blocks[i].id + "']").parentNode;
-                        blockParent.querySelectorAll("input").forEach(function(block) {
-                            var json_name = block.getAttribute("name");
-                            var json_value = block.value;
-                            json_data.blocks[i].data.push({
-                                name: json_name,
-                                value: json_value
-                            });
-                        });
-                        Array.prototype.slice.call(blockParent.attributes).forEach(function(attribute) {
-                            var jsonobj = {};
-                            jsonobj[attribute.name] = attribute.value;
-                            json_data.blocks[i].attr.push(jsonobj);
-                        });
+            return json_data;
+        }
+    }
+
+    deleteBlocks = () => {
+        this.blocks = [];
+        this.canvas_div.innerHTML = "<div class='indicator invisible'></div>";
+    }
+
+    beginDrag = (event) => {
+        if (event.targetTouches) {
+            this.mouse_x = event.changedTouches[0].clientX;
+            this.mouse_y = event.changedTouches[0].clientY;
+        } else {
+            this.mouse_x = event.clientX;
+            this.mouse_y = event.clientY;
+        }
+        if (event.which != 3 && event.target.closest(".create-flowy")) {
+            this.original = event.target.closest(".create-flowy");
+            let newNode = event.target.closest(".create-flowy").cloneNode(true);
+            event.target.closest(".create-flowy").classList.add("dragnow");
+            newNode.classList.add("block");
+            newNode.classList.remove("create-flowy");
+            if (this.blocks.length === 0) {
+                newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + this.blocks.length + "'>";
+                document.body.appendChild(newNode);
+                this.drag = document.querySelector(".blockid[value='" + this.blocks.length + "']").parentNode;
+            } else {
+                newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + (Math.max.apply(Math, this.blocks.map(a => a.id)) + 1) + "'>";
+                document.body.appendChild(newNode);
+                this.drag = document.querySelector(".blockid[value='" + (parseInt(Math.max.apply(Math, this.blocks.map(a => a.id))) + 1) + "']").parentNode;
+            }
+            this.blockGrabbed(event.target.closest(".create-flowy"));
+            this.drag.classList.add("dragging");
+            this.active = true;
+            this.dragx = this.mouse_x - (event.target.closest(".create-flowy").offsetLeft);
+            this.dragy = this.mouse_y - (event.target.closest(".create-flowy").offsetTop);
+            this.drag.style.left = this.mouse_x - this.dragx + "px";
+            this.drag.style.top = this.mouse_y - this.dragy + "px";
+        }
+    }
+
+    touchDone = () => {
+        this.dragblock = false;
+    }
+
+    endDrag = (event) => {
+        if (event.which != 3 && (this.active || this.rearrange)) {
+            this.dragblock = false;
+            this.blockReleased();
+            if (!document.querySelector(".indicator").classList.contains("invisible")) {
+                document.querySelector(".indicator").classList.add("invisible");
+            }
+            if (this.active) {
+                this.original.classList.remove("dragnow");
+                this.drag.classList.remove("dragging");
+            }
+            if (parseInt(this.drag.querySelector(".blockid").value) === 0 && this.rearrange) {
+                this.drag.classList.remove("dragging");
+                this.rearrange = false;
+                for (let w = 0; w < this.blockstemp.length; w++) {
+
+                    if (this.blockstemp[w].id != parseInt(this.drag.querySelector(".blockid").value)) {
+
+                        const blockParent = document.querySelector(".blockid[value='" + this.blockstemp[w].id + "']").parentNode;
+
+                        const arrowParent = document.querySelector(".arrowid[value='" + this.blockstemp[w].id + "']").parentNode;
+
+                        blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft;
+
+                        blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop;
+
+                        arrowParent.style.left = (arrowParent.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft;
+
+                        arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) - (this.canvas_div.getBoundingClientRect().top + this.canvas_div.scrollTop) + "px";
+
+                        this.canvas_div.appendChild(blockParent);
+                        this.canvas_div.appendChild(arrowParent);
+
+                        this.blockstemp[w].x = (blockParent.getBoundingClientRect().left + window.scrollX) + (parseInt(blockParent.offsetWidth) / 2) + this.canvas_div.scrollLeft;
+
+                        this.blockstemp[w].y = (blockParent.getBoundingClientRect().top + window.scrollY) + (parseInt(blockParent.offsetHeight) / 2) + this.canvas_div.scrollTop;
+
                     }
-                    return json_data;
+                }
+
+                this.blockstemp.filter(a => a.id == 0)[0].x = (this.drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(this.drag).width) / 2);
+
+                this.blockstemp.filter(a => a.id == 0)[0].y = (this.drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(this.drag).height) / 2);
+
+                this.blocks = this.blocks.concat(this.blockstemp);
+                this.blockstemp = [];
+
+            } else if (this.active && this.blocks.length == 0 && (this.drag.getBoundingClientRect().top + window.scrollY) > (this.canvas_div.getBoundingClientRect().top + window.scrollY) && (this.drag.getBoundingClientRect().left + window.scrollX) > (this.canvas_div.getBoundingClientRect().left + window.scrollX)) {
+                this.blockSnap(true, undefined);
+                this.active = false;
+                this.drag.style.top = (this.drag.getBoundingClientRect().top + window.scrollY) - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop + "px";
+                this.drag.style.left = (this.drag.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft + "px";
+                this.canvas_div.appendChild(this.drag);
+                this.blocks.push({
+                    parent: -1,
+                    childwidth: 0,
+                    id: parseInt(this.drag.querySelector(".blockid").value),
+                    x: (this.drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft,
+                    y: (this.drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(this.drag).height) / 2) + this.canvas_div.scrollTop,
+                    width: parseInt(window.getComputedStyle(this.drag).width),
+                    height: parseInt(window.getComputedStyle(this.drag).height)
+                });
+            } else if (this.active && this.blocks.length == 0) {
+                this.canvas_div.appendChild(document.querySelector(".indicator"));
+                this.drag.parentNode.removeChild(this.drag);
+            } else if (this.active || this.rearrange) {
+                let xpos = (this.drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft;
+                let ypos = (this.drag.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop
+                let blocko = this.blocks.map(a => a.id);
+                for (let i = 0; i < this.blocks.length; i++) {
+                    if (xpos >= this.blocks.filter(a => a.id == blocko[i])[0].x - (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) - this.paddingx && xpos <= this.blocks.filter(a => a.id == blocko[i])[0].x + (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) + this.paddingx && ypos >= this.blocks.filter(a => a.id == blocko[i])[0].y - (this.blocks.filter(a => a.id == blocko[i])[0].height / 2) && ypos <= this.blocks.filter(a => a.id == blocko[i])[0].y + this.blocks.filter(a => a.id == blocko[i])[0].height) {
+                                        this.active = false;
+                        if (!this.rearrange && this.blockSnap(false, this.blocks.filter(id => id.id == blocko[i])[0])) {
+                            this.snap(i, blocko);
+                        } else if (this.rearrange) {
+                            this.snap(i,blocko);
+                        }
+                        break;
+                    } else if (i == this.blocks.length - 1) {
+                        if (this.rearrange) {
+                            this.rearrange = false;
+                            this.blockstemp = [];
+                        }
+                        this.active = false;
+                        this.canvas_div.appendChild(document.querySelector(".indicator"));
+                        this.drag.parentNode.removeChild(this.drag);
+                    }
                 }
             }
-            this.deleteBlocks = function() {
-                blocks = [];
-                canvas_div.innerHTML = "<div class='indicator invisible'></div>";
-            }
+        }
+    }
 
-            this.beginDrag = function(event) {
-                if (event.targetTouches) {
-                    mouse_x = event.changedTouches[0].clientX;
-                    mouse_y = event.changedTouches[0].clientY;
+    snap = (i, blocko) => {
+        if (!this.rearrange) {
+            this.canvas_div.appendChild(this.drag);
+        }
+        let totalwidth = 0;
+        let totalremove = 0;
+        let maxheight = 0;
+        for (let w = 0; w < this.blocks.filter(id => id.parent == blocko[i]).length; w++) {
+            let children = this.blocks.filter(id => id.parent == blocko[i])[w];
+            if (children.childwidth > children.width) {
+                totalwidth += children.childwidth + this.paddingx;
+            } else {
+                totalwidth += children.width + this.paddingx;
+            }
+        }
+        totalwidth += parseInt(window.getComputedStyle(this.drag).width);
+        for (let w = 0; w < this.blocks.filter(id => id.parent == blocko[i]).length; w++) {
+            let children = this.blocks.filter(id => id.parent == blocko[i])[w];
+            if (children.childwidth > children.width) {
+                document.querySelector(".blockid[value='" + children.id + "']").parentNode.style.left = this.blocks.filter(a => a.id == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2) + "px";
+                children.x = this.blocks.filter(id => id.parent == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2);
+                totalremove += children.childwidth + this.paddingx;
+            } else {
+                document.querySelector(".blockid[value='" + children.id + "']").parentNode.style.left = this.blocks.filter(a => a.id == blocko[i])[0].x - (totalwidth / 2) + totalremove + "px";
+                children.x = this.blocks.filter(id => id.parent == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.width / 2);
+                totalremove += children.width + this.paddingx;
+            }
+        }
+        this.drag.style.left = this.blocks.filter(id => id.id == blocko[i])[0].x - (totalwidth / 2) + totalremove - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft + "px";
+        this.drag.style.top = this.blocks.filter(id => id.id == blocko[i])[0].y + (this.blocks.filter(id => id.id == blocko[i])[0].height / 2) + this.paddingy - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + "px";
+        if (this.rearrange) {
+            this.blockstemp.filter(a => a.id == parseInt(this.drag.querySelector(".blockid").value))[0].x = (this.drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft + this.canvas_div.scrollLeft;
+            this.blockstemp.filter(a => a.id == parseInt(this.drag.querySelector(".blockid").value))[0].y = (this.drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(this.drag).height) / 2) + this.canvas_div.scrollTop;
+            this.blockstemp.filter(a => a.id == this.drag.querySelector(".blockid").value)[0].parent = blocko[i];
+            for (let w = 0; w < this.blockstemp.length; w++) {
+                if (this.blockstemp[w].id != parseInt(this.drag.querySelector(".blockid").value)) {
+                    const blockParent = document.querySelector(".blockid[value='" + this.blockstemp[w].id + "']").parentNode;
+                    const arrowParent = document.querySelector(".arrowid[value='" + this.blockstemp[w].id + "']").parentNode;
+                    blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft;
+                    blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop;
+                    arrowParent.style.left = (arrowParent.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft + 20;
+                    arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop;
+                    this.canvas_div.appendChild(blockParent);
+                    this.canvas_div.appendChild(arrowParent);
+
+                    this.blockstemp[w].x = (blockParent.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(blockParent).width) / 2) + this.canvas_div.scrollLeft;
+                    this.blockstemp[w].y = (blockParent.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(blockParent).height) / 2) + this.canvas_div.scrollTop;
+
+                }
+            }
+            this.blocks = this.blocks.concat(this.blockstemp);
+            this.blockstemp = [];
+        } else {
+            this.blocks.push({
+                childwidth: 0,
+                parent: blocko[i],
+                id: parseInt(this.drag.querySelector(".blockid").value),
+                x: (this.drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft,
+                y: (this.drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(this.drag).height) / 2) + this.canvas_div.scrollTop,
+                width: parseInt(window.getComputedStyle(this.drag).width),
+                height: parseInt(window.getComputedStyle(this.drag).height)
+            });
+        }
+        let arrowhelp = this.blocks.filter(a => a.id == parseInt(this.drag.querySelector(".blockid").value))[0];
+        let arrowx = arrowhelp.x - this.blocks.filter(a => a.id == blocko[i])[0].x + 20;
+        let arrowy = parseFloat(arrowhelp.y - (arrowhelp.height / 2) - (this.blocks.filter(id => id.parent == blocko[i])[0].y + (this.blocks.filter(id => id.parent == blocko[i])[0].height / 2)) + this.canvas_div.scrollTop);
+        if (arrowx < 0) {
+            this.canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + this.drag.querySelector(".blockid").value + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (this.blocks.filter(a => a.id == blocko[i])[0].x - arrowhelp.x + 5) + ' 0L' + (this.blocks.filter(a => a.id == blocko[i])[0].x - arrowhelp.x + 5) + ' ' + (this.paddingy / 2) + 'L5 ' + (this.paddingy / 2) + 'L5 ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (arrowy - 5) + 'H10L5 ' + arrowy + 'L0 ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
+            document.querySelector('.arrowid[value="' + this.drag.querySelector(".blockid").value + '"]').parentNode.style.left = (arrowhelp.x - 5) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft + "px";
+        } else {
+            this.canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + this.drag.querySelector(".blockid").value + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L20 ' + (this.paddingy / 2) + 'L' + (arrowx) + ' ' + (this.paddingy / 2) + 'L' + arrowx + ' ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M' + (arrowx - 5) + ' ' + (arrowy - 5) + 'H' + (arrowx + 5) + 'L' + arrowx + ' ' + arrowy + 'L' + (arrowx - 5) + ' ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
+            document.querySelector('.arrowid[value="' + parseInt(this.drag.querySelector(".blockid").value) + '"]').parentNode.style.left = this.blocks.filter(a => a.id == blocko[i])[0].x - 20 - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft + "px";
+        }
+        document.querySelector('.arrowid[value="' + parseInt(this.drag.querySelector(".blockid").value) + '"]').parentNode.style.top = this.blocks.filter(a => a.id == blocko[i])[0].y + (this.blocks.filter(a => a.id == blocko[i])[0].height / 2) + "px";
+        if (this.blocks.filter(a => a.id == blocko[i])[0].parent != -1) {
+            let flag = false;
+            let idval = blocko[i];
+            while (!flag) {
+                if (this.blocks.filter(a => a.id == idval)[0].parent == -1) {
+                    flag = true;
                 } else {
-                    mouse_x = event.clientX;
-                    mouse_y = event.clientY;
-                }
-                if (event.which != 3 && event.target.closest(".create-flowy")) {
-                    original = event.target.closest(".create-flowy");
-                    var newNode = event.target.closest(".create-flowy").cloneNode(true);
-                    event.target.closest(".create-flowy").classList.add("dragnow");
-                    newNode.classList.add("block");
-                    newNode.classList.remove("create-flowy");
-                    if (blocks.length === 0) {
-                        newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + blocks.length + "'>";
-                        document.body.appendChild(newNode);
-                        drag = document.querySelector(".blockid[value='" + blocks.length + "']").parentNode;
-                    } else {
-                        newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + (Math.max.apply(Math, blocks.map(a => a.id)) + 1) + "'>";
-                        document.body.appendChild(newNode);
-                        drag = document.querySelector(".blockid[value='" + (parseInt(Math.max.apply(Math, blocks.map(a => a.id))) + 1) + "']").parentNode;
+                    let zwidth = 0;
+                    for (let w = 0; w < this.blocks.filter(id => id.parent == idval).length; w++) {
+                        let children = this.blocks.filter(id => id.parent == idval)[w];
+                        if (children.childwidth > children.width) {
+                            if (w == this.blocks.filter(id => id.parent == idval).length - 1) {
+                                zwidth += children.childwidth;
+                            } else {
+                                zwidth += children.childwidth + this.paddingx;
+                            }
+                        } else {
+                            if (w == this.blocks.filter(id => id.parent == idval).length - 1) {
+                                zwidth += children.width;
+                            } else {
+                                zwidth += children.width + this.paddingx;
+                            }
+                        }
                     }
-                    blockGrabbed(event.target.closest(".create-flowy"));
-                    drag.classList.add("dragging");
-                    active = true;
-                    dragx = mouse_x - (event.target.closest(".create-flowy").offsetLeft);
-                    dragy = mouse_y - (event.target.closest(".create-flowy").offsetTop);
-                    drag.style.left = mouse_x - dragx + "px";
-                    drag.style.top = mouse_y - dragy + "px";
+                    this.blocks.filter(a => a.id == idval)[0].childwidth = zwidth;
+                    idval = this.blocks.filter(a => a.id == idval)[0].parent;
                 }
             }
-            document.addEventListener("mousedown",touchblock, false);
-            document.addEventListener("touchstart",touchblock, false);
-            document.addEventListener("mouseup", touchblock, false);
+            this.blocks.filter(id => id.id == idval)[0].childwidth = totalwidth;
+        }
+        if (this.rearrange) {
+            this.rearrange = false;
+            this.drag.classList.remove("dragging");
+        }
+        this.rearrangeMe();
+        this.checkOffset();
+    }
 
-            this.touchDone = function() {
-                dragblock = false;
+    rearrangeMe = () => {
+        let result = this.blocks.map(a => a.parent);
+        for (let z = 0; z < result.length; z++) {
+            if (result[z] == -1) {
+                z++;
             }
-            document.addEventListener('mousedown',this.beginDrag);
-            document.addEventListener('touchstart',this.beginDrag);
+            let totalwidth = 0;
+            let totalremove = 0;
+            let maxheight = 0;
+            for (let w = 0; w < this.blocks.filter(id => id.parent == result[z]).length; w++) {
+                let children = this.blocks.filter(id => id.parent == result[z])[w];
+                if (this.blocks.filter(id => id.parent == children.id).length == 0) {
+                    children.childwidth = 0;
+                }
+                if (children.childwidth > children.width) {
+                    if (w == this.blocks.filter(id => id.parent == result[z]).length - 1) {
+                        totalwidth += children.childwidth;
+                    } else {
+                        totalwidth += children.childwidth + this.paddingx;
+                    }
+                } else {
+                    if (w == this.blocks.filter(id => id.parent == result[z]).length - 1) {
+                        totalwidth += children.width;
+                    } else {
+                        totalwidth += children.width + this.paddingx;
+                    }
+                }
+            }
+            if (result[z] != -1) {
+                this.blocks.filter(a => a.id == result[z])[0].childwidth = totalwidth;
+            }
+            for (let w = 0; w < this.blocks.filter(id => id.parent == result[z]).length; w++) {
+                let children = this.blocks.filter(id => id.parent == result[z])[w];
+                const r_block = document.querySelector(".blockid[value='" + children.id + "']").parentNode;
+                const r_array = this.blocks.filter(id => id.id == result[z]);
+                r_block.style.top = r_array.y + this.paddingy + "px";
+                r_array.y = r_array.y + this.paddingy;
+                if (children.childwidth > children.width) {
+                    r_block.style.left = r_array[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + "px";
+                    children.x = r_array[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2);
+                    totalremove += children.childwidth + this.paddingx;
+                } else {
+                    r_block.style.left = r_array[0].x - (totalwidth / 2) + totalremove - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + "px";
+                    children.x = r_array[0].x - (totalwidth / 2) + totalremove + (children.width / 2);
+                    totalremove += children.width + this.paddingx;
+                }
+                let arrowhelp = this.blocks.filter(a => a.id == children.id)[0];
+                let arrowx = arrowhelp.x - this.blocks.filter(a => a.id == children.parent)[0].x + 20;
+                let arrowy = arrowhelp.y - (arrowhelp.height / 2) - (this.blocks.filter(a => a.id == children.parent)[0].y + (this.blocks.filter(a => a.id == children.parent)[0].height / 2));
+                document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.style.top = this.blocks.filter(id => id.id == children.parent)[0].y + (this.blocks.filter(id => id.id == children.parent)[0].height / 2) - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + "px";
+                if (arrowx < 0) {
+                    document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.style.left = (arrowhelp.x - 5) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + "px";
+                    document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.innerHTML = '<input type="hidden" class="arrowid" value="' + children.id + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (this.blocks.filter(id => id.id == children.parent)[0].x - arrowhelp.x + 5) + ' 0L' + (this.blocks.filter(id => id.id == children.parent)[0].x - arrowhelp.x + 5) + ' ' + (this.paddingy / 2) + 'L5 ' + (this.paddingy / 2) + 'L5 ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (arrowy - 5) + 'H10L5 ' + arrowy + 'L0 ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg>';
+                } else {
+                    document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.style.left = this.blocks.filter(id => id.id == children.parent)[0].x - 20 - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + "px";
+                    document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.innerHTML = '<input type="hidden" class="arrowid" value="' + children.id + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L20 ' + (this.paddingy / 2) + 'L' + (arrowx) + ' ' + (this.paddingy / 2) + 'L' + arrowx + ' ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M' + (arrowx - 5) + ' ' + (arrowy - 5) + 'H' + (arrowx + 5) + 'L' + arrowx + ' ' + arrowy + 'L' + (arrowx - 5) + ' ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg>';
+                }
+            }
+        }
+    }
 
-            this.endDrag = function(event) {
-                if (event.which != 3 && (active || rearrange)) {
-                    dragblock = false;
-                    blockReleased();
+    checkOffset = () => {
+        this.offsetleft = this.blocks.map(a => a.x);
+        let widths = this.blocks.map(a => a.width);
+        let mathmin = this.offsetleft.map(function(item, index) {
+            return item - (widths[index] / 2);
+        })
+        this.offsetleft = Math.min.apply(Math, mathmin);
+        if (this.offsetleft < (this.canvas_div.getBoundingClientRect().left + window.scrollX)) {
+            this.lastevent = true;
+            let blocko = this.blocks.map(a => a.id);
+            for (let w = 0; w < this.blocks.length; w++) {
+                document.querySelector(".blockid[value='" + this.blocks.filter(a => a.id == blocko[w])[0].id + "']").parentNode.style.left = this.blocks.filter(a => a.id == blocko[w])[0].x - (this.blocks.filter(a => a.id == blocko[w])[0].width / 2) - this.offsetleft + 20;
+                if (this.blocks.filter(a => a.id == blocko[w])[0].parent != -1) {
+                    let arrowhelp = this.blocks.filter(a => a.id == blocko[w])[0];
+                    let arrowx = arrowhelp.x - this.blocks.filter(a => a.id == this.blocks.filter(a => a.id == blocko[w])[0].parent)[0].x;
+                    if (arrowx < 0) {
+                        document.querySelector('.arrowid[value="' + blocko[w] + '"]').parentNode.style.left = (arrowhelp.x - this.offsetleft + 20 - 5) + "px";
+                    } else {
+                        document.querySelector('.arrowid[value="' + blocko[w] + '"]').parentNode.style.left = this.blocks.filter(id => id.id == this.blocks.filter(a => a.id == blocko[w])[0].parent)[0].x - 20 - this.offsetleft + 20 + "px";
+                    }
+                }
+            }
+            for (let w = 0; w < this.blocks.length; w++) {
+                this.blocks[w].x = (document.querySelector(".blockid[value='" + this.blocks[w].id + "']").parentNode.getBoundingClientRect().left + window.scrollX) + (this.canvas_div.getBoundingClientRect().left + this.canvas_div.scrollLeft) - (parseInt(window.getComputedStyle(document.querySelector(".blockid[value='" + this.blocks[w].id + "']").parentNode).width) / 2) - 40;
+            }
+            this.offsetleftold = this.offsetleft;
+        }
+    }
+
+    touchblock = (event) => {
+        this.dragblock = false;
+        if (this.hasParentClass(event.target, "block")) {
+            let theblock = event.target.closest(".block");
+            if (event.targetTouches) {
+                this.mouse_x = event.targetTouches[0].clientX;
+                this.mouse_y = event.targetTouches[0].clientY;
+            } else {
+                this.mouse_x = event.clientX;
+                this.mouse_y = event.clientY;
+            }
+            if (event.type !== "mouseup" && this.hasParentClass(event.target, "block")) {
+                if (event.which != 3) {
+                    if (!this.active && !this.rearrange) {
+                        this.dragblock = true;
+                        this.drag = theblock;
+                        this.dragx = this.mouse_x - (this.drag.getBoundingClientRect().left + window.scrollX);
+                        this.dragy = this.mouse_y - (this.drag.getBoundingClientRect().top + window.scrollY);
+                    }
+                }
+            }
+        }
+    }
+
+    hasParentClass = (element, classname) => {
+        if (element.className) {
+            if (element.className.split(' ').indexOf(classname)>=0) return true;
+        }
+        return element.parentNode && this.hasParentClass(element.parentNode, classname);
+    }
+
+    moveBlock = (event) => {
+        if (event.targetTouches) {
+            this.mouse_x = event.targetTouches[0].clientX;
+            this.mouse_y = event.targetTouches[0].clientY;
+        } else {
+            this.mouse_x = event.clientX;
+            this.mouse_y = event.clientY;
+        }
+        if (this.dragblock) {
+            this.rearrange = true;
+            this.drag.classList.add("dragging");
+            let blockid = parseInt(this.drag.querySelector(".blockid").value);
+            this.blockstemp.push(this.blocks.filter(a => a.id == blockid)[0]);
+            this.blocks = this.blocks.filter(function(e) {
+                return e.id != blockid
+            });
+            if (blockid != 0) {
+                document.querySelector(".arrowid[value='" + blockid + "']").parentNode.remove();
+            }
+            let layer = this.blocks.filter(a => a.parent == blockid);
+            let flag = false;
+            let foundids = [];
+            let allids = [];
+            while (!flag) {
+                for (let i = 0; i < layer.length; i++) {
+                    if (layer[i] != blockid) {
+                    this.blockstemp.push(this.blocks.filter(a => a.id == layer[i].id)[0]);
+                    const blockParent = document.querySelector(".blockid[value='" + layer[i].id + "']").parentNode;
+                    const arrowParent = document.querySelector(".arrowid[value='" + layer[i].id + "']").parentNode;
+                    blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (this.drag.getBoundingClientRect().left + window.scrollX);
+                    blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (this.drag.getBoundingClientRect().top + window.scrollY);
+                    arrowParent.style.left = (arrowParent.getBoundingClientRect().left + window.scrollX) - (this.drag.getBoundingClientRect().left + window.scrollX);
+                    arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) - (this.drag.getBoundingClientRect().top + window.scrollY);
+                    this.drag.appendChild(blockParent);
+                    this.drag.appendChild(arrowParent);
+                    foundids.push(layer[i].id);
+                    allids.push(layer[i].id);
+                    }
+                }
+                if (foundids.length == 0) {
+                    flag = true;
+                } else {
+                    layer = this.blocks.filter(a => foundids.includes(a.parent));
+                    foundids = [];
+                }
+            }
+            for (let i = 0; i < this.blocks.filter(a => a.parent == blockid).length; i++) {
+                let blocknumber = this.blocks.filter(a => a.parent == blockid)[i];
+                this.blocks = this.blocks.filter(function(e) {
+                    return e.id != blocknumber
+                });
+            }
+            for (let i = 0; i < allids.length; i++) {
+                let blocknumber = allids[i];
+                this.blocks = this.blocks.filter(function(e) {
+                    return e.id != blocknumber
+                });
+            }
+            if (this.blocks.length > 1) {
+                this.rearrangeMe();
+            }
+            if (this.lastevent) {
+                this.fixOffset();
+            }
+            this.dragblock = false;
+        }
+        if (this.active) {
+            this.drag.style.left = this.mouse_x - this.dragx + "px";
+            this.drag.style.top = this.mouse_y - this.dragy + "px";
+        } else if (this.rearrange) {
+            this.drag.style.left = this.mouse_x - this.dragx - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft + "px";
+            this.drag.style.top = this.mouse_y - this.dragy - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop + "px";
+            this.blockstemp.filter(a => a.id == parseInt(this.drag.querySelector(".blockid").value)).x = (this.drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft;
+            this.blockstemp.filter(a => a.id == parseInt(this.drag.querySelector(".blockid").value)).y = (this.drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(this.drag).height) / 2) + this.canvas_div.scrollTop;
+        }
+        if (this.active || this.rearrange) {
+            let xpos = (this.drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft;
+            let ypos = (this.drag.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop;
+            let blocko = this.blocks.map(a => a.id);
+            for (let i = 0; i < this.blocks.length; i++) {
+                if (xpos >= this.blocks.filter(a => a.id == blocko[i])[0].x - (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) - this.paddingx && xpos <= this.blocks.filter(a => a.id == blocko[i])[0].x + (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) + this.paddingx && ypos >= this.blocks.filter(a => a.id == blocko[i])[0].y - (this.blocks.filter(a => a.id == blocko[i])[0].height / 2) && ypos <= this.blocks.filter(a => a.id == blocko[i])[0].y + this.blocks.filter(a => a.id == blocko[i])[0].height) {
+                    document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.appendChild(document.querySelector(".indicator"));
+                    document.querySelector(".indicator").style.left = (parseInt(window.getComputedStyle(document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode).width) / 2) - 5 + "px";
+                    document.querySelector(".indicator").style.top = window.getComputedStyle(document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode).height;
+                    document.querySelector(".indicator").classList.remove("invisible");
+                    break;
+                } else if (i == this.blocks.length - 1) {
                     if (!document.querySelector(".indicator").classList.contains("invisible")) {
                         document.querySelector(".indicator").classList.add("invisible");
                     }
-                    if (active) {
-                        original.classList.remove("dragnow");
-                        drag.classList.remove("dragging");
-                    }
-                    if (parseInt(drag.querySelector(".blockid").value) === 0 && rearrange) {
-                        drag.classList.remove("dragging");
-                        rearrange = false;
-                        for (var w = 0; w < blockstemp.length; w++) {
-                            if (blockstemp[w].id != parseInt(drag.querySelector(".blockid").value)) {
-                                const blockParent = document.querySelector(".blockid[value='" + blockstemp[w].id + "']").parentNode;
-                                const arrowParent = document.querySelector(".arrowid[value='" + blockstemp[w].id + "']").parentNode;
-                                blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (canvas_div.getBoundingClientRect().left + window.scrollX) + canvas_div.scrollLeft;
-                                blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (canvas_div.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop;
-                                arrowParent.style.left = (arrowParent.getBoundingClientRect().left + window.scrollX) - (canvas_div.getBoundingClientRect().left + window.scrollX) + canvas_div.scrollLeft;
-                                arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) - (canvas_div.getBoundingClientRect().top + canvas_div.scrollTop) + "px";
-                                canvas_div.appendChild(blockParent);
-                                canvas_div.appendChild(arrowParent);
-                                blockstemp[w].x = (blockParent.getBoundingClientRect().left + window.scrollX) + (parseInt(blockParent.offsetWidth) / 2) + canvas_div.scrollLeft;
-                                blockstemp[w].y = (blockParent.getBoundingClientRect().top + window.scrollY) + (parseInt(blockParent.offsetHeight) / 2) + canvas_div.scrollTop;
-                            }
-                        }
-                        blockstemp.filter(a => a.id == 0)[0].x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2);
-                        blockstemp.filter(a => a.id == 0)[0].y = (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2);
-                        blocks = blocks.concat(blockstemp);
-                        blockstemp = [];
-                    } else if (active && blocks.length == 0 && (drag.getBoundingClientRect().top + window.scrollY) > (canvas_div.getBoundingClientRect().top + window.scrollY) && (drag.getBoundingClientRect().left + window.scrollX) > (canvas_div.getBoundingClientRect().left + window.scrollX)) {
-                        blockSnap(drag, true, undefined);
-                        active = false;
-                        drag.style.top = (drag.getBoundingClientRect().top + window.scrollY) - (canvas_div.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop + "px";
-                        drag.style.left = (drag.getBoundingClientRect().left + window.scrollX) - (canvas_div.getBoundingClientRect().left + window.scrollX) + canvas_div.scrollLeft + "px";
-                        canvas_div.appendChild(drag);
-                        blocks.push({
-                            parent: -1,
-                            childwidth: 0,
-                            id: parseInt(drag.querySelector(".blockid").value),
-                            x: (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft,
-                            y: (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop,
-                            width: parseInt(window.getComputedStyle(drag).width),
-                            height: parseInt(window.getComputedStyle(drag).height)
-                        });
-                    } else if (active && blocks.length == 0) {
-                        canvas_div.appendChild(document.querySelector(".indicator"));
-                        drag.parentNode.removeChild(drag);
-                    } else if (active || rearrange) {
-                        var xpos = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft;
-                        var ypos = (drag.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop
-                        var blocko = blocks.map(a => a.id);
-                        for (var i = 0; i < blocks.length; i++) {
-                            if (xpos >= blocks.filter(a => a.id == blocko[i])[0].x - (blocks.filter(a => a.id == blocko[i])[0].width / 2) - paddingx && xpos <= blocks.filter(a => a.id == blocko[i])[0].x + (blocks.filter(a => a.id == blocko[i])[0].width / 2) + paddingx && ypos >= blocks.filter(a => a.id == blocko[i])[0].y - (blocks.filter(a => a.id == blocko[i])[0].height / 2) && ypos <= blocks.filter(a => a.id == blocko[i])[0].y + blocks.filter(a => a.id == blocko[i])[0].height) {
-                                                active = false;
-                                if (!rearrange && blockSnap(drag, false, blocks.filter(id => id.id == blocko[i])[0])) {
-                                    snap(drag,i, blocko);
-                                } else if (rearrange) {
-                                    snap(drag,i,blocko);
-                                }
-                                break;
-                            } else if (i == blocks.length - 1) {
-                                if (rearrange) {
-                                    rearrange = false;
-                                    blockstemp = [];
-                                }
-                                active = false;
-                                canvas_div.appendChild(document.querySelector(".indicator"));
-                                drag.parentNode.removeChild(drag);
-                            }
-                        }
-                    }
                 }
             }
+        }
+    }
 
-            document.addEventListener("mouseup", this.endDrag, false);
-            document.addEventListener("touchend", this.endDrag, false);
+    fixOffset = () => {
+        if (this.offsetleftold < (this.canvas_div.getBoundingClientRect().left + window.scrollX)) {
+            this.lastevent = false;
+            let blocko = this.blocks.map(a => a.id);
+            for (let w = 0; w < this.blocks.length; w++) {
+                document.querySelector(".blockid[value='" + this.blocks.filter(a => a.id == blocko[w])[0].id + "']").parentNode.style.left = this.blocks.filter(a => a.id == blocko[w])[0].x - (this.blocks.filter(a => a.id == blocko[w])[0].width / 2) - this.offsetleftold - 20;
 
-            function snap(drag, i, blocko) {
-                                if (!rearrange) {
-                                    canvas_div.appendChild(drag);
-                                }
-                                var totalwidth = 0;
-                                var totalremove = 0;
-                                var maxheight = 0;
-                                for (var w = 0; w < blocks.filter(id => id.parent == blocko[i]).length; w++) {
-                                    var children = blocks.filter(id => id.parent == blocko[i])[w];
-                                    if (children.childwidth > children.width) {
-                                        totalwidth += children.childwidth + paddingx;
-                                    } else {
-                                        totalwidth += children.width + paddingx;
-                                    }
-                                }
-                                totalwidth += parseInt(window.getComputedStyle(drag).width);
-                                for (var w = 0; w < blocks.filter(id => id.parent == blocko[i]).length; w++) {
-                                    var children = blocks.filter(id => id.parent == blocko[i])[w];
-                                    if (children.childwidth > children.width) {
-                                        document.querySelector(".blockid[value='" + children.id + "']").parentNode.style.left = blocks.filter(a => a.id == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2) + "px";
-                                        children.x = blocks.filter(id => id.parent == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2);
-                                        totalremove += children.childwidth + paddingx;
-                                    } else {
-                                        document.querySelector(".blockid[value='" + children.id + "']").parentNode.style.left = blocks.filter(a => a.id == blocko[i])[0].x - (totalwidth / 2) + totalremove + "px";
-                                        children.x = blocks.filter(id => id.parent == blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.width / 2);
-                                        totalremove += children.width + paddingx;
-                                    }
-                                }
-                                drag.style.left = blocks.filter(id => id.id == blocko[i])[0].x - (totalwidth / 2) + totalremove - (canvas_div.getBoundingClientRect().left + window.scrollX) + canvas_div.scrollLeft + "px";
-                                drag.style.top = blocks.filter(id => id.id == blocko[i])[0].y + (blocks.filter(id => id.id == blocko[i])[0].height / 2) + paddingy - (canvas_div.getBoundingClientRect().top + window.scrollY) + "px";
-                                if (rearrange) {
-                                    blockstemp.filter(a => a.id == parseInt(drag.querySelector(".blockid").value))[0].x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft + canvas_div.scrollLeft;
-                                    blockstemp.filter(a => a.id == parseInt(drag.querySelector(".blockid").value))[0].y = (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop;
-                                    blockstemp.filter(a => a.id == drag.querySelector(".blockid").value)[0].parent = blocko[i];
-                                    for (var w = 0; w < blockstemp.length; w++) {
-                                        if (blockstemp[w].id != parseInt(drag.querySelector(".blockid").value)) {
-                                            const blockParent = document.querySelector(".blockid[value='" + blockstemp[w].id + "']").parentNode;
-                                            const arrowParent = document.querySelector(".arrowid[value='" + blockstemp[w].id + "']").parentNode;
-                                            blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (canvas_div.getBoundingClientRect().left + window.scrollX) + canvas_div.scrollLeft;
-                                            blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (canvas_div.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop;
-                                            arrowParent.style.left = (arrowParent.getBoundingClientRect().left + window.scrollX) - (canvas_div.getBoundingClientRect().left + window.scrollX) + canvas_div.scrollLeft + 20;
-                                            arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) - (canvas_div.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop;
-                                            canvas_div.appendChild(blockParent);
-                                            canvas_div.appendChild(arrowParent);
+                this.blocks.filter(a => a.id == blocko[w])[0].x = (document.querySelector(".blockid[value='" + this.blocks.filter(a => a.id == blocko[w])[0].id + "']").parentNode.getBoundingClientRect().left + window.scrollX) + (this.blocks.filter(a => a.id == blocko[w])[0].width / 2);
 
-                                            blockstemp[w].x = (blockParent.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(blockParent).width) / 2) + canvas_div.scrollLeft;
-                                            blockstemp[w].y = (blockParent.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(blockParent).height) / 2) + canvas_div.scrollTop;
-
-                                        }
-                                    }
-                                    blocks = blocks.concat(blockstemp);
-                                    blockstemp = [];
-                                } else {
-                                    blocks.push({
-                                        childwidth: 0,
-                                        parent: blocko[i],
-                                        id: parseInt(drag.querySelector(".blockid").value),
-                                        x: (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft,
-                                        y: (drag.getBoundingClientRect().top + window.scrollY) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop,
-                                        width: parseInt(window.getComputedStyle(drag).width),
-                                        height: parseInt(window.getComputedStyle(drag).height)
-                                    });
-                                }
-                                var arrowhelp = blocks.filter(a => a.id == parseInt(drag.querySelector(".blockid").value))[0];
-                                var arrowx = arrowhelp.x - blocks.filter(a => a.id == blocko[i])[0].x + 20;
-                                var arrowy = parseFloat(arrowhelp.y - (arrowhelp.height / 2) - (blocks.filter(id => id.parent == blocko[i])[0].y + (blocks.filter(id => id.parent == blocko[i])[0].height / 2)) + canvas_div.scrollTop);
-                                if (arrowx < 0) {
-                                    canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + drag.querySelector(".blockid").value + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (blocks.filter(a => a.id == blocko[i])[0].x - arrowhelp.x + 5) + ' 0L' + (blocks.filter(a => a.id == blocko[i])[0].x - arrowhelp.x + 5) + ' ' + (paddingy / 2) + 'L5 ' + (paddingy / 2) + 'L5 ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (arrowy - 5) + 'H10L5 ' + arrowy + 'L0 ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
-                                    document.querySelector('.arrowid[value="' + drag.querySelector(".blockid").value + '"]').parentNode.style.left = (arrowhelp.x - 5) - (canvas_div.getBoundingClientRect().left + window.scrollX) + canvas_div.scrollLeft + "px";
-                                } else {
-                                    canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + drag.querySelector(".blockid").value + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L20 ' + (paddingy / 2) + 'L' + (arrowx) + ' ' + (paddingy / 2) + 'L' + arrowx + ' ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M' + (arrowx - 5) + ' ' + (arrowy - 5) + 'H' + (arrowx + 5) + 'L' + arrowx + ' ' + arrowy + 'L' + (arrowx - 5) + ' ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
-                                    document.querySelector('.arrowid[value="' + parseInt(drag.querySelector(".blockid").value) + '"]').parentNode.style.left = blocks.filter(a => a.id == blocko[i])[0].x - 20 - (canvas_div.getBoundingClientRect().left + window.scrollX) + canvas_div.scrollLeft + "px";
-                                }
-                                document.querySelector('.arrowid[value="' + parseInt(drag.querySelector(".blockid").value) + '"]').parentNode.style.top = blocks.filter(a => a.id == blocko[i])[0].y + (blocks.filter(a => a.id == blocko[i])[0].height / 2) + "px";
-                                if (blocks.filter(a => a.id == blocko[i])[0].parent != -1) {
-                                    var flag = false;
-                                    var idval = blocko[i];
-                                    while (!flag) {
-                                        if (blocks.filter(a => a.id == idval)[0].parent == -1) {
-                                            flag = true;
-                                        } else {
-                                            var zwidth = 0;
-                                            for (var w = 0; w < blocks.filter(id => id.parent == idval).length; w++) {
-                                                var children = blocks.filter(id => id.parent == idval)[w];
-                                                if (children.childwidth > children.width) {
-                                                    if (w == blocks.filter(id => id.parent == idval).length - 1) {
-                                                        zwidth += children.childwidth;
-                                                    } else {
-                                                        zwidth += children.childwidth + paddingx;
-                                                    }
-                                                } else {
-                                                    if (w == blocks.filter(id => id.parent == idval).length - 1) {
-                                                        zwidth += children.width;
-                                                    } else {
-                                                        zwidth += children.width + paddingx;
-                                                    }
-                                                }
-                                            }
-                                            blocks.filter(a => a.id == idval)[0].childwidth = zwidth;
-                                            idval = blocks.filter(a => a.id == idval)[0].parent;
-                                        }
-                                    }
-                                    blocks.filter(id => id.id == idval)[0].childwidth = totalwidth;
-                                }
-                                if (rearrange) {
-                                    rearrange = false;
-                                    drag.classList.remove("dragging");
-                                }
-                                rearrangeMe();
-                                checkOffset();
-            }
-
-            function touchblock(event) {
-                dragblock = false;
-                if (hasParentClass(event.target, "block")) {
-                    var theblock = event.target.closest(".block");
-                    if (event.targetTouches) {
-                        mouse_x = event.targetTouches[0].clientX;
-                        mouse_y = event.targetTouches[0].clientY;
+                if (this.blocks.filter(a => a.id == blocko[w])[0].parent != -1) {
+                    let arrowhelp = this.blocks.filter(a => a.id == blocko[w])[0];
+                    let arrowx = arrowhelp.x - this.blocks.filter(a => a.id == this.blocks.filter(a => a.id == blocko[w])[0].parent)[0].x;
+                    if (arrowx < 0) {
+                        document.querySelector('.arrowid[value="' + blocko[w] + '"]').parentNode.style.left = (arrowhelp.x - 5 - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + "px");
                     } else {
-                        mouse_x = event.clientX;
-                        mouse_y = event.clientY;
-                    }
-                    if (event.type !== "mouseup" && hasParentClass(event.target, "block")) {
-                        if (event.which != 3) {
-                            if (!active && !rearrange) {
-                                dragblock = true;
-                                drag = theblock;
-                                dragx = mouse_x - (drag.getBoundingClientRect().left + window.scrollX);
-                                dragy = mouse_y - (drag.getBoundingClientRect().top + window.scrollY);
-                            }
-                        }
+                        document.querySelector('.arrowid[value="' + blocko[w] + '"]').parentNode.style.left = this.blocks.filter(id => id.id == this.blocks.filter(a => a.id == blocko[w])[0].parent)[0].x - 20 - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + "px";
                     }
                 }
             }
-
-            function hasParentClass(element, classname) {
-                if (element.className) {
-                    if (element.className.split(' ').indexOf(classname)>=0) return true;
-                }
-                return element.parentNode && hasParentClass(element.parentNode, classname);
-            }
-
-            this.moveBlock = function(event) {
-                if (event.targetTouches) {
-                    mouse_x = event.targetTouches[0].clientX;
-                    mouse_y = event.targetTouches[0].clientY;
-                } else {
-                    mouse_x = event.clientX;
-                    mouse_y = event.clientY;
-                }
-                if (dragblock) {
-                    rearrange = true;
-                                drag.classList.add("dragging");
-                                var blockid = parseInt(drag.querySelector(".blockid").value);
-                                blockstemp.push(blocks.filter(a => a.id == blockid)[0]);
-                                blocks = blocks.filter(function(e) {
-                                    return e.id != blockid
-                                });
-                                if (blockid != 0) {
-                                    document.querySelector(".arrowid[value='" + blockid + "']").parentNode.remove();
-                                }
-                                var layer = blocks.filter(a => a.parent == blockid);
-                                var flag = false;
-                                var foundids = [];
-                                var allids = [];
-                                while (!flag) {
-                                    for (var i = 0; i < layer.length; i++) {
-                                        if (layer[i] != blockid) {
-                                        blockstemp.push(blocks.filter(a => a.id == layer[i].id)[0]);
-                                        const blockParent = document.querySelector(".blockid[value='" + layer[i].id + "']").parentNode;
-                                        const arrowParent = document.querySelector(".arrowid[value='" + layer[i].id + "']").parentNode;
-                                        blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (drag.getBoundingClientRect().left + window.scrollX);
-                                        blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (drag.getBoundingClientRect().top + window.scrollY);
-                                        arrowParent.style.left = (arrowParent.getBoundingClientRect().left + window.scrollX) - (drag.getBoundingClientRect().left + window.scrollX);
-                                        arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) - (drag.getBoundingClientRect().top + window.scrollY);
-                                        drag.appendChild(blockParent);
-                                        drag.appendChild(arrowParent);
-                                        foundids.push(layer[i].id);
-                                        allids.push(layer[i].id);
-                                        }
-                                    }
-                                    if (foundids.length == 0) {
-                                        flag = true;
-                                    } else {
-                                        layer = blocks.filter(a => foundids.includes(a.parent));
-                                        foundids = [];
-                                    }
-                                }
-                                for (var i = 0; i < blocks.filter(a => a.parent == blockid).length; i++) {
-                                    var blocknumber = blocks.filter(a => a.parent == blockid)[i];
-                                    blocks = blocks.filter(function(e) {
-                                        return e.id != blocknumber
-                                    });
-                                }
-                                for (var i = 0; i < allids.length; i++) {
-                                    var blocknumber = allids[i];
-                                    blocks = blocks.filter(function(e) {
-                                        return e.id != blocknumber
-                                    });
-                                }
-                                if (blocks.length > 1) {
-                                    rearrangeMe();
-                                }
-                                if (lastevent) {
-                                    fixOffset();
-                                }
-                    dragblock = false;
-                }
-                if (active) {
-                    drag.style.left = mouse_x - dragx + "px";
-                    drag.style.top = mouse_y - dragy + "px";
-                } else if (rearrange) {
-                    drag.style.left = mouse_x - dragx - (canvas_div.getBoundingClientRect().left + window.scrollX) + canvas_div.scrollLeft + "px";
-                    drag.style.top = mouse_y - dragy - (canvas_div.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop + "px";
-                    blockstemp.filter(a => a.id == parseInt(drag.querySelector(".blockid").value)).x = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft;
-                    blockstemp.filter(a => a.id == parseInt(drag.querySelector(".blockid").value)).y = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).height) / 2) + canvas_div.scrollTop;
-                }
-                if (active || rearrange) {
-                    var xpos = (drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(drag).width) / 2) + canvas_div.scrollLeft;
-                    var ypos = (drag.getBoundingClientRect().top + window.scrollY) + canvas_div.scrollTop;
-                    var blocko = blocks.map(a => a.id);
-                    for (var i = 0; i < blocks.length; i++) {
-                        if (xpos >= blocks.filter(a => a.id == blocko[i])[0].x - (blocks.filter(a => a.id == blocko[i])[0].width / 2) - paddingx && xpos <= blocks.filter(a => a.id == blocko[i])[0].x + (blocks.filter(a => a.id == blocko[i])[0].width / 2) + paddingx && ypos >= blocks.filter(a => a.id == blocko[i])[0].y - (blocks.filter(a => a.id == blocko[i])[0].height / 2) && ypos <= blocks.filter(a => a.id == blocko[i])[0].y + blocks.filter(a => a.id == blocko[i])[0].height) {
-                            document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.appendChild(document.querySelector(".indicator"));
-                            document.querySelector(".indicator").style.left = (parseInt(window.getComputedStyle(document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode).width) / 2) - 5 + "px";
-                            document.querySelector(".indicator").style.top = window.getComputedStyle(document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode).height;
-                            document.querySelector(".indicator").classList.remove("invisible");
-                            break;
-                        } else if (i == blocks.length - 1) {
-                            if (!document.querySelector(".indicator").classList.contains("invisible")) {
-                                document.querySelector(".indicator").classList.add("invisible");
-                            }
-                        }
-                    }
-                }
-            }
-
-            document.addEventListener("mousemove", this.moveBlock, false);
-            document.addEventListener("touchmove", this.moveBlock, false);
-
-            function checkOffset() {
-                offsetleft = blocks.map(a => a.x);
-                var widths = blocks.map(a => a.width);
-                var mathmin = offsetleft.map(function(item, index) {
-                    return item - (widths[index] / 2);
-                })
-                offsetleft = Math.min.apply(Math, mathmin);
-                if (offsetleft < (canvas_div.getBoundingClientRect().left + window.scrollX)) {
-                    lastevent = true;
-                    var blocko = blocks.map(a => a.id);
-                    for (var w = 0; w < blocks.length; w++) {
-                        document.querySelector(".blockid[value='" + blocks.filter(a => a.id == blocko[w])[0].id + "']").parentNode.style.left = blocks.filter(a => a.id == blocko[w])[0].x - (blocks.filter(a => a.id == blocko[w])[0].width / 2) - offsetleft + 20;
-                        if (blocks.filter(a => a.id == blocko[w])[0].parent != -1) {
-                            var arrowhelp = blocks.filter(a => a.id == blocko[w])[0];
-                            var arrowx = arrowhelp.x - blocks.filter(a => a.id == blocks.filter(a => a.id == blocko[w])[0].parent)[0].x;
-                            if (arrowx < 0) {
-                                document.querySelector('.arrowid[value="' + blocko[w] + '"]').parentNode.style.left = (arrowhelp.x - offsetleft + 20 - 5) + "px";
-                            } else {
-                                document.querySelector('.arrowid[value="' + blocko[w] + '"]').parentNode.style.left = blocks.filter(id => id.id == blocks.filter(a => a.id == blocko[w])[0].parent)[0].x - 20 - offsetleft + 20 + "px";
-                            }
-                        }
-                    }
-                    for (var w = 0; w < blocks.length; w++) {
-                        blocks[w].x = (document.querySelector(".blockid[value='" + blocks[w].id + "']").parentNode.getBoundingClientRect().left + window.scrollX) + (canvas_div.getBoundingClientRect().left + canvas_div.scrollLeft) - (parseInt(window.getComputedStyle(document.querySelector(".blockid[value='" + blocks[w].id + "']").parentNode).width) / 2) - 40;
-                    }
-                    offsetleftold = offsetleft;
-                }
-            }
-
-            function fixOffset() {
-                if (offsetleftold < (canvas_div.getBoundingClientRect().left + window.scrollX)) {
-                    lastevent = false;
-                    var blocko = blocks.map(a => a.id);
-                    for (var w = 0; w < blocks.length; w++) {
-                        document.querySelector(".blockid[value='" + blocks.filter(a => a.id == blocko[w])[0].id + "']").parentNode.style.left = blocks.filter(a => a.id == blocko[w])[0].x - (blocks.filter(a => a.id == blocko[w])[0].width / 2) - offsetleftold - 20;
-                        blocks.filter(a => a.id == blocko[w])[0].x = (document.querySelector(".blockid[value='" + blocks.filter(a => a.id == blocko[w])[0].id + "']").parentNode.getBoundingClientRect().left + window.scrollX) + (blocks.filter(a => a.id == blocko[w])[0].width / 2);
-
-                        if (blocks.filter(a => a.id == blocko[w])[0].parent != -1) {
-                            var arrowhelp = blocks.filter(a => a.id == blocko[w])[0];
-                            var arrowx = arrowhelp.x - blocks.filter(a => a.id == blocks.filter(a => a.id == blocko[w])[0].parent)[0].x;
-                            if (arrowx < 0) {
-                                document.querySelector('.arrowid[value="' + blocko[w] + '"]').parentNode.style.left = (arrowhelp.x - 5 - (canvas_div.getBoundingClientRect().left + window.scrollX) + "px");
-                            } else {
-                                document.querySelector('.arrowid[value="' + blocko[w] + '"]').parentNode.style.left = blocks.filter(id => id.id == blocks.filter(a => a.id == blocko[w])[0].parent)[0].x - 20 - (canvas_div.getBoundingClientRect().left + window.scrollX) + "px";
-                            }
-                        }
-                    }
-                    offsetleftold = 0;
-                }
-            }
-
-            function rearrangeMe() {
-                var result = blocks.map(a => a.parent);
-                for (var z = 0; z < result.length; z++) {
-                    if (result[z] == -1) {
-                        z++;
-                    }
-                    var totalwidth = 0;
-                    var totalremove = 0;
-                    var maxheight = 0;
-                    for (var w = 0; w < blocks.filter(id => id.parent == result[z]).length; w++) {
-                        var children = blocks.filter(id => id.parent == result[z])[w];
-                        if (blocks.filter(id => id.parent == children.id).length == 0) {
-                            children.childwidth = 0;
-                        }
-                        if (children.childwidth > children.width) {
-                            if (w == blocks.filter(id => id.parent == result[z]).length - 1) {
-                                totalwidth += children.childwidth;
-                            } else {
-                                totalwidth += children.childwidth + paddingx;
-                            }
-                        } else {
-                            if (w == blocks.filter(id => id.parent == result[z]).length - 1) {
-                                totalwidth += children.width;
-                            } else {
-                                totalwidth += children.width + paddingx;
-                            }
-                        }
-                    }
-                    if (result[z] != -1) {
-                        blocks.filter(a => a.id == result[z])[0].childwidth = totalwidth;
-                    }
-                    for (var w = 0; w < blocks.filter(id => id.parent == result[z]).length; w++) {
-                        var children = blocks.filter(id => id.parent == result[z])[w];
-                        const r_block = document.querySelector(".blockid[value='" + children.id + "']").parentNode;
-                        const r_array = blocks.filter(id => id.id == result[z]);
-                        r_block.style.top = r_array.y + paddingy + "px";
-                        r_array.y = r_array.y + paddingy;
-                        if (children.childwidth > children.width) {
-                            r_block.style.left = r_array[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2) - (canvas_div.getBoundingClientRect().left + window.scrollX) + "px";
-                            children.x = r_array[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2);
-                            totalremove += children.childwidth + paddingx;
-                        } else {
-                            r_block.style.left = r_array[0].x - (totalwidth / 2) + totalremove - (canvas_div.getBoundingClientRect().left + window.scrollX) + "px";
-                            children.x = r_array[0].x - (totalwidth / 2) + totalremove + (children.width / 2);
-                            totalremove += children.width + paddingx;
-                        }
-                        var arrowhelp = blocks.filter(a => a.id == children.id)[0];
-                        var arrowx = arrowhelp.x - blocks.filter(a => a.id == children.parent)[0].x + 20;
-                        var arrowy = arrowhelp.y - (arrowhelp.height / 2) - (blocks.filter(a => a.id == children.parent)[0].y + (blocks.filter(a => a.id == children.parent)[0].height / 2));
-                        document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.style.top = blocks.filter(id => id.id == children.parent)[0].y + (blocks.filter(id => id.id == children.parent)[0].height / 2) - (canvas_div.getBoundingClientRect().top + window.scrollY) + "px";
-                        if (arrowx < 0) {
-                            document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.style.left = (arrowhelp.x - 5) - (canvas_div.getBoundingClientRect().left + window.scrollX) + "px";
-                            document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.innerHTML = '<input type="hidden" class="arrowid" value="' + children.id + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (blocks.filter(id => id.id == children.parent)[0].x - arrowhelp.x + 5) + ' 0L' + (blocks.filter(id => id.id == children.parent)[0].x - arrowhelp.x + 5) + ' ' + (paddingy / 2) + 'L5 ' + (paddingy / 2) + 'L5 ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (arrowy - 5) + 'H10L5 ' + arrowy + 'L0 ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg>';
-                        } else {
-                            document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.style.left = blocks.filter(id => id.id == children.parent)[0].x - 20 - (canvas_div.getBoundingClientRect().left + window.scrollX) + "px";
-                            document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.innerHTML = '<input type="hidden" class="arrowid" value="' + children.id + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L20 ' + (paddingy / 2) + 'L' + (arrowx) + ' ' + (paddingy / 2) + 'L' + arrowx + ' ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M' + (arrowx - 5) + ' ' + (arrowy - 5) + 'H' + (arrowx + 5) + 'L' + arrowx + ' ' + arrowy + 'L' + (arrowx - 5) + ' ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg>';
-                        }
-                    }
-                }
-            }
+            this.offsetleftold = 0;
         }
-        this.load();
+    }
 
-        function blockGrabbed(block) {
-            grab(block);
-        }
+    load (canvas, spacing_x, spacing_y) {
+        if (!this.loaded)
+            this.loaded = true;
+        else
+            return;
+        this.blocks = [];
+        this.blockstemp = [];
+        this.canvas_div = canvas;
+        this.active = false;
+        this.paddingx = spacing_x;
+        this.paddingy = spacing_y;
+        this.offsetleft = 0;
+        this.offsetleftold = 0;
+        this.rearrange = false;
+        this.lastevent = false;
+        this.dragx = undefined;
+        this.dragy = undefined;
+        this.original = undefined;
+        this.drag = undefined;
+        this.mouse_x = undefined;
+        this.mouse_y = undefined;
+        this.dragblock = false;
+        let el = document.createElement("DIV");
+        el.classList.add('indicator');
+        el.classList.add('invisible');
+        this.canvas_div.appendChild(el);
 
-        function blockReleased() {
-            release();
-        }
+        document.addEventListener("mousedown",this.touchblock, false);
+        document.addEventListener("touchstart",this.touchblock, false);
+        document.addEventListener("mouseup", this.touchblock, false);
 
-        function blockSnap(drag, first, parent) {
-            return snapping(drag, first, parent);
-        }
+        document.addEventListener('mousedown',this.beginDrag);
+        document.addEventListener('touchstart',this.beginDrag);
 
+        document.addEventListener("mouseup", this.endDrag, false);
+        document.addEventListener("touchend", this.endDrag, false);
+
+        document.addEventListener("mousemove", this.moveBlock, false);
+        document.addEventListener("touchmove", this.moveBlock, false);
 
     }
 
@@ -630,7 +679,11 @@ export default class SketchPad extends Component {
     }
 
     importData = e => {
-        this.import(JSON.parse(this.chartData));
+
+        if(this.chartData){
+            this.import(JSON.parse(this.chartData));
+        }
+
     }
 
     render() {

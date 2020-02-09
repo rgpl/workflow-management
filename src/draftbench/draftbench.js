@@ -8,18 +8,18 @@ import {
     EuiIcon,
     EuiFlexItem,
     EuiFlexGroup,
-    EuiSideNav,
     EuiPageContent,
-    EuiPageContentHeader,
-    EuiTitle,
-    EuiPageContentBody,
-    EuiPageContentHeaderSection,
     EuiTabbedContent,
-    EuiText,
-    EuiSpacer
 } from '@elastic/eui';
 import './draftbench.css';
 import grabme from './assets/grabme.svg';
+import eye from './assets/eye.svg';
+import action from './assets/action.svg';
+import time from './assets/time.svg';
+import error from './assets/error.svg';
+import database from './assets/database.svg';
+import twitter from './assets/twitter.svg';
+import log from './assets/log.svg';
 import SketchPad from './sketchpad';
 
 export default class Draftbench extends React.Component {
@@ -40,7 +40,7 @@ export default class Draftbench extends React.Component {
                             <div className="blockin">
                                 <div className="blockico">
                                     <span></span>
-                                    <img src="assets/eye.svg"/>
+                                    <img src={eye}/>
                                 </div>
                                 <div className="blocktext">
                                     <p className="blocktitle">New visitor</p>
@@ -51,12 +51,12 @@ export default class Draftbench extends React.Component {
                         <div className="blockelem create-flowy noselect">
                             <input type="hidden" name='blockelemtype' className="blockelemtype" value="2"/>
                             <div className="grabme">
-                                <img src="assets/grabme.svg"/>
+                                <img src={grabme}/>
                             </div>
                             <div className="blockin">
                                 <div className="blockico">
                                     <span></span>
-                                    <img src="assets/action.svg"/>
+                                    <img src={action}/>
                                 </div>
                                 <div className="blocktext">
                                     <p className="blocktitle">Action is performed</p>
@@ -67,12 +67,12 @@ export default class Draftbench extends React.Component {
                         <div className="blockelem create-flowy noselect">
                             <input type="hidden" name='blockelemtype' className="blockelemtype" value="3"/>
                             <div className="grabme">
-                                <img src="assets/grabme.svg"/>
+                                <img src={grabme}/>
                             </div>
                             <div className="blockin">
                                 <div className="blockico">
                                     <span></span>
-                                    <img src="assets/time.svg"/>
+                                    <img src={time}/>
                                 </div>
                                 <div className="blocktext">
                                     <p className="blocktitle">Time has passed</p>
@@ -83,12 +83,12 @@ export default class Draftbench extends React.Component {
                         <div className="blockelem create-flowy noselect">
                             <input type="hidden" name='blockelemtype' className="blockelemtype" value="4"/>
                             <div className="grabme">
-                                <img src="assets/grabme.svg"/>
+                                <img src={grabme}/>
                             </div>
                             <div className="blockin">
                                 <div className="blockico">
                                     <span></span>
-                                    <img src="assets/error.svg"/>
+                                    <img src={error}/>
                                 </div>
                                 <div className="blocktext">
                                     <p className="blocktitle">Error prompt</p>
@@ -104,67 +104,68 @@ export default class Draftbench extends React.Component {
                 name:'Actions',
                 content:(
                     <div id="blocklist">
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="1"/>
-                            <div className="grabme">
-                                <img src="assets/grabme.svg"/>
+                        <div class="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="5"/>
+                            <div class="grabme">
+                                <img src={grabme}/>
                             </div>
-                            <div className="blockin">
-                                <div className="blockico">
+                            <div class="blockin">
+
+                                <div class="blockico">
                                     <span></span>
-                                    <img src="assets/eye.svg"/>
+                                    <img src={database}/>
                                 </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">New visitor</p>
-                                    <p className="blockdesc">Triggers when somebody visits a specified page</p>
+                                <div class="blocktext">
+                                    <p class="blocktitle">New database entry</p>
+                                    <p class="blockdesc">Adds a new entry to a specified database</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="2"/>
-                            <div className="grabme">
-                                <img src="assets/grabme.svg"/>
+                        <div class="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="6"/>
+                            <div class="grabme">
+                                <img src={grabme}/>
                             </div>
-                            <div className="blockin">
-                                <div className="blockico">
+                            <div class="blockin">
+                                <div class="blockico">
                                     <span></span>
-                                    <img src="assets/action.svg"/>
+                                    <img src={database}/>
                                 </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Action is performed</p>
-                                    <p className="blockdesc">Triggers when somebody performs a specified action</p>
+                                <div class="blocktext">
+                                    <p class="blocktitle">Update database</p>
+                                    <p class="blockdesc">Edits and deletes database entries and properties</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="3"/>
-                            <div className="grabme">
-                                <img src="assets/grabme.svg"/>
+                        <div class="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="7"/>
+                            <div class="grabme">
+                                <img src={grabme}/>
                             </div>
-                            <div className="blockin">
-                                <div className="blockico">
+                            <div class="blockin">
+                                <div class="blockico">
                                     <span></span>
-                                    <img src="assets/time.svg"/>
+                                    <img src={action}/>
                                 </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Time has passed</p>
-                                    <p className="blockdesc">Triggers after a specified amount of time</p>
+                                <div class="blocktext">
+                                    <p class="blocktitle">Perform an action</p>
+                                    <p class="blockdesc">Performs or edits a specified action</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="4"/>
-                            <div className="grabme">
-                                <img src="assets/grabme.svg"/>
+                        <div class="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="8"/>
+                            <div class="grabme">
+                                <img src={grabme}/>
                             </div>
-                            <div className="blockin">
-                                <div className="blockico">
+                            <div class="blockin">
+                                <div class="blockico">
                                     <span></span>
-                                    <img src="assets/error.svg"/>
+                                    <img src={twitter}/>
                                 </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Error prompt</p>
-                                    <p className="blockdesc">Triggers when a specified error happens</p>
+                                <div class="blocktext">
+                                    <p class="blocktitle">Make a tweet</p>
+                                    <p class="blockdesc">Makes a tweet with a specified query</p>
                                 </div>
                             </div>
                         </div>
@@ -176,67 +177,51 @@ export default class Draftbench extends React.Component {
                 name:'Loggers',
                 content:(
                     <div id="blocklist">
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="1"/>
-                            <div className="grabme">
-                                <img src="assets/grabme.svg"/>
+                        <div class="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="9"/>
+                            <div class="grabme">
+                                <img src={grabme}/>
                             </div>
-                            <div className="blockin">
-                                <div className="blockico">
+                            <div class="blockin">
+                                <div class="blockico">
                                     <span></span>
-                                    <img src="assets/eye.svg"/>
+                                    <img src={log}/>
                                 </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">New visitor</p>
-                                    <p className="blockdesc">Triggers when somebody visits a specified page</p>
+                                <div class="blocktext">
+                                    <p class="blocktitle">Add new log entry</p>
+                                    <p class="blockdesc">Adds a new log entry to this project</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="2"/>
-                            <div className="grabme">
-                                <img src="assets/grabme.svg"/>
+                        <div class="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="10"/>
+                            <div class="grabme">
+                                <img src={grabme}/>
                             </div>
-                            <div className="blockin">
-                                <div className="blockico">
+                            <div class="blockin">
+                                <div class="blockico">
                                     <span></span>
-                                    <img src="assets/action.svg"/>
+                                    <img src={log}/>
                                 </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Action is performed</p>
-                                    <p className="blockdesc">Triggers when somebody performs a specified action</p>
+                                <div class="blocktext">
+                                    <p class="blocktitle">Update logs</p>
+                                    <p class="blockdesc">Edits and deletes log entries in this project</p>
+                                </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="3"/>
-                            <div className="grabme">
-                                <img src="assets/grabme.svg"/>
-                            </div>
-                            <div className="blockin">
-                                <div className="blockico">
+                            <div class="blockelem create-flowy noselect">
+                                <input type="hidden" name="blockelemtype" class="blockelemtype" value="11"/>
+                                <div class="grabme">
+                                    <img src={grabme}/>
+                                </div>
+                                <div class="blockin">
+                                <div class="blockico">
                                     <span></span>
-                                    <img src="assets/time.svg"/>
+                                    <img src={error}/>
                                 </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Time has passed</p>
-                                    <p className="blockdesc">Triggers after a specified amount of time</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="4"/>
-                            <div className="grabme">
-                                <img src="assets/grabme.svg"/>
-                            </div>
-                            <div className="blockin">
-                                <div className="blockico">
-                                    <span></span>
-                                    <img src="assets/error.svg"/>
-                                </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Error prompt</p>
-                                    <p className="blockdesc">Triggers when a specified error happens</p>
+                                <div class="blocktext">
+                                    <p class="blocktitle">Prompt an error</p>
+                                    <p class="blockdesc">Triggers a specified error</p>
                                 </div>
                             </div>
                         </div>
@@ -248,7 +233,7 @@ export default class Draftbench extends React.Component {
 
 
     render(){
-        
+
 
         return(
             <EuiPage>
@@ -264,16 +249,16 @@ export default class Draftbench extends React.Component {
                     </EuiHeader>
                     <EuiFlexGroup>
                         <EuiFlexItem grow={false}>
-                            
+
                             <EuiTabbedContent
                                 tabs={this.tabs}
-                                initialSelectedTab={this.tabs[1]}
+                                initialSelectedTab={this.tabs[0]}
                                 autoFocus="selected"
                                 onTabClick={tab => {
                                 console.log('clicked tab', tab);
                                 }}
                             />
-                            
+
                         </EuiFlexItem>
                         <EuiFlexItem>
                             <EuiPageContent>
