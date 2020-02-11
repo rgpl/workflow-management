@@ -1,5 +1,29 @@
 import React,{ Component, Fragment } from 'react';
-import './flowy.css';
+import {
+    EuiPage,
+    EuiPageBody,
+    EuiHeader,
+    EuiHeaderSection,
+    EuiHeaderSectionItem,
+    EuiFlexItem,
+    EuiFlexGroup,
+    EuiPageContent,
+    EuiTabbedContent,
+    EuiButton,
+    EuiHeaderBreadcrumbs,
+    EuiIcon,
+    EuiButtonIcon,
+    EuiButtonEmpty
+} from '@elastic/eui';
+import './sketchpad.css';
+import grabme from './assets/grabme.svg';
+import eye from './assets/eye.svg';
+import action from './assets/action.svg';
+import time from './assets/time.svg';
+import error from './assets/error.svg';
+import database from './assets/database.svg';
+import twitter from './assets/twitter.svg';
+import log from './assets/log.svg';
 import eyeblue from './assets/eyeblue.svg';
 import more from './assets/more.svg';
 import actionblue from './assets/actionblue.svg';
@@ -16,6 +40,249 @@ export default class SketchPad extends Component {
 
     constructor(props){
         super(props);
+        this.tabs= [
+            {
+                id:'triggers',
+                name:'Triggers',
+                content:(
+                    <div id="blocklist">
+                        <div className="blockelem create-flowy noselect">
+                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="1"/>
+                            <div className="grabme">
+                                <img src={grabme}/>
+                            </div>
+                            <div className="blockin">
+                                <div className="blockico">
+                                    <span></span>
+                                    <img src={eye}/>
+                                </div>
+                                <div className="blocktext">
+                                    <p className="blocktitle">New visitor</p>
+                                    <p className="blockdesc">Triggers when somebody visits a specified page</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="blockelem create-flowy noselect">
+                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="2"/>
+                            <div className="grabme">
+                                <img src={grabme}/>
+                            </div>
+                            <div className="blockin">
+                                <div className="blockico">
+                                    <span></span>
+                                    <img src={action}/>
+                                </div>
+                                <div className="blocktext">
+                                    <p className="blocktitle">Action is performed</p>
+                                    <p className="blockdesc">Triggers when somebody performs a specified action</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="blockelem create-flowy noselect">
+                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="3"/>
+                            <div className="grabme">
+                                <img src={grabme}/>
+                            </div>
+                            <div className="blockin">
+                                <div className="blockico">
+                                    <span></span>
+                                    <img src={time}/>
+                                </div>
+                                <div className="blocktext">
+                                    <p className="blocktitle">Time has passed</p>
+                                    <p className="blockdesc">Triggers after a specified amount of time</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="blockelem create-flowy noselect">
+                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="4"/>
+                            <div className="grabme">
+                                <img src={grabme}/>
+                            </div>
+                            <div className="blockin">
+                                <div className="blockico">
+                                    <span></span>
+                                    <img src={error}/>
+                                </div>
+                                <div className="blocktext">
+                                    <p className="blocktitle">Error prompt</p>
+                                    <p className="blockdesc">Triggers when a specified error happens</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            },
+            {
+                id:'actions',
+                name:'Actions',
+                content:(
+                    <div id="blocklist">
+                        <div class="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="5"/>
+                            <div class="grabme">
+                                <img src={grabme}/>
+                            </div>
+                            <div class="blockin">
+
+                                <div class="blockico">
+                                    <span></span>
+                                    <img src={database}/>
+                                </div>
+                                <div class="blocktext">
+                                    <p class="blocktitle">New database entry</p>
+                                    <p class="blockdesc">Adds a new entry to a specified database</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="6"/>
+                            <div class="grabme">
+                                <img src={grabme}/>
+                            </div>
+                            <div class="blockin">
+                                <div class="blockico">
+                                    <span></span>
+                                    <img src={database}/>
+                                </div>
+                                <div class="blocktext">
+                                    <p class="blocktitle">Update database</p>
+                                    <p class="blockdesc">Edits and deletes database entries and properties</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="7"/>
+                            <div class="grabme">
+                                <img src={grabme}/>
+                            </div>
+                            <div class="blockin">
+                                <div class="blockico">
+                                    <span></span>
+                                    <img src={action}/>
+                                </div>
+                                <div class="blocktext">
+                                    <p class="blocktitle">Perform an action</p>
+                                    <p class="blockdesc">Performs or edits a specified action</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="8"/>
+                            <div class="grabme">
+                                <img src={grabme}/>
+                            </div>
+                            <div class="blockin">
+                                <div class="blockico">
+                                    <span></span>
+                                    <img src={twitter}/>
+                                </div>
+                                <div class="blocktext">
+                                    <p class="blocktitle">Make a tweet</p>
+                                    <p class="blockdesc">Makes a tweet with a specified query</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            },
+            {
+                id:'loggers',
+                name:'Loggers',
+                content:(
+                    <div id="blocklist">
+                        <div class="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="9"/>
+                            <div class="grabme">
+                                <img src={grabme}/>
+                            </div>
+                            <div class="blockin">
+                                <div class="blockico">
+                                    <span></span>
+                                    <img src={log}/>
+                                </div>
+                                <div class="blocktext">
+                                    <p class="blocktitle">Add new log entry</p>
+                                    <p class="blockdesc">Adds a new log entry to this project</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="10"/>
+                            <div class="grabme">
+                                <img src={grabme}/>
+                            </div>
+                            <div class="blockin">
+                                <div class="blockico">
+                                    <span></span>
+                                    <img src={log}/>
+                                </div>
+                                <div class="blocktext">
+                                    <p class="blocktitle">Update logs</p>
+                                    <p class="blockdesc">Edits and deletes log entries in this project</p>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="blockelem create-flowy noselect">
+                                <input type="hidden" name="blockelemtype" class="blockelemtype" value="11"/>
+                                <div class="grabme">
+                                    <img src={grabme}/>
+                                </div>
+                                <div class="blockin">
+                                <div class="blockico">
+                                    <span></span>
+                                    <img src={error}/>
+                                </div>
+                                <div class="blocktext">
+                                    <p class="blocktitle">Prompt an error</p>
+                                    <p class="blockdesc">Triggers a specified error</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+        ];
+        this.breadcrumbs = [
+            {
+              text: 'Management',
+              href: '#',
+              onClick: e => {
+                e.preventDefault();
+                console.log('You clicked management');
+              },
+              'data-test-subj': 'breadcrumbsAnimals',
+              className: 'customClass',
+            },
+            {
+              text: 'Truncation test is here for a really long item',
+              href: '#',
+              onClick: e => {
+                e.preventDefault();
+                console.log('You clicked truncation test');
+              },
+            },
+            {
+              text: 'hidden',
+              href: '#',
+              onClick: e => {
+                e.preventDefault();
+                console.log('You clicked hidden');
+              },
+            },
+            {
+              text: 'Users',
+              href: '#',
+              onClick: e => {
+                e.preventDefault();
+                console.log('You clicked users');
+              },
+            },
+            {
+              text: 'Create',
+            },
+        ];
+
         this.tempblock2= undefined;
         this.loaded = false;
         this.blocks = [];
@@ -209,11 +476,11 @@ export default class SketchPad extends Component {
 
                         const arrowParent = document.querySelector(".arrowid[value='" + this.blockstemp[w].id + "']").parentNode;
 
-                        blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft;
+                        blockParent.style.left = ((blockParent.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft) + "px";
 
-                        blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop;
+                        blockParent.style.top = ((blockParent.getBoundingClientRect().top + window.scrollY) - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop) + "px";
 
-                        arrowParent.style.left = (arrowParent.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft;
+                        arrowParent.style.left = ((arrowParent.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft) + "px";
 
                         arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) - (this.canvas_div.getBoundingClientRect().top + this.canvas_div.scrollTop) + "px";
 
@@ -315,12 +582,18 @@ export default class SketchPad extends Component {
             this.blockstemp.filter(a => a.id == this.drag.querySelector(".blockid").value)[0].parent = blocko[i];
             for (let w = 0; w < this.blockstemp.length; w++) {
                 if (this.blockstemp[w].id != parseInt(this.drag.querySelector(".blockid").value)) {
+
                     const blockParent = document.querySelector(".blockid[value='" + this.blockstemp[w].id + "']").parentNode;
                     const arrowParent = document.querySelector(".arrowid[value='" + this.blockstemp[w].id + "']").parentNode;
-                    blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft;
-                    blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop;
-                    arrowParent.style.left = (arrowParent.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft + 20;
-                    arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop;
+
+                    blockParent.style.left = ((blockParent.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft) + "px";
+
+                    blockParent.style.top = ((blockParent.getBoundingClientRect().top + window.scrollY) - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop) + "px";
+
+                    arrowParent.style.left = ((arrowParent.getBoundingClientRect().left + window.scrollX) - (this.canvas_div.getBoundingClientRect().left + window.scrollX) + this.canvas_div.scrollLeft + 20) + "px";
+
+                    arrowParent.style.top = ((arrowParent.getBoundingClientRect().top + window.scrollY) - (this.canvas_div.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop) + "px";
+
                     this.canvas_div.appendChild(blockParent);
                     this.canvas_div.appendChild(arrowParent);
 
@@ -538,17 +811,26 @@ export default class SketchPad extends Component {
             while (!flag) {
                 for (let i = 0; i < layer.length; i++) {
                     if (layer[i] != blockid) {
-                    this.blockstemp.push(this.blocks.filter(a => a.id == layer[i].id)[0]);
-                    const blockParent = document.querySelector(".blockid[value='" + layer[i].id + "']").parentNode;
-                    const arrowParent = document.querySelector(".arrowid[value='" + layer[i].id + "']").parentNode;
-                    blockParent.style.left = (blockParent.getBoundingClientRect().left + window.scrollX) - (this.drag.getBoundingClientRect().left + window.scrollX);
-                    blockParent.style.top = (blockParent.getBoundingClientRect().top + window.scrollY) - (this.drag.getBoundingClientRect().top + window.scrollY);
-                    arrowParent.style.left = (arrowParent.getBoundingClientRect().left + window.scrollX) - (this.drag.getBoundingClientRect().left + window.scrollX);
-                    arrowParent.style.top = (arrowParent.getBoundingClientRect().top + window.scrollY) - (this.drag.getBoundingClientRect().top + window.scrollY);
-                    this.drag.appendChild(blockParent);
-                    this.drag.appendChild(arrowParent);
-                    foundids.push(layer[i].id);
-                    allids.push(layer[i].id);
+
+                        this.blockstemp.push(this.blocks.filter(a => a.id == layer[i].id)[0]);
+
+                        const blockParent = document.querySelector(".blockid[value='" + layer[i].id + "']").parentNode;
+
+                        const arrowParent = document.querySelector(".arrowid[value='" + layer[i].id + "']").parentNode;
+
+                        blockParent.style.left = ((blockParent.getBoundingClientRect().left + window.scrollX) - (this.drag.getBoundingClientRect().left + window.scrollX)) + "px";
+
+                        blockParent.style.top = ((blockParent.getBoundingClientRect().top + window.scrollY) - (this.drag.getBoundingClientRect().top + window.scrollY)) + "px";
+
+                        arrowParent.style.left = ((arrowParent.getBoundingClientRect().left + window.scrollX) - (this.drag.getBoundingClientRect().left + window.scrollX)) + "px";
+
+                        arrowParent.style.top = ((arrowParent.getBoundingClientRect().top + window.scrollY) - (this.drag.getBoundingClientRect().top + window.scrollY)) + "px";
+
+                        this.drag.appendChild(blockParent);
+                        this.drag.appendChild(arrowParent);
+
+                        foundids.push(layer[i].id);
+                        allids.push(layer[i].id);
                     }
                 }
                 if (foundids.length == 0) {
@@ -593,10 +875,15 @@ export default class SketchPad extends Component {
             let blocko = this.blocks.map(a => a.id);
             for (let i = 0; i < this.blocks.length; i++) {
                 if (xpos >= this.blocks.filter(a => a.id == blocko[i])[0].x - (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) - this.paddingx && xpos <= this.blocks.filter(a => a.id == blocko[i])[0].x + (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) + this.paddingx && ypos >= this.blocks.filter(a => a.id == blocko[i])[0].y - (this.blocks.filter(a => a.id == blocko[i])[0].height / 2) && ypos <= this.blocks.filter(a => a.id == blocko[i])[0].y + this.blocks.filter(a => a.id == blocko[i])[0].height) {
+
                     document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.appendChild(document.querySelector(".indicator"));
+
                     document.querySelector(".indicator").style.left = (parseInt(window.getComputedStyle(document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode).width) / 2) - 5 + "px";
-                    document.querySelector(".indicator").style.top = window.getComputedStyle(document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode).height;
+
+                    document.querySelector(".indicator").style.top = (window.getComputedStyle(document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode).height) + "px";
+
                     document.querySelector(".indicator").classList.remove("invisible");
+
                     break;
                 } else if (i == this.blocks.length - 1) {
                     if (!document.querySelector(".indicator").classList.contains("invisible")) {
@@ -688,12 +975,56 @@ export default class SketchPad extends Component {
 
     render() {
         return(
-            <Fragment>
-                <div id="canvas" ref={this.canvasRef}></div>
-                <div className="export-flowy-data" onClick={this.exportData}>Export</div>
-                <div className="import-flowy-data" onClick={this.importData}>Import</div>
-            </Fragment>
+            <EuiPage className="full-height">
+                <EuiPageBody>
+                    <EuiHeader>
+                        <EuiHeaderSection grow={false} >
+                            <EuiHeaderSectionItem>
+                                <EuiButtonEmpty
+                                    iconType="arrowLeft"
+                                >
+                                    Back
+                                </EuiButtonEmpty >
+                            </EuiHeaderSectionItem>
+                        </EuiHeaderSection>
+                        <EuiHeaderBreadcrumbs breadcrumbs={this.breadcrumbs} />
+                        <EuiHeaderSection side="right">
+                            <EuiHeaderSectionItem>
+                                <EuiButtonEmpty onClick={this.importData}>
+                                    Import
+                                </EuiButtonEmpty>
+                            </EuiHeaderSectionItem>
+                            <EuiHeaderSectionItem>
+                                <EuiButtonEmpty onClick={this.exportData}>
+                                    Export
+                                </EuiButtonEmpty>
+                            </EuiHeaderSectionItem>
+                            <EuiHeaderSectionItem>
+                                <EuiButtonIcon color="danger" iconType="trash" iconSize="l" onClick={this.deleteBlocks}></EuiButtonIcon>
+                            </EuiHeaderSectionItem>
+                        </EuiHeaderSection>
+                    </EuiHeader>
+                    <EuiFlexGroup>
+                        <EuiFlexItem grow={false}>
 
+                            <EuiTabbedContent
+                                tabs={this.tabs}
+                                initialSelectedTab={this.tabs[0]}
+                                autoFocus="selected"
+                                onTabClick={tab => {
+                                console.log('clicked tab', tab);
+                                }}
+                            />
+
+                        </EuiFlexItem>
+                        <EuiFlexItem>
+                            <EuiPageContent paddingSize="none" >
+                                <div id="canvas" ref={this.canvasRef}></div>
+                            </EuiPageContent>
+                        </EuiFlexItem>
+                    </EuiFlexGroup>
+                </EuiPageBody>
+            </EuiPage>
         )
     }
 }

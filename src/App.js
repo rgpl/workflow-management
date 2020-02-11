@@ -8,7 +8,7 @@ import {
 import Login from './login/login';
 import HomeRoute from './home/home-route';
 import Home from './home/home';
-import Draftbench from './draftbench/draftbench';
+import SketchPad from './sketchpad/sketchpad';
 
 class App extends React.Component {
     render(){
@@ -21,8 +21,8 @@ class App extends React.Component {
                 <HomeRoute exact path="/">
                   <Home />
                 </HomeRoute>
-                <Route path="/draftbench">
-                  <Draftbench></Draftbench>
+                <Route path="/sketchpad">
+                  <SketchPad></SketchPad>
                 </Route>
 
               </Switch>
