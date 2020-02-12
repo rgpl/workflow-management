@@ -32,12 +32,48 @@ import twitterorange from './assets/twitterorange.svg';
 import actionorange from './assets/actionorange.svg';
 import logred from './assets/logred.svg';
 import errorred from './assets/errorred.svg';
+import close from './assets/close.svg';
+import dropdown from './assets/dropdown.svg';
+import checkon from './assets/checkon.svg';
+import checkoff from './assets/checkoff.svg';
+
+const Flyout = (props) => {
+    return(
+        <div id="propwrap" className="itson">
+            <div id="properties" className="expanded">
+                <div id="close" onClick={props.closeSettings}>
+                    <img src={close}/>
+                </div>
+                <p id="header2">Properties</p>
+                <div id="propswitch">
+                    <div id="dataprop">Data</div>
+                    <div id="alertprop">Alerts</div>
+                    <div id="logsprop">Logs</div>
+                </div>
+                <div id="proplist">
+                    <p className="inputlabel">Select database</p>
+                    <div className="dropme">Database 1 <img src={dropdown}/>
+                    </div>
+                    <p className="inputlabel">Check properties</p>
+                    <div className="dropme">All<img src={dropdown}/></div>
+                    <div className="checkus"><img src={checkon}/><p>Log on successful performance</p></div>
+                    <div className="checkus"><img src={checkoff}/><p>Give priority to this block</p></div>
+                </div>
+                <div id="divisionthing"></div>
+                <div id="removeblock">Delete blocks</div>
+            </div>
+        </div>
+    );
+};
 
 
 export default class SketchPad extends Component {
 
     constructor(props){
         super(props);
+        this.state ={
+            showSettings:false
+        };
         this.tabs= [
             {
                 id:'triggers',
@@ -302,10 +338,50 @@ export default class SketchPad extends Component {
         this.dragblock = false;
         this.canvasRef = React.createRef();
         this.chartData = null;
+
+        this.aclick = false;
+        this.rightcard = false;
+        this.tempblock = undefined;
     }
 
     componentDidMount(){
         this.flowy(this.canvasRef.current);
+        this.initSettings();
+    }
+
+    beginTouch = () => {
+        this.aclick = true;
+    }
+
+    checkTouch = () => {
+        this.aclick = false;
+    }
+
+    doneTouch = (event) => {
+        if (event.type === "mouseup" && this.aclick) {
+            console.log("closest-->",event.target);
+            if (!this.rightcard && this.hasParentClass(event.target,'block')) {
+                    this.tempblock = event.target.closest(".block");
+                    this.rightcard = true;
+                    this.setState({showSettings:true});
+                    this.tempblock.classList.add("selectedblock");
+            }
+        }
+    }
+
+    closeSettings = (event) => {
+        if (this.rightcard) {
+            this.rightcard = false;
+            this.setState({showSettings:false});
+            this.tempblock.classList.remove("selectedblock");
+        }
+    }
+
+    initSettings(){
+
+        document.addEventListener("mousedown", this.beginTouch, false);
+        document.addEventListener("mousemove", this.checkTouch, false);
+        document.addEventListener("mouseup", this.doneTouch, false);
     }
 
     snapping=(first)=>  {
@@ -1048,7 +1124,6 @@ export default class SketchPad extends Component {
 
     exportData= e => {
         this.chartData = JSON.stringify(this.output());
-        console.log("output-->",this.chartData);
         this.deleteBlocks();
     }
 
@@ -1106,6 +1181,7 @@ export default class SketchPad extends Component {
                         </EuiFlexItem>
                         <EuiFlexItem>
                             <EuiPageContent paddingSize="none" >
+                                {this.state.showSettings? <Flyout closeSettings={this.closeSettings} /> : null}
                                 <div id="canvas" ref={this.canvasRef}></div>
                             </EuiPageContent>
                         </EuiFlexItem>
