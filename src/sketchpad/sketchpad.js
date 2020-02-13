@@ -37,34 +37,8 @@ import dropdown from './assets/dropdown.svg';
 import checkon from './assets/checkon.svg';
 import checkoff from './assets/checkoff.svg';
 
-const Flyout = (props) => {
-    return(
-        <div id="propwrap" className="itson">
-            <div id="properties" className="expanded">
-                <div id="close" onClick={props.closeSettings}>
-                    <img src={close}/>
-                </div>
-                <p id="header2">Properties</p>
-                <div id="propswitch">
-                    <div id="dataprop">Data</div>
-                    <div id="alertprop">Alerts</div>
-                    <div id="logsprop">Logs</div>
-                </div>
-                <div id="proplist">
-                    <p className="inputlabel">Select database</p>
-                    <div className="dropme">Database 1 <img src={dropdown}/>
-                    </div>
-                    <p className="inputlabel">Check properties</p>
-                    <div className="dropme">All<img src={dropdown}/></div>
-                    <div className="checkus"><img src={checkon}/><p>Log on successful performance</p></div>
-                    <div className="checkus"><img src={checkoff}/><p>Give priority to this block</p></div>
-                </div>
-                <div id="divisionthing"></div>
-                <div id="removeblock">Delete blocks</div>
-            </div>
-        </div>
-    );
-};
+import Flyout from './flyout';
+
 
 
 export default class SketchPad extends Component {
@@ -152,68 +126,68 @@ export default class SketchPad extends Component {
                 name:'Actions',
                 content:(
                     <div id="blocklist">
-                        <div class="blockelem create-flowy noselect">
-                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="5"/>
-                            <div class="grabme">
+                        <div className="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" className="blockelemtype" value="5"/>
+                            <div className="grabme">
                                 <img src={grabme}/>
                             </div>
-                            <div class="blockin">
+                            <div className="blockin">
 
-                                <div class="blockico">
+                                <div className="blockico">
                                     <span></span>
                                     <img src={database}/>
                                 </div>
-                                <div class="blocktext">
-                                    <p class="blocktitle">New database entry</p>
-                                    <p class="blockdesc">Adds a new entry to a specified database</p>
+                                <div className="blocktext">
+                                    <p className="blocktitle">New database entry</p>
+                                    <p className="blockdesc">Adds a new entry to a specified database</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="blockelem create-flowy noselect">
-                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="6"/>
-                            <div class="grabme">
+                        <div className="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" className="blockelemtype" value="6"/>
+                            <div className="grabme">
                                 <img src={grabme}/>
                             </div>
-                            <div class="blockin">
-                                <div class="blockico">
+                            <div className="blockin">
+                                <div className="blockico">
                                     <span></span>
                                     <img src={database}/>
                                 </div>
-                                <div class="blocktext">
-                                    <p class="blocktitle">Update database</p>
-                                    <p class="blockdesc">Edits and deletes database entries and properties</p>
+                                <div className="blocktext">
+                                    <p className="blocktitle">Update database</p>
+                                    <p className="blockdesc">Edits and deletes database entries and properties</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="blockelem create-flowy noselect">
-                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="7"/>
-                            <div class="grabme">
+                        <div className="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" className="blockelemtype" value="7"/>
+                            <div className="grabme">
                                 <img src={grabme}/>
                             </div>
-                            <div class="blockin">
-                                <div class="blockico">
+                            <div className="blockin">
+                                <div className="blockico">
                                     <span></span>
                                     <img src={action}/>
                                 </div>
-                                <div class="blocktext">
-                                    <p class="blocktitle">Perform an action</p>
-                                    <p class="blockdesc">Performs or edits a specified action</p>
+                                <div className="blocktext">
+                                    <p className="blocktitle">Perform an action</p>
+                                    <p className="blockdesc">Performs or edits a specified action</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="blockelem create-flowy noselect">
-                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="8"/>
-                            <div class="grabme">
+                        <div className="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" className="blockelemtype" value="8"/>
+                            <div className="grabme">
                                 <img src={grabme}/>
                             </div>
-                            <div class="blockin">
-                                <div class="blockico">
+                            <div className="blockin">
+                                <div className="blockico">
                                     <span></span>
                                     <img src={twitter}/>
                                 </div>
-                                <div class="blocktext">
-                                    <p class="blocktitle">Make a tweet</p>
-                                    <p class="blockdesc">Makes a tweet with a specified query</p>
+                                <div className="blocktext">
+                                    <p className="blocktitle">Make a tweet</p>
+                                    <p className="blockdesc">Makes a tweet with a specified query</p>
                                 </div>
                             </div>
                         </div>
@@ -225,51 +199,51 @@ export default class SketchPad extends Component {
                 name:'Loggers',
                 content:(
                     <div id="blocklist">
-                        <div class="blockelem create-flowy noselect">
-                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="9"/>
-                            <div class="grabme">
+                        <div className="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" className="blockelemtype" value="9"/>
+                            <div className="grabme">
                                 <img src={grabme}/>
                             </div>
-                            <div class="blockin">
-                                <div class="blockico">
+                            <div className="blockin">
+                                <div className="blockico">
                                     <span></span>
                                     <img src={log}/>
                                 </div>
-                                <div class="blocktext">
-                                    <p class="blocktitle">Add new log entry</p>
-                                    <p class="blockdesc">Adds a new log entry to this project</p>
+                                <div className="blocktext">
+                                    <p className="blocktitle">Add new log entry</p>
+                                    <p className="blockdesc">Adds a new log entry to this project</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="blockelem create-flowy noselect">
-                            <input type="hidden" name="blockelemtype" class="blockelemtype" value="10"/>
-                            <div class="grabme">
+                        <div className="blockelem create-flowy noselect">
+                            <input type="hidden" name="blockelemtype" className="blockelemtype" value="10"/>
+                            <div className="grabme">
                                 <img src={grabme}/>
                             </div>
-                            <div class="blockin">
-                                <div class="blockico">
+                            <div className="blockin">
+                                <div className="blockico">
                                     <span></span>
                                     <img src={log}/>
                                 </div>
-                                <div class="blocktext">
-                                    <p class="blocktitle">Update logs</p>
-                                    <p class="blockdesc">Edits and deletes log entries in this project</p>
+                                <div className="blocktext">
+                                    <p className="blocktitle">Update logs</p>
+                                    <p className="blockdesc">Edits and deletes log entries in this project</p>
                                 </div>
                                 </div>
                             </div>
-                            <div class="blockelem create-flowy noselect">
-                                <input type="hidden" name="blockelemtype" class="blockelemtype" value="11"/>
-                                <div class="grabme">
+                            <div className="blockelem create-flowy noselect">
+                                <input type="hidden" name="blockelemtype" className="blockelemtype" value="11"/>
+                                <div className="grabme">
                                     <img src={grabme}/>
                                 </div>
-                                <div class="blockin">
-                                <div class="blockico">
+                                <div className="blockin">
+                                <div className="blockico">
                                     <span></span>
                                     <img src={error}/>
                                 </div>
-                                <div class="blocktext">
-                                    <p class="blocktitle">Prompt an error</p>
-                                    <p class="blockdesc">Triggers a specified error</p>
+                                <div className="blocktext">
+                                    <p className="blocktitle">Prompt an error</p>
+                                    <p className="blockdesc">Triggers a specified error</p>
                                 </div>
                             </div>
                         </div>
@@ -346,27 +320,6 @@ export default class SketchPad extends Component {
 
     componentDidMount(){
         this.flowy(this.canvasRef.current);
-        this.initSettings();
-    }
-
-    beginTouch = () => {
-        this.aclick = true;
-    }
-
-    checkTouch = () => {
-        this.aclick = false;
-    }
-
-    doneTouch = (event) => {
-        if (event.type === "mouseup" && this.aclick) {
-            console.log("closest-->",event.target);
-            if (!this.rightcard && this.hasParentClass(event.target,'block')) {
-                    this.tempblock = event.target.closest(".block");
-                    this.rightcard = true;
-                    this.setState({showSettings:true});
-                    this.tempblock.classList.add("selectedblock");
-            }
-        }
     }
 
     closeSettings = (event) => {
@@ -375,13 +328,6 @@ export default class SketchPad extends Component {
             this.setState({showSettings:false});
             this.tempblock.classList.remove("selectedblock");
         }
-    }
-
-    initSettings(){
-
-        document.addEventListener("mousedown", this.beginTouch, false);
-        document.addEventListener("mousemove", this.checkTouch, false);
-        document.addEventListener("mouseup", this.doneTouch, false);
     }
 
     snapping=(first)=>  {
@@ -492,6 +438,7 @@ export default class SketchPad extends Component {
     }
 
     beginDrag = (event) => {
+        this.aclick = true;
         if (event.targetTouches) {
             this.mouse_x = event.changedTouches[0].clientX;
             this.mouse_y = event.changedTouches[0].clientY;
@@ -529,6 +476,16 @@ export default class SketchPad extends Component {
     }
 
     endDrag = (event) => {
+
+        if (event.type === "mouseup" && this.aclick) {
+            if (!this.rightcard && this.hasParentClass(event.target,'block')) {
+                this.tempblock = event.target.closest(".block");
+                this.rightcard = true;
+                this.setState({showSettings:true});
+                this.tempblock.classList.add("selectedblock");
+            }
+        }
+
         if (event.which != 3 && (this.active || this.rearrange)) {
             this.dragblock = false;
             this.blockReleased();
@@ -934,6 +891,7 @@ export default class SketchPad extends Component {
     }
 
     moveBlock = (event) => {
+
         if (event.targetTouches) {
             this.mouse_x = event.targetTouches[0].clientX;
             this.mouse_y = event.targetTouches[0].clientY;
@@ -1026,6 +984,9 @@ export default class SketchPad extends Component {
 
         }
         if (this.active || this.rearrange) {
+
+            this.aclick = false;
+
             let xpos = (this.drag.getBoundingClientRect().left + window.scrollX) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft;
             let ypos = (this.drag.getBoundingClientRect().top + window.scrollY) + this.canvas_div.scrollTop;
             let blocko = this.blocks.map(a => a.id);
