@@ -1,4 +1,4 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with yarn2 , delete __yarn.lock__ if you find trouble in installing.
 
 ## Available Scripts
 

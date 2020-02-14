@@ -32,10 +32,6 @@ import twitterorange from './assets/twitterorange.svg';
 import actionorange from './assets/actionorange.svg';
 import logred from './assets/logred.svg';
 import errorred from './assets/errorred.svg';
-import close from './assets/close.svg';
-import dropdown from './assets/dropdown.svg';
-import checkon from './assets/checkon.svg';
-import checkoff from './assets/checkoff.svg';
 
 import Flyout from './flyout';
 
@@ -257,7 +253,7 @@ export default class SketchPad extends Component {
               href: '#',
               onClick: e => {
                 e.preventDefault();
-                console.log('You clicked management');
+
               },
               'data-test-subj': 'breadcrumbsAnimals',
               className: 'customClass',
@@ -267,7 +263,7 @@ export default class SketchPad extends Component {
               href: '#',
               onClick: e => {
                 e.preventDefault();
-                console.log('You clicked truncation test');
+
               },
             },
             {
@@ -275,7 +271,7 @@ export default class SketchPad extends Component {
               href: '#',
               onClick: e => {
                 e.preventDefault();
-                console.log('You clicked hidden');
+
               },
             },
             {
@@ -283,7 +279,7 @@ export default class SketchPad extends Component {
               href: '#',
               onClick: e => {
                 e.preventDefault();
-                console.log('You clicked users');
+
               },
             },
             {
@@ -310,12 +306,14 @@ export default class SketchPad extends Component {
         this.mouse_x = undefined;
         this.mouse_y = undefined;
         this.dragblock = false;
+
         this.canvasRef = React.createRef();
         this.chartData = null;
 
         this.aclick = false;
         this.rightcard = false;
         this.tempblock = undefined;
+        this.editMode = false;
     }
 
     componentDidMount(){
@@ -368,7 +366,8 @@ export default class SketchPad extends Component {
     }
 
     release=()=> {
-        this.tempblock2.classList.remove("blockdisabled");
+        if(this.tempblock2)
+            this.tempblock2.classList.remove("blockdisabled");
     }
 
     flowy(canvas, spacing_x, spacing_y) {
@@ -1068,32 +1067,51 @@ export default class SketchPad extends Component {
         el.classList.add('invisible');
         this.canvas_div.appendChild(el);
 
-        document.addEventListener("mousedown",this.touchblock, false);
-        document.addEventListener("touchstart",this.touchblock, false);
-        document.addEventListener("mouseup", this.touchblock, false);
+    }
 
-        document.addEventListener('mousedown',this.beginDrag);
-        document.addEventListener('touchstart',this.beginDrag);
+    startEdit = () => {
 
-        document.addEventListener("mouseup", this.endDrag, false);
-        document.addEventListener("touchend", this.endDrag, false);
+        if(!this.editMode) {
 
-        document.addEventListener("mousemove", this.moveBlock, false);
-        document.addEventListener("touchmove", this.moveBlock, false);
+            this.editMode = true;
+
+            document.addEventListener("mousedown",this.touchblock, false);
+            document.addEventListener("touchstart",this.touchblock, false);
+            document.addEventListener("mouseup", this.touchblock, false);
+
+            document.addEventListener('mousedown',this.beginDrag);
+            document.addEventListener('touchstart',this.beginDrag);
+
+            document.addEventListener("mouseup", this.endDrag, false);
+            document.addEventListener("touchend", this.endDrag, false);
+
+            document.addEventListener("mousemove", this.moveBlock, false);
+            document.addEventListener("touchmove", this.moveBlock, false);
+        }
 
     }
 
     exportData= e => {
         this.chartData = JSON.stringify(this.output());
+        localStorage.setItem("journey_1",this.chartData);
         this.deleteBlocks();
     }
 
     importData = e => {
 
+        this.chartData = localStorage.getItem("journey_1");
         if(this.chartData){
             this.import(JSON.parse(this.chartData));
         }
 
+    }
+
+    zoomIn = e => {
+        //this.canvas_div.style.transform ="scale(1.5)";
+    }
+
+    zoomOut = e => {
+        //this.canvas_div.style.transform ="scale(0.5)";
     }
 
     render() {
@@ -1102,7 +1120,7 @@ export default class SketchPad extends Component {
                 <EuiPageBody>
                     <EuiHeader>
                         <EuiHeaderSection grow={false} >
-                            <EuiHeaderSectionItem>
+                            <EuiHeaderSectionItem border="none">
                                 <EuiButtonEmpty
                                     iconType="arrowLeft"
                                 >
@@ -1112,31 +1130,29 @@ export default class SketchPad extends Component {
                         </EuiHeaderSection>
                         <EuiHeaderBreadcrumbs breadcrumbs={this.breadcrumbs} />
                         <EuiHeaderSection side="right">
-                            <EuiHeaderSectionItem>
-                                <EuiButtonEmpty onClick={this.importData}>
-                                    Import
-                                </EuiButtonEmpty>
-                            </EuiHeaderSectionItem>
-                            <EuiHeaderSectionItem>
-                                <EuiButtonEmpty onClick={this.exportData}>
-                                    Export
-                                </EuiButtonEmpty>
-                            </EuiHeaderSectionItem>
-                            <EuiHeaderSectionItem>
-                                <EuiButtonIcon color="danger" iconType="trash" iconSize="l" onClick={this.deleteBlocks}></EuiButtonIcon>
-                            </EuiHeaderSectionItem>
+
+                            <EuiButtonIcon iconType="magnifyWithPlus" color="#DA8B45" iconSize="l" title="ZoomIn" onClick={this.zoomIn}></EuiButtonIcon>
+
+                            <EuiButtonIcon color="primary" iconType="magnifyWithMinus" iconSize="l" title="ZoomOut" onClick={this.zoomOut}></EuiButtonIcon>
+
+                            <EuiButtonIcon color="primary" iconType="documentEdit" iconSize="l" title="Edit" onClick={this.startEdit}></EuiButtonIcon>
+
+                            <EuiButtonIcon color="#490" iconType="importAction" iconSize="l" title="Import" onClick={this.importData}></EuiButtonIcon>
+
+                            <EuiButtonIcon color="secondary" iconType="exportAction" iconSize="l" title="Export" onClick={this.exportData}></EuiButtonIcon>
+
+                            <EuiButtonIcon color="danger" iconType="trash" iconSize="l" title="Delete" onClick={this.deleteBlocks}></EuiButtonIcon>
+
                         </EuiHeaderSection>
                     </EuiHeader>
-                    <EuiFlexGroup>
+                    <EuiFlexGroup gutterSize="none">
                         <EuiFlexItem grow={false}>
 
                             <EuiTabbedContent
                                 tabs={this.tabs}
                                 initialSelectedTab={this.tabs[0]}
                                 autoFocus="selected"
-                                onTabClick={tab => {
-                                console.log('clicked tab', tab);
-                                }}
+                                onTabClick={tab => {}}
                             />
 
                         </EuiFlexItem>
