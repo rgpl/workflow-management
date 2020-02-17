@@ -8,20 +8,11 @@ import {
     EuiFlexItem,
     EuiFlexGroup,
     EuiPageContent,
-    EuiTabbedContent,
     EuiHeaderBreadcrumbs,
     EuiButtonIcon,
     EuiButtonEmpty
 } from '@elastic/eui';
 import './sketchpad.css';
-import grabme from './assets/grabme.svg';
-import eye from './assets/eye.svg';
-import action from './assets/action.svg';
-import time from './assets/time.svg';
-import error from './assets/error.svg';
-import database from './assets/database.svg';
-import twitter from './assets/twitter.svg';
-import log from './assets/log.svg';
 import eyeblue from './assets/eyeblue.svg';
 import more from './assets/more.svg';
 import actionblue from './assets/actionblue.svg';
@@ -34,6 +25,7 @@ import logred from './assets/logred.svg';
 import errorred from './assets/errorred.svg';
 
 import Flyout from './flyout';
+import Blocks from './blocks';
 
 
 
@@ -44,248 +36,7 @@ export default class SketchPad extends Component {
         this.state ={
             showSettings:false
         };
-        this.tabs= [
-            {
-                id:'triggers',
-                name:'Triggers',
-                content:(
-                    <div id="blocklist">
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="1"/>
-                            <div className="grabme">
-                                <img src={grabme}/>
-                            </div>
-                            <div className="blockin">
-                                <div className="blockico">
-                                    <span></span>
-                                    <img src={eye}/>
-                                </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Enter Workflow</p>
-                                    <p className="blockdesc">Triggers when somebody visits a specified page</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="2"/>
-                            <div className="grabme">
-                                <img src={grabme}/>
-                            </div>
-                            <div className="blockin">
-                                <div className="blockico">
-                                    <span></span>
-                                    <img src={action}/>
-                                </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Action is performed</p>
-                                    <p className="blockdesc">Triggers when somebody performs a specified action</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="3"/>
-                            <div className="grabme">
-                                <img src={grabme}/>
-                            </div>
-                            <div className="blockin">
-                                <div className="blockico">
-                                    <span></span>
-                                    <img src={time}/>
-                                </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Time has passed</p>
-                                    <p className="blockdesc">Triggers after a specified amount of time</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name='blockelemtype' className="blockelemtype" value="4"/>
-                            <div className="grabme">
-                                <img src={grabme}/>
-                            </div>
-                            <div className="blockin">
-                                <div className="blockico">
-                                    <span></span>
-                                    <img src={error}/>
-                                </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Exit Workflow</p>
-                                    <p className="blockdesc">Triggers when a specified error happens</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-            },
-            {
-                id:'actions',
-                name:'Actions',
-                content:(
-                    <div id="blocklist">
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name="blockelemtype" className="blockelemtype" value="5"/>
-                            <div className="grabme">
-                                <img src={grabme}/>
-                            </div>
-                            <div className="blockin">
-
-                                <div className="blockico">
-                                    <span></span>
-                                    <img src={database}/>
-                                </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">New database entry</p>
-                                    <p className="blockdesc">Adds a new entry to a specified database</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name="blockelemtype" className="blockelemtype" value="6"/>
-                            <div className="grabme">
-                                <img src={grabme}/>
-                            </div>
-                            <div className="blockin">
-                                <div className="blockico">
-                                    <span></span>
-                                    <img src={database}/>
-                                </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Update database</p>
-                                    <p className="blockdesc">Edits and deletes database entries and properties</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name="blockelemtype" className="blockelemtype" value="7"/>
-                            <div className="grabme">
-                                <img src={grabme}/>
-                            </div>
-                            <div className="blockin">
-                                <div className="blockico">
-                                    <span></span>
-                                    <img src={action}/>
-                                </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Perform an action</p>
-                                    <p className="blockdesc">Performs or edits a specified action</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name="blockelemtype" className="blockelemtype" value="8"/>
-                            <div className="grabme">
-                                <img src={grabme}/>
-                            </div>
-                            <div className="blockin">
-                                <div className="blockico">
-                                    <span></span>
-                                    <img src={twitter}/>
-                                </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Make a tweet</p>
-                                    <p className="blockdesc">Makes a tweet with a specified query</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-            },
-            {
-                id:'loggers',
-                name:'Loggers',
-                content:(
-                    <div id="blocklist">
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name="blockelemtype" className="blockelemtype" value="9"/>
-                            <div className="grabme">
-                                <img src={grabme}/>
-                            </div>
-                            <div className="blockin">
-                                <div className="blockico">
-                                    <span></span>
-                                    <img src={log}/>
-                                </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Add new log entry</p>
-                                    <p className="blockdesc">Adds a new log entry to this project</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="blockelem create-flowy noselect">
-                            <input type="hidden" name="blockelemtype" className="blockelemtype" value="10"/>
-                            <div className="grabme">
-                                <img src={grabme}/>
-                            </div>
-                            <div className="blockin">
-                                <div className="blockico">
-                                    <span></span>
-                                    <img src={log}/>
-                                </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Update logs</p>
-                                    <p className="blockdesc">Edits and deletes log entries in this project</p>
-                                </div>
-                                </div>
-                            </div>
-                            <div className="blockelem create-flowy noselect">
-                                <input type="hidden" name="blockelemtype" className="blockelemtype" value="11"/>
-                                <div className="grabme">
-                                    <img src={grabme}/>
-                                </div>
-                                <div className="blockin">
-                                <div className="blockico">
-                                    <span></span>
-                                    <img src={error}/>
-                                </div>
-                                <div className="blocktext">
-                                    <p className="blocktitle">Prompt an error</p>
-                                    <p className="blockdesc">Triggers a specified error</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-            }
-        ];
-        this.breadcrumbs = [
-            {
-              text: 'Management',
-              href: '#',
-              onClick: e => {
-                e.preventDefault();
-
-              },
-              'data-test-subj': 'breadcrumbsAnimals',
-              className: 'customClass',
-            },
-            {
-              text: 'Truncation test is here for a really long item',
-              href: '#',
-              onClick: e => {
-                e.preventDefault();
-
-              },
-            },
-            {
-              text: 'hidden',
-              href: '#',
-              onClick: e => {
-                e.preventDefault();
-
-              },
-            },
-            {
-              text: 'Users',
-              href: '#',
-              onClick: e => {
-                e.preventDefault();
-
-              },
-            },
-            {
-              text: 'Create',
-            },
-        ];
+        this.breadcrumbs = [];
 
         this.tempblock2= undefined;
         this.loaded = false;
@@ -314,6 +65,10 @@ export default class SketchPad extends Component {
         this.rightcard = false;
         this.tempblock = undefined;
         this.editMode = false;
+        this.magnifyMax = 1;
+        this.magnifyMin = 0.1;
+        this.currentScale = 1;
+        this.scaleIncrementor = 0.1;
     }
 
     componentDidMount(){
@@ -330,8 +85,6 @@ export default class SketchPad extends Component {
 
     snapping=(first)=>  {
 
-        let grab = this.drag.querySelector(".grabme");
-        grab.parentNode.removeChild(grab);
         let blockin = this.drag.querySelector(".blockin");
         blockin.parentNode.removeChild(blockin);
         if (this.drag.querySelector(".blockelemtype").value == "1") {
@@ -1107,11 +860,11 @@ export default class SketchPad extends Component {
     }
 
     zoomIn = e => {
-        //this.canvas_div.style.transform ="scale(1.5)";
+
     }
 
     zoomOut = e => {
-        //this.canvas_div.style.transform ="scale(0.5)";
+
     }
 
     render() {
@@ -1148,12 +901,7 @@ export default class SketchPad extends Component {
                     <EuiFlexGroup gutterSize="none">
                         <EuiFlexItem grow={false}>
 
-                            <EuiTabbedContent
-                                tabs={this.tabs}
-                                initialSelectedTab={this.tabs[0]}
-                                autoFocus="selected"
-                                onTabClick={tab => {}}
-                            />
+                            <Blocks></Blocks>
 
                         </EuiFlexItem>
                         <EuiFlexItem>

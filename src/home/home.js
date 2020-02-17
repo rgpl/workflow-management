@@ -182,7 +182,7 @@ export default class Home extends React.Component {
           ];
 
         return (
-            <EuiPage>
+            <EuiPage style={{padding:'0px'}}>
                 <EuiPageBody>
                     <EuiHeader>
                         <EuiHeaderSection grow={false}>
