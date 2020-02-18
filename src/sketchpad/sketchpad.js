@@ -840,6 +840,23 @@ export default class SketchPad extends Component {
 
             document.addEventListener("mousemove", this.moveBlock, false);
             document.addEventListener("touchmove", this.moveBlock, false);
+
+        } else {
+
+            this.editMode = false;
+
+            document.removeEventListener("mousedown",this.touchblock, false);
+            document.removeEventListener("touchstart",this.touchblock, false);
+            document.removeEventListener("mouseup", this.touchblock, false);
+
+            document.removeEventListener('mousedown',this.beginDrag);
+            document.removeEventListener('touchstart',this.beginDrag);
+
+            document.removeEventListener("mouseup", this.endDrag, false);
+            document.removeEventListener("touchend", this.endDrag, false);
+
+            document.removeEventListener("mousemove", this.moveBlock, false);
+            document.removeEventListener("touchmove", this.moveBlock, false);
         }
 
     }
