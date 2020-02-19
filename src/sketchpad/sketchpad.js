@@ -34,7 +34,8 @@ export default class SketchPad extends Component {
     constructor(props){
         super(props);
         this.state ={
-            showSettings:false
+            showSettings:false,
+            editMode: this.props.editMode
         };
         this.breadcrumbs = [];
 
@@ -64,7 +65,7 @@ export default class SketchPad extends Component {
         this.aclick = false;
         this.rightcard = false;
         this.tempblock = undefined;
-        this.editMode = false;
+        this.editMode = this.props.editMode;
         this.magnifyMax = 1;
         this.magnifyMin = 0.1;
         this.currentScale = 1;
@@ -820,6 +821,10 @@ export default class SketchPad extends Component {
         el.classList.add('invisible');
         this.canvas_div.appendChild(el);
 
+        if(this.editMode) {
+            this.startEdit();
+        }
+
     }
 
     startEdit = () => {
@@ -827,6 +832,8 @@ export default class SketchPad extends Component {
         if(!this.editMode) {
 
             this.editMode = true;
+
+            this.setState({editMode:true});
 
             document.addEventListener("mousedown",this.touchblock, false);
             document.addEventListener("touchstart",this.touchblock, false);
@@ -841,22 +848,6 @@ export default class SketchPad extends Component {
             document.addEventListener("mousemove", this.moveBlock, false);
             document.addEventListener("touchmove", this.moveBlock, false);
 
-        } else {
-
-            this.editMode = false;
-
-            document.removeEventListener("mousedown",this.touchblock, false);
-            document.removeEventListener("touchstart",this.touchblock, false);
-            document.removeEventListener("mouseup", this.touchblock, false);
-
-            document.removeEventListener('mousedown',this.beginDrag);
-            document.removeEventListener('touchstart',this.beginDrag);
-
-            document.removeEventListener("mouseup", this.endDrag, false);
-            document.removeEventListener("touchend", this.endDrag, false);
-
-            document.removeEventListener("mousemove", this.moveBlock, false);
-            document.removeEventListener("touchmove", this.moveBlock, false);
         }
 
     }
@@ -918,7 +909,7 @@ export default class SketchPad extends Component {
                     <EuiFlexGroup gutterSize="none">
                         <EuiFlexItem grow={false}>
 
-                            <Blocks></Blocks>
+                            {this.state.editMode ? <Blocks></Blocks> : null}
 
                         </EuiFlexItem>
                         <EuiFlexItem>

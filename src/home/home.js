@@ -19,7 +19,8 @@ import {
     EuiPageContentHeaderSection,
     EuiTitle,
     EuiPageContentBody,
-    EuiPageContentHeader
+    EuiPageContentHeader,
+    EuiPanel
 } from '@elastic/eui';
 import { Redirect } from 'react-router-dom';
 
@@ -224,14 +225,59 @@ export default class Home extends React.Component {
                         <EuiPageContentHeader>
                         <EuiPageContentHeaderSection>
                             <EuiTitle>
-                            <h2>Content title</h2>
+                            <h2>Journeys</h2>
                             </EuiTitle>
                         </EuiPageContentHeaderSection>
                         <EuiPageContentHeaderSection>
-                            Content abilities
+                            <EuiButton fill onClick={() => window.alert('Button clicked')}>
+                            Create Journey
+                            </EuiButton>
                         </EuiPageContentHeaderSection>
                         </EuiPageContentHeader>
-                        <EuiPageContentBody>Content body</EuiPageContentBody>
+                        <EuiPageContentBody>
+                            <EuiPanel paddingSize="s" style={{marginBottom:10}}>
+                                <EuiFlexGroup justifyContent="spaceBetween">
+                                    <EuiFlexItem>Frequent user flow</EuiFlexItem>
+                                    <EuiFlexItem grow={false}>
+                                        <EuiButton
+                                        color="secondary"
+                                        fill
+                                        size="s"
+                                        onClick={() => window.alert('Button clicked')}>
+                                        View
+                                        </EuiButton>
+                                    </EuiFlexItem>
+                                </EuiFlexGroup>
+                            </EuiPanel>
+                            <EuiPanel  paddingSize="s" style={{marginBottom:10}}>
+                                <EuiFlexGroup justifyContent="spaceBetween">
+                                    <EuiFlexItem>Rare user flow</EuiFlexItem>
+                                    <EuiFlexItem grow={false}>
+                                        <EuiButton
+                                        color="secondary"
+                                        fill
+                                        size="s"
+                                        onClick={() => window.alert('Button clicked')}>
+                                        View
+                                        </EuiButton>
+                                    </EuiFlexItem>
+                                </EuiFlexGroup>
+                            </EuiPanel>
+                            <EuiPanel  paddingSize="s" style={{marginBottom:10}}>
+                                <EuiFlexGroup justifyContent="spaceBetween">
+                                    <EuiFlexItem>Addicted user flow</EuiFlexItem>
+                                    <EuiFlexItem grow={false}>
+                                        <EuiButton
+                                        color="secondary"
+                                        fill
+                                        size="s"
+                                        onClick={() => window.alert('Button clicked')}>
+                                        View
+                                        </EuiButton>
+                                    </EuiFlexItem>
+                                </EuiFlexGroup>
+                            </EuiPanel>
+                        </EuiPageContentBody>
                     </EuiPageContent>
                         </EuiFlexItem>
                     </EuiFlexGroup>

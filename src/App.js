@@ -16,14 +16,14 @@ const App = ({store}) =>(
     <Provider store={store}>
         <Router>
             <Switch>
-            <Route path="/login">
-                <Login />
+            <Route path="/login" render={props => <Login {...props}  />}>
+
             </Route>
             <HomeRoute exact path="/">
                 <Home />
             </HomeRoute>
             <Route path="/sketchpad">
-                <SketchPad></SketchPad>
+                <SketchPad editMode={true}></SketchPad>
             </Route>
 
             </Switch>

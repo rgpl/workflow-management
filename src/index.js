@@ -5,9 +5,9 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import '@elastic/eui/dist/eui_theme_light.css';
 import { createStore } from 'redux';
-import workFlow from './reducers';
+import reducer from './store/reducer';
 
-const store = createStore(workFlow);
+const store = createStore(reducer);
 
 
 
