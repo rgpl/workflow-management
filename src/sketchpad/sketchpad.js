@@ -10,7 +10,9 @@ import {
     EuiPageContent,
     EuiHeaderBreadcrumbs,
     EuiButtonIcon,
-    EuiButtonEmpty
+    EuiButtonEmpty,
+    EuiButtonToggle,
+    EuiButton
 } from '@elastic/eui';
 import './sketchpad.css';
 import eyeblue from './assets/eyeblue.svg';
@@ -848,7 +850,7 @@ export default class SketchPad extends Component {
             document.addEventListener("mousemove", this.moveBlock, false);
             document.addEventListener("touchmove", this.moveBlock, false);
 
-        }
+        } 
 
     }
 
@@ -890,19 +892,36 @@ export default class SketchPad extends Component {
                             </EuiHeaderSectionItem>
                         </EuiHeaderSection>
                         <EuiHeaderBreadcrumbs breadcrumbs={this.breadcrumbs} />
-                        <EuiHeaderSection side="right">
+                        <EuiHeaderSection side="right" className="content-center">
 
-                            <EuiButtonIcon iconType="magnifyWithPlus" color="#DA8B45" iconSize="l" title="ZoomIn" onClick={this.zoomIn}></EuiButtonIcon>
+                            <EuiButtonToggle
+                                label="Edit"
+                                fill={this.state.editMode}
+                                onChange={this.startEdit}
+                                isSelected={this.state.editMode}
+                                size="s"
+                                
+                            />
 
-                            <EuiButtonIcon color="primary" iconType="magnifyWithMinus" iconSize="l" title="ZoomOut" onClick={this.zoomOut}></EuiButtonIcon>
+                            <EuiButton 
+                                fill 
+                                onClick={this.exportData}
+                                size="s"
+                                color="secondary"
+                                style={{marginLeft:10}}
+                            >
+                                Save
+                            </EuiButton>
 
-                            <EuiButtonIcon color="primary" iconType="documentEdit" iconSize="l" title="Edit" onClick={this.startEdit}></EuiButtonIcon>
-
-                            <EuiButtonIcon color="#490" iconType="importAction" iconSize="l" title="Import" onClick={this.importData}></EuiButtonIcon>
-
-                            <EuiButtonIcon color="secondary" iconType="exportAction" iconSize="l" title="Export" onClick={this.exportData}></EuiButtonIcon>
-
-                            <EuiButtonIcon color="danger" iconType="trash" iconSize="l" title="Delete" onClick={this.deleteBlocks}></EuiButtonIcon>
+                            <EuiButton
+                                fill
+                                onClick={this.deleteBlocks}
+                                size="s"
+                                color="danger"
+                                style={{ marginLeft: 10, marginRight: 10 }}
+                            >
+                                Clear
+                            </EuiButton>
 
                         </EuiHeaderSection>
                     </EuiHeader>
@@ -915,7 +934,7 @@ export default class SketchPad extends Component {
                         <EuiFlexItem>
                             <EuiPageContent paddingSize="none" >
                                 {this.state.showSettings? <Flyout closeSettings={this.closeSettings} /> : null}
-                                <div id="canvas" ref={this.canvasRef}></div>
+                                <div id="canvas" className={this.state.editMode ? 'edit-bg' : 'view-bg'} ref={this.canvasRef}></div>
                             </EuiPageContent>
                         </EuiFlexItem>
                     </EuiFlexGroup>
