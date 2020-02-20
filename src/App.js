@@ -23,7 +23,7 @@ const App = ({store}) =>(
                 <Home />
             </HomeRoute>
             <Route path="/sketchpad">
-                <SketchPad editMode={true}></SketchPad>
+                <SketchPad editMode={false}></SketchPad>
             </Route>
 
             </Switch>
