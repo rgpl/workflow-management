@@ -88,31 +88,74 @@ export default class SketchPad extends Component {
 
     snapping=(first)=>  {
 
+        let flowBlocks = [
+            {
+                icon:eyeblue,
+                title:'Enter Workflow',
+                desc:'When a <span>New User</span> goes to <span>Site 1</span>'
+            },
+            {
+                icon:actionblue,
+                title:'Action is performed',
+                desc:'When <span>Action 1</span> is performed'
+            },
+            {
+                icon:timeblue,
+                title:'Time has passed',
+                desc:'When <span>10 seconds</span> have passed'
+            },
+            {
+                icon:errorblue,
+                title:'Exit Workflow',
+                desc:'When <span>10 seconds</span> have passed'
+            },
+            {
+                icon:databaseorange,
+                title:'New database entry',
+                desc:'Add <span>Data object</span> to <span>Database 1</span>'
+            },
+            {
+                icon:databaseorange,
+                title:'Update database',
+                desc:'Update <span>Database 1</span>'
+            },
+            {
+                icon:actionorange,
+                title:'Perform an action',
+                desc:'Perform <span>Action 1</span>'
+            },
+            {
+                icon:twitterorange,
+                title:'Make a tweet',
+                desc:'Tweet <span>Query 1</span> with the account <span>@twitter</span>'
+            },
+            {
+                icon:logred,
+                title:'Add new log entry',
+                desc:'Add new <span>success</span> log entry'
+            },
+            {
+                icon:logred,
+                title:'Update logs',
+                desc:'Edit <span>Log Entry 1</span>'
+            },
+            {
+                icon:errorred,
+                title:'Prompt an error',
+                desc:'Trigger <span>Exit</span>'
+            }
+
+        ];
+
         let blockin = this.drag.querySelector(".blockin");
         blockin.parentNode.removeChild(blockin);
-        if (this.drag.querySelector(".blockelemtype").value == "1") {
-            this.drag.innerHTML += "<div class='blockyleft'><img src="+eyeblue+"><p class='blockyname'>Enter Workflow</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>When a <span>New User</span> goes to <span>Site 1</span></div>";
-        } else if (this.drag.querySelector(".blockelemtype").value == "2") {
-            this.drag.innerHTML += "<div class='blockyleft'><img src="+actionblue+"><p class='blockyname'>Action is performed</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>When <span>Action 1</span> is performed</div>";
-        } else if (this.drag.querySelector(".blockelemtype").value == "3") {
-            this.drag.innerHTML += "<div class='blockyleft'><img src="+timeblue+"><p class='blockyname'>Time has passed</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>When <span>10 seconds</span> have passed</div>";
-        } else if (this.drag.querySelector(".blockelemtype").value == "4") {
-            this.drag.innerHTML += "<div class='blockyleft'><img src="+errorblue+"><p class='blockyname'>Exit Workflow</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>When <span>Exit</span> is triggered</div>";
-        } else if (this.drag.querySelector(".blockelemtype").value == "5") {
-            this.drag.innerHTML += "<div class='blockyleft'><img src="+databaseorange+"><p class='blockyname'>New database entry</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Add <span>Data object</span> to <span>Database 1</span></div>";
-        } else if (this.drag.querySelector(".blockelemtype").value == "6") {
-            this.drag.innerHTML += "<div class='blockyleft'><img src="+databaseorange+"><p class='blockyname'>Update database</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Update <span>Database 1</span></div>";
-        } else if (this.drag.querySelector(".blockelemtype").value == "7") {
-            this.drag.innerHTML += "<div class='blockyleft'><img src="+actionorange+"><p class='blockyname'>Perform an action</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Perform <span>Action 1</span></div>";
-        } else if (this.drag.querySelector(".blockelemtype").value == "8") {
-            this.drag.innerHTML += "<div class='blockyleft'><img src="+twitterorange+"><p class='blockyname'>Make a tweet</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Tweet <span>Query 1</span> with the account <span>@alyssaxuu</span></div>";
-        } else if (this.drag.querySelector(".blockelemtype").value == "9") {
-            this.drag.innerHTML += "<div class='blockyleft'><img src="+logred+"><p class='blockyname'>Add new log entry</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Add new <span>success</span> log entry</div>";
-        } else if (this.drag.querySelector(".blockelemtype").value == "10") {
-            this.drag.innerHTML += "<div class='blockyleft'><img src="+logred+"><p class='blockyname'>Update logs</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Edit <span>Log Entry 1</span></div>";
-        } else if (this.drag.querySelector(".blockelemtype").value == "11") {
-            this.drag.innerHTML += "<div class='blockyleft'><img src="+errorred+"><p class='blockyname'>Prompt an error</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>Trigger <span>Exit</span></div>";
-        }
+
+        let blockIndex = Number(this.drag.querySelector(".blockelemtype").value);
+
+        let chosenBlock = "<div class='blockyleft'><img src="+flowBlocks[(blockIndex-1)].icon+"><p class='blockyname'>"+flowBlocks[(blockIndex-1)].title+"</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>"+flowBlocks[(blockIndex-1)].desc+"</div>";
+
+        this.drag.innerHTML += chosenBlock;
+
         return true;
     }
 
@@ -850,7 +893,7 @@ export default class SketchPad extends Component {
             document.addEventListener("mousemove", this.moveBlock, false);
             document.addEventListener("touchmove", this.moveBlock, false);
 
-        } 
+        }
 
     }
 
@@ -900,11 +943,11 @@ export default class SketchPad extends Component {
                                 onChange={this.startEdit}
                                 isSelected={this.state.editMode}
                                 size="s"
-                                
+
                             />
 
-                            <EuiButton 
-                                fill 
+                            <EuiButton
+                                fill
                                 onClick={this.exportData}
                                 size="s"
                                 color="secondary"
