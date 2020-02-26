@@ -438,7 +438,6 @@ body, html {
     width: calc(88% / 3);
     height: 48px;
     line-height: 48px;
-    display: inline-block;
     float: left;
     margin-left: 20px;
 }
@@ -451,7 +450,6 @@ body, html {
     margin-top: -4px;
 }
 #alertprop {
-    display: inline-block;
     font-family: Roboto;
     font-weight: 500;
     color: #808292;
@@ -560,7 +558,6 @@ transition: all .3s cubic-bezier(.05,.03,.35,1);
     vertical-align: middle;
 }
 .blockyright {
-    display: inline-block;
     float: right;
     vertical-align: middle;
     margin-right: 20px;
