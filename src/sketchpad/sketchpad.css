@@ -662,7 +662,7 @@ transition: all .3s cubic-bezier(.05,.03,.35,1);
 }
 .arrowblock{
     position:absolute;
-    width:100%;
+    width:auto;
     overflow:visible;
     pointer-events:none
 }
