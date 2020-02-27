@@ -17,7 +17,7 @@ const tabs= [
         id:'triggers',
         name:'Triggers',
         content:(
-            <div id="blocklist">
+            <div className="blocklist">
                 <div className="blockelem create-flowy noselect">
                     <input type="hidden" name='blockelemtype' className="blockelemtype" value="1"/>
                     <div className="blockin">
@@ -77,7 +77,7 @@ const tabs= [
         id:'actions',
         name:'Actions',
         content:(
-            <div id="blocklist">
+            <div className="blocklist">
                 <div className="blockelem create-flowy noselect">
                     <input type="hidden" name="blockelemtype" className="blockelemtype" value="5"/>
                     <div className="blockin">
@@ -139,7 +139,7 @@ const tabs= [
         id:'loggers',
         name:'Loggers',
         content:(
-            <div id="blocklist">
+            <div className="blocklist">
                 <div className="blockelem create-flowy noselect">
                     <input type="hidden" name="blockelemtype" className="blockelemtype" value="9"/>
                     <div className="blockin">
@@ -191,6 +191,7 @@ const Blocks = (props) => {
             initialSelectedTab={tabs[0]}
             onTabClick={tab => {}}
             expand={true}
+            size="s"
         />
     )
 };

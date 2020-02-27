@@ -152,7 +152,7 @@ export default class SketchPad extends Component {
 
         let blockIndex = Number(this.drag.querySelector(".blockelemtype").value);
 
-        let chosenBlock = "<div class='blockyleft'><img src="+flowBlocks[(blockIndex-1)].icon+"><p class='blockyname'>"+flowBlocks[(blockIndex-1)].title+"</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>"+flowBlocks[(blockIndex-1)].desc+"</div>";
+        let chosenBlock = "<div class='blockyleft'><img width='25' height='25' src="+flowBlocks[(blockIndex-1)].icon+"><p class='blockyname'>"+flowBlocks[(blockIndex-1)].title+"</p></div><div class='blockyright'><img src="+more+"></div><div class='blockydiv'></div><div class='blockyinfo'>"+flowBlocks[(blockIndex-1)].desc+"</div>";
 
         this.drag.innerHTML += chosenBlock;
 
@@ -175,7 +175,7 @@ export default class SketchPad extends Component {
             spacing_x = 20;
         }
         if (!spacing_y) {
-            spacing_y = 80;
+            spacing_y = 60;
         }
 
 
@@ -978,7 +978,7 @@ export default class SketchPad extends Component {
                         <EuiFlexItem>
                             <EuiPageContent paddingSize="none" >
                                 {this.state.showSettings? <Flyout closeSettings={this.closeSettings} /> : null}
-                                <div id="canvas" className={this.state.editMode ? 'edit-bg' : 'view-bg'} ref={this.canvasRef}></div>
+                                <div className={`canvas ${(this.state.editMode ? 'edit-bg' : 'view-bg')}`} ref={this.canvasRef}></div>
                             </EuiPageContent>
                         </EuiFlexItem>
                     </EuiFlexGroup>
