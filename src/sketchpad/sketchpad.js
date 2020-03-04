@@ -86,8 +86,31 @@ export default class SketchPad extends Component {
         }
     }
 
-    snapping=(first)=>  {
+    flowy(canvas, spacing_x, spacing_y) {
 
+        if (!spacing_x) {
+            spacing_x = 20;
+        }
+        if (!spacing_y) {
+            spacing_y = 60;
+        }
+
+
+        this.load(canvas, spacing_x, spacing_y);
+
+    }
+
+    blockGrabbed = (block) => {
+        block.classList.add("blockdisabled");
+        this.tempblock2 = block;
+    }
+
+    blockReleased() {
+        if(this.tempblock2)
+            this.tempblock2.classList.remove("blockdisabled");
+    }
+
+    blockSnap(first, parent) {
         let flowBlocks = [
             {
                 icon:eyeblue,
@@ -157,42 +180,6 @@ export default class SketchPad extends Component {
         this.drag.innerHTML += chosenBlock;
 
         return true;
-    }
-
-    pull=(block)=> {
-        block.classList.add("blockdisabled");
-        this.tempblock2 = block;
-    }
-
-    release=()=> {
-        if(this.tempblock2)
-            this.tempblock2.classList.remove("blockdisabled");
-    }
-
-    flowy(canvas, spacing_x, spacing_y) {
-
-        if (!spacing_x) {
-            spacing_x = 20;
-        }
-        if (!spacing_y) {
-            spacing_y = 60;
-        }
-
-
-        this.load(canvas, spacing_x, spacing_y);
-
-    }
-
-    blockGrabbed = (block) => {
-        this.pull(block);
-    }
-
-    blockReleased() {
-        this.release();
-    }
-
-    blockSnap(first, parent) {
-        return this.snapping(first, parent);
     }
 
     import = (output) => {
@@ -285,8 +272,13 @@ export default class SketchPad extends Component {
         }
 
         if (event.which != 3 && (this.active || this.rearrange)) {
+
             this.dragblock = false;
             this.blockReleased();
+            let dBlockId = parseInt(this.drag.querySelector(".blockid").value);
+            let dBlock = this.blockstemp.filter( d => d.id === dBlockId)[0];
+            let isParent = dBlock ? (dBlock.parent === -1) : false;
+            console.log("isParent->",isParent);
             if (!document.querySelector(".indicator").classList.contains("invisible")) {
                 document.querySelector(".indicator").classList.add("invisible");
             }
@@ -294,7 +286,7 @@ export default class SketchPad extends Component {
                 this.original.classList.remove("dragnow");
                 this.drag.classList.remove("dragging");
             }
-            if (parseInt(this.drag.querySelector(".blockid").value) === 0 && this.rearrange) {
+            if (isParent && this.rearrange) {
                 this.drag.classList.remove("dragging");
                 this.rearrange = false;
                 for (let w = 0; w < this.blockstemp.length; w++) {
@@ -323,14 +315,14 @@ export default class SketchPad extends Component {
                     }
                 }
 
-                this.blockstemp.filter(a => a.id == 0)[0].x = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).width) / 2);
+                this.blockstemp.filter(a => a.id == dBlock.id)[0].x = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).width) / 2);
 
-                this.blockstemp.filter(a => a.id == 0)[0].y = (this.drag.getBoundingClientRect().top) + (parseInt(window.getComputedStyle(this.drag).height) / 2);
+                this.blockstemp.filter(a => a.id == dBlock.id)[0].y = (this.drag.getBoundingClientRect().top) + (parseInt(window.getComputedStyle(this.drag).height) / 2);
 
                 this.blocks = this.blocks.concat(this.blockstemp);
                 this.blockstemp = [];
 
-            } else if (this.active && this.blocks.length == 0 && (this.drag.getBoundingClientRect().top) > (this.canvas_div.getBoundingClientRect().top) && (this.drag.getBoundingClientRect().left) > (this.canvas_div.getBoundingClientRect().left)) {
+            } else if (this.active && !this.link && (this.drag.getBoundingClientRect().top) > (this.canvas_div.getBoundingClientRect().top) && (this.drag.getBoundingClientRect().left) > (this.canvas_div.getBoundingClientRect().left)) {
 
                 this.blockSnap(true, undefined);
                 this.active = false;
@@ -362,9 +354,22 @@ export default class SketchPad extends Component {
 
                 let blocko = this.blocks.map(a => a.id);
 
+                console.log("blocko-->",blocko);
+                console.log("blocks->",this.blocks);
+
                 for (let i = 0; i < this.blocks.length; i++) {
 
-                    if (xpos >= this.blocks.filter(a => a.id == blocko[i])[0].x - (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) - this.paddingx && xpos <= this.blocks.filter(a => a.id == blocko[i])[0].x + (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) + this.paddingx && ypos >= this.blocks.filter(a => a.id == blocko[i])[0].y - (this.blocks.filter(a => a.id == blocko[i])[0].height / 2) && ypos <= this.blocks.filter(a => a.id == blocko[i])[0].y + this.blocks.filter(a => a.id == blocko[i])[0].height) {
+                    if (
+
+                        xpos >= (this.blocks.filter(a => a.id == blocko[i])[0].x - (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) - this.paddingx)
+                        &&
+                        xpos <= (this.blocks.filter(a => a.id == blocko[i])[0].x + (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) + this.paddingx)
+                        &&
+                        ypos >= (this.blocks.filter(a => a.id == blocko[i])[0].y - (this.blocks.filter(a => a.id == blocko[i])[0].height / 2))
+                        &&
+                        ypos <= (this.blocks.filter(a => a.id == blocko[i])[0].y + this.blocks.filter(a => a.id == blocko[i])[0].height)
+
+                        ) {
 
                         this.active = false;
 
@@ -374,19 +379,23 @@ export default class SketchPad extends Component {
 
                         } else if (this.rearrange) {
 
+                            console.log("reaaranging blocks");
+
                             this.snap(i,blocko);
 
                         }
                         break;
 
                     } else if (i == this.blocks.length - 1) {
+                        console.log("removing-blocks");
                         if (this.rearrange) {
                             this.rearrange = false;
-                            this.blockstemp = [];
+                            this.blocks = this.blocks.concat(this.blockstemp);
+                            //this.blockstemp = [];
                         }
                         this.active = false;
                         this.canvas_div.appendChild(document.querySelector(".indicator"));
-                        this.drag.parentNode.removeChild(this.drag);
+                       // if(this.drag.parentNode) this.drag.parentNode.removeChild(this.drag);
                     }
                 }
             }
@@ -399,7 +408,6 @@ export default class SketchPad extends Component {
         }
         let totalwidth = 0;
         let totalremove = 0;
-        let maxheight = 0;
 
         for (let w = 0; w < this.blocks.filter(id => id.parent == blocko[i]).length; w++) {
 
@@ -550,7 +558,6 @@ export default class SketchPad extends Component {
             }
             let totalwidth = 0;
             let totalremove = 0;
-            let maxheight = 0;
             for (let w = 0; w < this.blocks.filter(id => id.parent == result[z]).length; w++) {
                 let children = this.blocks.filter(id => id.parent == result[z])[w];
                 if (this.blocks.filter(id => id.parent == children.id).length == 0) {
@@ -707,7 +714,8 @@ export default class SketchPad extends Component {
                 return e.id != blockid
             });
             if (blockid != 0) {
-                document.querySelector(".arrowid[value='" + blockid + "']").parentNode.remove();
+                let parentArrow = document.querySelector(".arrowid[value='" + blockid + "']");
+                if(parentArrow) parentArrow.parentNode.remove();
             }
             let layer = this.blocks.filter(a => a.parent == blockid);
             let flag = false;
@@ -787,10 +795,23 @@ export default class SketchPad extends Component {
             this.aclick = false;
 
             let xpos = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft;
+
             let ypos = (this.drag.getBoundingClientRect().top) + this.canvas_div.scrollTop;
+
             let blocko = this.blocks.map(a => a.id);
+
             for (let i = 0; i < this.blocks.length; i++) {
-                if (xpos >= this.blocks.filter(a => a.id == blocko[i])[0].x - (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) - this.paddingx && xpos <= this.blocks.filter(a => a.id == blocko[i])[0].x + (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) + this.paddingx && ypos >= this.blocks.filter(a => a.id == blocko[i])[0].y - (this.blocks.filter(a => a.id == blocko[i])[0].height / 2) && ypos <= this.blocks.filter(a => a.id == blocko[i])[0].y + this.blocks.filter(a => a.id == blocko[i])[0].height) {
+
+                if (
+                    (xpos >= (this.blocks.filter(a => a.id == blocko[i])[0].x - (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) - this.paddingx))
+                    &&
+                    (xpos <= (this.blocks.filter(a => a.id == blocko[i])[0].x + (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) + this.paddingx))
+                    &&
+                    (ypos >= (this.blocks.filter(a => a.id == blocko[i])[0].y - (this.blocks.filter(a => a.id == blocko[i])[0].height / 2)))
+                    &&
+                    (ypos <= (this.blocks.filter(a => a.id == blocko[i])[0].y + this.blocks.filter(a => a.id == blocko[i])[0].height))
+                ) {
+                    this.link = true;
 
                     document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.appendChild(document.querySelector(".indicator"));
 
@@ -802,6 +823,7 @@ export default class SketchPad extends Component {
 
                     break;
                 } else if (i == this.blocks.length - 1) {
+                    this.link = false;
                     if (!document.querySelector(".indicator").classList.contains("invisible")) {
                         document.querySelector(".indicator").classList.add("invisible");
                     }
