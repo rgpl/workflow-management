@@ -110,7 +110,7 @@ export default class SketchPad extends Component {
             this.tempblock2.classList.remove("blockdisabled");
     }
 
-    blockSnap(first, parent) {
+    blockSnap() {
         let flowBlocks = [
             {
                 icon:eyeblue,
@@ -275,9 +275,11 @@ export default class SketchPad extends Component {
 
             this.dragblock = false;
             this.blockReleased();
+
             let dBlockId = parseInt(this.drag.querySelector(".blockid").value);
             let dBlock = this.blockstemp.filter( d => d.id === dBlockId)[0];
             let isParent = dBlock ? (dBlock.parent === -1) : false;
+
             console.log("isParent->",isParent);
             if (!document.querySelector(".indicator").classList.contains("invisible")) {
                 document.querySelector(".indicator").classList.add("invisible");
@@ -287,6 +289,7 @@ export default class SketchPad extends Component {
                 this.drag.classList.remove("dragging");
             }
             if (isParent && this.rearrange) {
+                console.log("parent-rearrange");
                 this.drag.classList.remove("dragging");
                 this.rearrange = false;
                 for (let w = 0; w < this.blockstemp.length; w++) {
@@ -324,7 +327,7 @@ export default class SketchPad extends Component {
 
             } else if (this.active && !this.link && (this.drag.getBoundingClientRect().top) > (this.canvas_div.getBoundingClientRect().top) && (this.drag.getBoundingClientRect().left) > (this.canvas_div.getBoundingClientRect().left)) {
 
-                this.blockSnap(true, undefined);
+                this.blockSnap();
                 this.active = false;
                 this.drag.style.top = ((this.drag.getBoundingClientRect().top) - (this.canvas_div.getBoundingClientRect().top) + this.canvas_div.scrollTop) + "px";
 
@@ -354,26 +357,26 @@ export default class SketchPad extends Component {
 
                 let blocko = this.blocks.map(a => a.id);
 
-                console.log("blocko-->",blocko);
-                console.log("blocks->",this.blocks);
 
                 for (let i = 0; i < this.blocks.length; i++) {
 
+                    let curBlock = this.blocks.filter(a => a.id == blocko[i])[0];
+
                     if (
 
-                        xpos >= (this.blocks.filter(a => a.id == blocko[i])[0].x - (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) - this.paddingx)
+                        xpos >= (curBlock.x - (curBlock.width / 2) - this.paddingx)
                         &&
-                        xpos <= (this.blocks.filter(a => a.id == blocko[i])[0].x + (this.blocks.filter(a => a.id == blocko[i])[0].width / 2) + this.paddingx)
+                        xpos <= (curBlock.x + (curBlock.width / 2) + this.paddingx)
                         &&
-                        ypos >= (this.blocks.filter(a => a.id == blocko[i])[0].y - (this.blocks.filter(a => a.id == blocko[i])[0].height / 2))
+                        ypos >= (curBlock.y - (curBlock.height / 2))
                         &&
-                        ypos <= (this.blocks.filter(a => a.id == blocko[i])[0].y + this.blocks.filter(a => a.id == blocko[i])[0].height)
+                        ypos <= (curBlock.y + curBlock.height)
 
-                        ) {
-
+                    ) {
+                        console.log("entering rearrange");
                         this.active = false;
 
-                        if (!this.rearrange && this.blockSnap(false, this.blocks.filter(id => id.id == blocko[i])[0])) {
+                        if (!this.rearrange && this.blockSnap()) {
 
                             this.snap(i, blocko);
 
@@ -391,11 +394,10 @@ export default class SketchPad extends Component {
                         if (this.rearrange) {
                             this.rearrange = false;
                             this.blocks = this.blocks.concat(this.blockstemp);
-                            //this.blockstemp = [];
+                            this.blockstemp = [];
                         }
                         this.active = false;
                         this.canvas_div.appendChild(document.querySelector(".indicator"));
-                       // if(this.drag.parentNode) this.drag.parentNode.removeChild(this.drag);
                     }
                 }
             }
@@ -823,10 +825,12 @@ export default class SketchPad extends Component {
 
                     break;
                 } else if (i == this.blocks.length - 1) {
-                    this.link = false;
+
                     if (!document.querySelector(".indicator").classList.contains("invisible")) {
                         document.querySelector(".indicator").classList.add("invisible");
                     }
+                } else {
+                    this.link = false;
                 }
             }
         }
