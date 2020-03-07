@@ -9,7 +9,6 @@ import {
     EuiFlexGroup,
     EuiPageContent,
     EuiHeaderBreadcrumbs,
-    EuiButtonIcon,
     EuiButtonEmpty,
     EuiButtonToggle,
     EuiButton
@@ -60,6 +59,7 @@ export default class SketchPad extends Component {
         this.mouse_x = undefined;
         this.mouse_y = undefined;
         this.dragblock = false;
+        this.link = false;
 
         this.canvasRef = React.createRef();
         this.chartData = null;
@@ -280,7 +280,6 @@ export default class SketchPad extends Component {
             let dBlock = this.blockstemp.filter( d => d.id === dBlockId)[0];
             let isParent = dBlock ? (dBlock.parent === -1) : false;
 
-            console.log("isParent->",isParent);
             if (!document.querySelector(".indicator").classList.contains("invisible")) {
                 document.querySelector(".indicator").classList.add("invisible");
             }
@@ -289,41 +288,79 @@ export default class SketchPad extends Component {
                 this.drag.classList.remove("dragging");
             }
             if (isParent && this.rearrange) {
-                console.log("parent-rearrange");
+
                 this.drag.classList.remove("dragging");
-                this.rearrange = false;
-                for (let w = 0; w < this.blockstemp.length; w++) {
 
-                    if (this.blockstemp[w].id != parseInt(this.drag.querySelector(".blockid").value)) {
+                if(this.link){
 
-                        const blockParent = document.querySelector(".blockid[value='" + this.blockstemp[w].id + "']").parentNode;
+                    let xpos = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft;
 
-                        const arrowParent = document.querySelector(".arrowid[value='" + this.blockstemp[w].id + "']").parentNode;
+                    let ypos = (this.drag.getBoundingClientRect().top) + this.canvas_div.scrollTop;
 
-                        blockParent.style.left = ((blockParent.getBoundingClientRect().left) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
+                    let blocko = this.blocks.map(a => a.id);
 
-                        blockParent.style.top = ((blockParent.getBoundingClientRect().top) - (this.canvas_div.getBoundingClientRect().top) + this.canvas_div.scrollTop) + "px";
 
-                        arrowParent.style.left = ((arrowParent.getBoundingClientRect().left) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
+                    for (let i = 0; i < this.blocks.length; i++) {
 
-                        arrowParent.style.top = ((arrowParent.getBoundingClientRect().top) - (this.canvas_div.getBoundingClientRect().top + this.canvas_div.scrollTop)) + "px";
+                        let curBlock = this.blocks.filter(a => a.id == blocko[i])[0];
 
-                        this.canvas_div.appendChild(blockParent);
-                        this.canvas_div.appendChild(arrowParent);
+                        if (
 
-                        this.blockstemp[w].x = (blockParent.getBoundingClientRect().left) + (parseInt(blockParent.offsetWidth) / 2) + this.canvas_div.scrollLeft;
+                            xpos >= (curBlock.x - (curBlock.width / 2) - this.paddingx)
+                            &&
+                            xpos <= (curBlock.x + (curBlock.width / 2) + this.paddingx)
+                            &&
+                            ypos >= (curBlock.y - (curBlock.height / 2))
+                            &&
+                            ypos <= (curBlock.y + curBlock.height)
 
-                        this.blockstemp[w].y = (blockParent.getBoundingClientRect().top) + (parseInt(blockParent.offsetHeight) / 2) + this.canvas_div.scrollTop;
+                        ) {
 
+                            this.active = false;
+
+                            this.snap(i,blocko);
+
+                            break;
+
+                        }
                     }
+                    this.link =false;
+                }else{
+                    this.rearrange = false;
+                    for (let w = 0; w < this.blockstemp.length; w++) {
+
+                        if (this.blockstemp[w].id != parseInt(this.drag.querySelector(".blockid").value)) {
+
+                            const blockParent = document.querySelector(".blockid[value='" + this.blockstemp[w].id + "']").parentNode;
+
+                            const arrowParent = document.querySelector(".arrowid[value='" + this.blockstemp[w].id + "']").parentNode;
+
+                            blockParent.style.left = ((blockParent.getBoundingClientRect().left) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
+
+                            blockParent.style.top = ((blockParent.getBoundingClientRect().top) - (this.canvas_div.getBoundingClientRect().top) + this.canvas_div.scrollTop) + "px";
+
+                            arrowParent.style.left = ((arrowParent.getBoundingClientRect().left) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
+
+                            arrowParent.style.top = ((arrowParent.getBoundingClientRect().top) - (this.canvas_div.getBoundingClientRect().top + this.canvas_div.scrollTop)) + "px";
+
+                            this.canvas_div.appendChild(blockParent);
+                            this.canvas_div.appendChild(arrowParent);
+
+                            this.blockstemp[w].x = (blockParent.getBoundingClientRect().left) + (parseInt(blockParent.offsetWidth) / 2) + this.canvas_div.scrollLeft;
+
+                            this.blockstemp[w].y = (blockParent.getBoundingClientRect().top) + (parseInt(blockParent.offsetHeight) / 2) + this.canvas_div.scrollTop;
+
+                        }
+                    }
+
+                    this.blockstemp.filter(a => a.id == dBlock.id)[0].x = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).width) / 2);
+
+                    this.blockstemp.filter(a => a.id == dBlock.id)[0].y = (this.drag.getBoundingClientRect().top) + (parseInt(window.getComputedStyle(this.drag).height) / 2);
+
+                    this.blocks = this.blocks.concat(this.blockstemp);
+                    this.blockstemp = [];
                 }
 
-                this.blockstemp.filter(a => a.id == dBlock.id)[0].x = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).width) / 2);
-
-                this.blockstemp.filter(a => a.id == dBlock.id)[0].y = (this.drag.getBoundingClientRect().top) + (parseInt(window.getComputedStyle(this.drag).height) / 2);
-
-                this.blocks = this.blocks.concat(this.blockstemp);
-                this.blockstemp = [];
 
             } else if (this.active && !this.link && (this.drag.getBoundingClientRect().top) > (this.canvas_div.getBoundingClientRect().top) && (this.drag.getBoundingClientRect().left) > (this.canvas_div.getBoundingClientRect().left)) {
 
@@ -350,7 +387,7 @@ export default class SketchPad extends Component {
                 this.drag.parentNode.removeChild(this.drag);
 
             } else if (this.active || this.rearrange) {
-
+                this.link =false;
                 let xpos = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft;
 
                 let ypos = (this.drag.getBoundingClientRect().top) + this.canvas_div.scrollTop;
@@ -373,7 +410,7 @@ export default class SketchPad extends Component {
                         ypos <= (curBlock.y + curBlock.height)
 
                     ) {
-                        console.log("entering rearrange");
+
                         this.active = false;
 
                         if (!this.rearrange && this.blockSnap()) {
@@ -382,15 +419,14 @@ export default class SketchPad extends Component {
 
                         } else if (this.rearrange) {
 
-                            console.log("reaaranging blocks");
-
                             this.snap(i,blocko);
 
                         }
                         break;
 
                     } else if (i == this.blocks.length - 1) {
-                        console.log("removing-blocks");
+
+                        this.blockstemp[0].parent = -1;
                         if (this.rearrange) {
                             this.rearrange = false;
                             this.blocks = this.blocks.concat(this.blockstemp);
@@ -398,6 +434,8 @@ export default class SketchPad extends Component {
                         }
                         this.active = false;
                         this.canvas_div.appendChild(document.querySelector(".indicator"));
+                        break;
+
                     }
                 }
             }
@@ -556,7 +594,12 @@ export default class SketchPad extends Component {
         let result = this.blocks.map(a => a.parent);
         for (let z = 0; z < result.length; z++) {
             if (result[z] == -1) {
-                z++;
+                if(z+1 < result.length){
+                    z++;
+                } else {
+                    break;
+                }
+
             }
             let totalwidth = 0;
             let totalremove = 0;
@@ -580,12 +623,17 @@ export default class SketchPad extends Component {
                 }
             }
             if (result[z] != -1) {
+
                 this.blocks.filter(a => a.id == result[z])[0].childwidth = totalwidth;
             }
             for (let w = 0; w < this.blocks.filter(id => id.parent == result[z]).length; w++) {
+
                 let children = this.blocks.filter(id => id.parent == result[z])[w];
                 const r_block = document.querySelector(".blockid[value='" + children.id + "']").parentNode;
                 const r_array = this.blocks.filter(id => id.id == result[z]);
+                if(!r_array.length){
+                    break;
+                }
 
                 r_block.style.top = (r_array.y + this.paddingy) + "px";
 
@@ -708,21 +756,26 @@ export default class SketchPad extends Component {
             this.mouse_y = event.clientY;
         }
         if (this.dragblock) {
+
             this.rearrange = true;
             this.drag.classList.add("dragging");
             let blockid = parseInt(this.drag.querySelector(".blockid").value);
             this.blockstemp.push(this.blocks.filter(a => a.id == blockid)[0]);
+            this.blockstemp[0].parent = -1;
             this.blocks = this.blocks.filter((e) => {
                 return e.id != blockid
             });
+
             if (blockid != 0) {
                 let parentArrow = document.querySelector(".arrowid[value='" + blockid + "']");
                 if(parentArrow) parentArrow.parentNode.remove();
             }
+
             let layer = this.blocks.filter(a => a.parent == blockid);
             let flag = false;
             let foundids = [];
             let allids = [];
+
             while (!flag) {
                 for (let i = 0; i < layer.length; i++) {
                     if (layer[i] != blockid) {
