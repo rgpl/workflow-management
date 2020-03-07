@@ -23,7 +23,7 @@ const tabs= [
                     <div className="blockin">
                         <div className="blockico">
                             <span></span>
-                            <img src={eye}/>
+                            <img src={eye} alt=""/>
                         </div>
                         <div className="blocktext">
                             <p className="blocktitle">Enter Workflow</p>
@@ -36,7 +36,7 @@ const tabs= [
                     <div className="blockin">
                         <div className="blockico">
                             <span></span>
-                            <img src={action}/>
+                            <img src={action} alt=""/>
                         </div>
                         <div className="blocktext">
                             <p className="blocktitle">Action is performed</p>
@@ -49,7 +49,7 @@ const tabs= [
                     <div className="blockin">
                         <div className="blockico">
                             <span></span>
-                            <img src={time}/>
+                            <img src={time} alt=""/>
                         </div>
                         <div className="blocktext">
                             <p className="blocktitle">Time has passed</p>
@@ -62,7 +62,7 @@ const tabs= [
                     <div className="blockin">
                         <div className="blockico">
                             <span></span>
-                            <img src={error}/>
+                            <img src={error} alt=""/>
                         </div>
                         <div className="blocktext">
                             <p className="blocktitle">Exit Workflow</p>
@@ -84,7 +84,7 @@ const tabs= [
 
                         <div className="blockico">
                             <span></span>
-                            <img src={database}/>
+                            <img src={database} alt=""/>
                         </div>
                         <div className="blocktext">
                             <p className="blocktitle">New database entry</p>
@@ -97,7 +97,7 @@ const tabs= [
                     <div className="blockin">
                         <div className="blockico">
                             <span></span>
-                            <img src={database}/>
+                            <img src={database} alt=""/>
                         </div>
                         <div className="blocktext">
                             <p className="blocktitle">Update database</p>
@@ -110,7 +110,7 @@ const tabs= [
                     <div className="blockin">
                         <div className="blockico">
                             <span></span>
-                            <img src={action}/>
+                            <img src={action} alt=""/>
                         </div>
                         <div className="blocktext">
                             <p className="blocktitle">Perform an action</p>
@@ -123,7 +123,7 @@ const tabs= [
                     <div className="blockin">
                         <div className="blockico">
                             <span></span>
-                            <img src={twitter}/>
+                            <img src={twitter} alt=""/>
                         </div>
                         <div className="blocktext">
                             <p className="blocktitle">Make a tweet</p>
@@ -145,7 +145,7 @@ const tabs= [
                     <div className="blockin">
                         <div className="blockico">
                             <span></span>
-                            <img src={log}/>
+                            <img src={log} alt=""/>
                         </div>
                         <div className="blocktext">
                             <p className="blocktitle">Add new log entry</p>
@@ -158,7 +158,7 @@ const tabs= [
                     <div className="blockin">
                         <div className="blockico">
                             <span></span>
-                            <img src={log}/>
+                            <img src={log} alt=""/>
                         </div>
                         <div className="blocktext">
                             <p className="blocktitle">Update logs</p>
@@ -171,7 +171,7 @@ const tabs= [
                         <div className="blockin">
                         <div className="blockico">
                             <span></span>
-                            <img src={error}/>
+                            <img src={error} alt=""/>
                         </div>
                         <div className="blocktext">
                             <p className="blocktitle">Prompt an error</p>
