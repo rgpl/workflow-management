@@ -8,7 +8,6 @@ import {
 import { Provider } from 'react-redux';
 import PropTypes from 'prop-types';
 import Login from './login/login';
-import HomeRoute from './home/home-route';
 import Home from './home/home';
 import SketchPad from './sketchpad/sketchpad';
 
@@ -19,9 +18,8 @@ const App = ({store}) =>(
             <Route path="/login" render={props => <Login {...props}  />}>
 
             </Route>
-            <HomeRoute exact path="/">
-                <Home />
-            </HomeRoute>
+            <Home exact path="/"/>
+
             <Route path="/sketchpad">
                 <SketchPad editMode={false}></SketchPad>
             </Route>

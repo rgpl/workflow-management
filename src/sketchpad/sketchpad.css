@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap");
+/* @import url("https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap"); */
 .db-back-icon {
     border-radius: 100px;
     background-color: #F1F4FC;
@@ -99,14 +99,12 @@ body, html {
 .blocktitle {
     margin-top: 4px!important;
     padding: 0px!important;
-    font-family: Roboto;
     font-weight: bold;
     font-size: 12px;
     color: #393C44;
 }
 .blockdesc {
     margin-top: 1px;
-    font-family: Roboto;
     color: #808292;
     font-size: 10px;
     line-height: 15px;
@@ -141,7 +139,6 @@ body, html {
                                   supported by Chrome, Opera and Firefox */
 }
 .blockyname {
-    font-family: Roboto;
     font-weight: 500;
     color: #253134;
     display: inline-block;
@@ -181,7 +178,6 @@ body, html {
     background-color: #E9E9EF;
 }
 .blockyinfo {
-    font-family: Roboto;
     font-size: 10px;
     color: #808292;
     margin-top: 7px;

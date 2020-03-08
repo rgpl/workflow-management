@@ -34,7 +34,8 @@ export default class Home extends React.Component {
         this.state = {
             isSideNavOpenOnMobile: false,
             selectedItemName: 'Lion stuff',
-            authenticated: true
+            authenticated: true,
+            editJourney:false
         };
     }
 
@@ -130,12 +131,21 @@ export default class Home extends React.Component {
         });
     }
 
+    openSketchPad = e => {
+        this.setState({editJourney:true});
+    }
+
     render() {
         if(!this.state.authenticated) {
             return(
                 <Redirect to="/login" />
             )
 
+        }
+        if(this.state.editJourney){
+            return (
+                <Redirect to="/sketchpad" />
+            )
         }
         const sideNav = [
             this.createItem('Elasticsearch', {
@@ -227,7 +237,7 @@ export default class Home extends React.Component {
                             </EuiTitle>
                         </EuiPageContentHeaderSection>
                         <EuiPageContentHeaderSection>
-                            <EuiButton fill onClick={() => window.alert('Button clicked')}>
+                            <EuiButton fill onClick={this.openSketchPad}>
                             Create Journey
                             </EuiButton>
                         </EuiPageContentHeaderSection>
@@ -241,7 +251,7 @@ export default class Home extends React.Component {
                                         color="secondary"
                                         fill
                                         size="s"
-                                        onClick={() => window.alert('Button clicked')}>
+                                        onClick={this.openSketchPad}>
                                         View
                                         </EuiButton>
                                     </EuiFlexItem>
@@ -255,7 +265,7 @@ export default class Home extends React.Component {
                                         color="secondary"
                                         fill
                                         size="s"
-                                        onClick={() => window.alert('Button clicked')}>
+                                        onClick={this.openSketchPad}>
                                         View
                                         </EuiButton>
                                     </EuiFlexItem>
@@ -269,7 +279,7 @@ export default class Home extends React.Component {
                                         color="secondary"
                                         fill
                                         size="s"
-                                        onClick={() => window.alert('Button clicked')}>
+                                        onClick={this.openSketchPad}>
                                         View
                                         </EuiButton>
                                     </EuiFlexItem>
