@@ -28,11 +28,54 @@ import errorred from './assets/errorred.svg';
 import Flyout from './flyout';
 import Blocks from './blocks';
 
+type SketchProps = {
+    editMode:boolean
+};
+
+type SketchState ={
+    showSettings:boolean,
+    editMode: boolean
+};
+
+export default class SketchPad extends Component<SketchProps, SketchState> {
+
+    state:SketchState ={
+        showSettings: false,
+        editMode: this.props.editMode
+    }
+    breadcrumbs:any = [];
+    tempblock2:any;
+    loaded:boolean;
+    blocks:Array<any>;
+    blockstemp:Array<any>;
+    canvas_div:any;
+    active:boolean;
+    paddingx:number;
+    paddingy:number;
+    offsetleft:any;
+    offsetleftold:number;
+    rearrange:boolean;
+    lastevent:boolean;
+    dragx:number;
+    dragy:number;
+    original:any;
+    drag:any;
+    mouse_x:number;
+    mouse_y:number;
+    dragblock:boolean;
+    link:boolean;
+    canvasRef:any;
+    chartData:any;
+    aclick:boolean;
+    rightcard:boolean;
+    tempblock:any;
+    editMode:boolean;
 
 
-export default class SketchPad extends Component {
 
-    constructor(props){
+
+
+    constructor(props:SketchProps){
         super(props);
         this.state ={
             showSettings:false,
@@ -46,39 +89,35 @@ export default class SketchPad extends Component {
         this.blockstemp = [];
         this.canvas_div = undefined;
         this.active = false;
-        this.paddingx = undefined
-        this.paddingy = undefined;
+        this.paddingx = 0
+        this.paddingy = 0;
         this.offsetleft = 0;
         this.offsetleftold = 0;
         this.rearrange = false;
         this.lastevent = false;
-        this.dragx = undefined;
-        this.dragy = undefined;
-        this.original = undefined;
+        this.dragx = 0;
+        this.dragy = 0;
+        this.original = null;
         this.drag = undefined;
-        this.mouse_x = undefined;
-        this.mouse_y = undefined;
+        this.mouse_x = 0;
+        this.mouse_y = 0;
         this.dragblock = false;
         this.link = false;
 
-        this.canvasRef = React.createRef();
-        this.chartData = null;
+        this.canvasRef = React.createRef<HTMLDivElement>();
+        this.chartData = '';
 
         this.aclick = false;
         this.rightcard = false;
         this.tempblock = undefined;
         this.editMode = this.props.editMode;
-        this.magnifyMax = 1;
-        this.magnifyMin = 0.1;
-        this.currentScale = 1;
-        this.scaleIncrementor = 0.1;
     }
 
     componentDidMount(){
         this.flowy(this.canvasRef.current);
     }
 
-    closeSettings = (event) => {
+    closeSettings = (event:MouseEvent) => {
         if (this.rightcard) {
             this.rightcard = false;
             this.setState({showSettings:false});
@@ -86,21 +125,20 @@ export default class SketchPad extends Component {
         }
     }
 
-    flowy(canvas, spacing_x, spacing_y) {
+    flowy(canvas:HTMLDivElement) {
 
-        if (!spacing_x) {
-            spacing_x = 20;
-        }
-        if (!spacing_y) {
-            spacing_y = 60;
-        }
+
+        let spacing_x:number = 20;
+
+
+        let spacing_y:number = 60;
 
 
         this.load(canvas, spacing_x, spacing_y);
 
     }
 
-    blockGrabbed = (block) => {
+    blockGrabbed = (block:HTMLDivElement) => {
         block.classList.add("blockdisabled");
         this.tempblock2 = block;
     }
@@ -182,14 +220,14 @@ export default class SketchPad extends Component {
         return true;
     }
 
-    import = (output) => {
+    import = (output:any) => {
         this.canvas_div.innerHTML = JSON.parse(output.html);
         this.blocks = output.blockarr;
     }
 
     output = () => {
-        let html_ser = JSON.stringify(this.canvas_div.innerHTML);
-        let json_data = {html:html_ser, blockarr:this.blocks, blocks:[]};
+        let html_ser:string = JSON.stringify(this.canvas_div.innerHTML);
+        let json_data:any = {html:html_ser, blockarr:this.blocks, blocks:[]};
         if (this.blocks.length > 0) {
             for (let i = 0; i < this.blocks.length; i++) {
                 json_data.blocks.push({
@@ -198,8 +236,8 @@ export default class SketchPad extends Component {
                     data: [],
                     attr: []
                 });
-                let blockParent = document.querySelector(".blockid[value='" + this.blocks[i].id + "']").parentNode;
-                blockParent.querySelectorAll("input").forEach((block) => {
+                let blockParent:any = (document.querySelector(".blockid[value='" + this.blocks[i].id + "']")as HTMLElement).parentNode;
+                blockParent.querySelectorAll("input").forEach((block:any) => {
                     let json_name = block.getAttribute("name");
                     let json_value = block.value;
                     json_data.blocks[i].data.push({
@@ -208,7 +246,7 @@ export default class SketchPad extends Component {
                     });
                 });
                 Array.prototype.slice.call(blockParent.attributes).forEach((attribute) => {
-                    let jsonobj = {};
+                    let jsonobj:any = {};
                     jsonobj[attribute.name] = attribute.value;
                     json_data.blocks[i].attr.push(jsonobj);
                 });
@@ -222,7 +260,7 @@ export default class SketchPad extends Component {
         this.canvas_div.innerHTML = "<div class='indicator invisible'></div>";
     }
 
-    beginDrag = (event) => {
+    beginDrag = (event:any) => {
         this.aclick = true;
         if (event.targetTouches) {
             this.mouse_x = event.changedTouches[0].clientX;
@@ -240,11 +278,11 @@ export default class SketchPad extends Component {
             if (this.blocks.length === 0) {
                 newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + this.blocks.length + "'>";
                 document.body.appendChild(newNode);
-                this.drag = document.querySelector(".blockid[value='" + this.blocks.length + "']").parentNode;
+                this.drag = (document.querySelector(".blockid[value='" + this.blocks.length + "']") as HTMLElement).parentNode;
             } else {
                 newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + (Math.max.apply(Math, this.blocks.map(a => a.id)) + 1) + "'>";
                 document.body.appendChild(newNode);
-                this.drag = document.querySelector(".blockid[value='" + (parseInt(Math.max.apply(Math, this.blocks.map(a => a.id))) + 1) + "']").parentNode;
+                this.drag = (document.querySelector(".blockid[value='" + ((Math.max.apply(Math, this.blocks.map(a => a.id))) + 1) + "']") as HTMLElement).parentNode;
             }
             this.blockGrabbed(event.target.closest(".create-flowy"));
             this.drag.classList.add("dragging");
@@ -260,7 +298,7 @@ export default class SketchPad extends Component {
         this.dragblock = false;
     }
 
-    endDrag = (event) => {
+    endDrag = (event:any) => {
 
         if (event.type === "mouseup" && this.aclick) {
             if (!this.rightcard && this.hasParentClass(event.target,'block')) {
@@ -280,8 +318,8 @@ export default class SketchPad extends Component {
             let dBlock = this.blockstemp.filter( d => d.id === dBlockId)[0];
             let isParent = dBlock ? (dBlock.parent === -1) : false;
 
-            if (!document.querySelector(".indicator").classList.contains("invisible")) {
-                document.querySelector(".indicator").classList.add("invisible");
+            if (!(document.querySelector(".indicator") as HTMLElement).classList.contains("invisible")) {
+                (document.querySelector(".indicator") as HTMLElement).classList.add("invisible");
             }
             if (this.active) {
                 this.original.classList.remove("dragnow");
@@ -302,7 +340,7 @@ export default class SketchPad extends Component {
 
                     for (let i = 0; i < this.blocks.length; i++) {
 
-                        let curBlock = this.blocks.filter(a => a.id === blocko[i])[0];
+                        let curBlock:any= this.blocks.filter(a => a.id === blocko[i])[0];
 
                         if (
 
@@ -331,9 +369,9 @@ export default class SketchPad extends Component {
 
                         if (this.blockstemp[w].id !== parseInt(this.drag.querySelector(".blockid").value)) {
 
-                            const blockParent = document.querySelector(".blockid[value='" + this.blockstemp[w].id + "']").parentNode;
+                            const blockParent:any = (document.querySelector(".blockid[value='" + this.blockstemp[w].id + "']") as HTMLElement).parentNode;
 
-                            const arrowParent = document.querySelector(".arrowid[value='" + this.blockstemp[w].id + "']").parentNode;
+                            const arrowParent:any = (document.querySelector(".arrowid[value='" + this.blockstemp[w].id + "']") as HTMLElement).parentNode;
 
                             blockParent.style.left = ((blockParent.getBoundingClientRect().left) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
 
@@ -353,9 +391,9 @@ export default class SketchPad extends Component {
                         }
                     }
 
-                    this.blockstemp.filter(a => a.id === dBlock.id)[0].x = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).width) / 2);
+                    this.blockstemp.filter((a:any) => a.id === dBlock.id)[0].x = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).width) / 2);
 
-                    this.blockstemp.filter(a => a.id === dBlock.id)[0].y = (this.drag.getBoundingClientRect().top) + (parseInt(window.getComputedStyle(this.drag).height) / 2);
+                    this.blockstemp.filter((a:any) => a.id === dBlock.id)[0].y = (this.drag.getBoundingClientRect().top) + (parseInt(window.getComputedStyle(this.drag).height) / 2);
 
                     this.blocks = this.blocks.concat(this.blockstemp);
                     this.blockstemp = [];
@@ -392,12 +430,12 @@ export default class SketchPad extends Component {
 
                 let ypos = (this.drag.getBoundingClientRect().top) + this.canvas_div.scrollTop;
 
-                let blocko = this.blocks.map(a => a.id);
+                let blocko = this.blocks.map((a:any) => a.id);
 
 
                 for (let i = 0; i < this.blocks.length; i++) {
 
-                    let curBlock = this.blocks.filter(a => a.id === blocko[i])[0];
+                    let curBlock:any = this.blocks.filter((a:any) => a.id === blocko[i])[0];
 
                     if (
 
@@ -426,12 +464,22 @@ export default class SketchPad extends Component {
 
                     } else if (i === this.blocks.length - 1) {
 
-                        this.blockstemp[0].parent = -1;
-                        if (this.rearrange) {
-                            this.rearrange = false;
-                            this.blocks = this.blocks.concat(this.blockstemp);
-                            this.blockstemp = [];
+                        if((this.drag.getBoundingClientRect().top) > (this.canvas_div.getBoundingClientRect().top) && (this.drag.getBoundingClientRect().left) > (this.canvas_div.getBoundingClientRect().left)){
+
+                            this.blockstemp[0].parent = -1;
+                            if (this.rearrange) {
+                                this.rearrange = false;
+                                this.blocks = this.blocks.concat(this.blockstemp);
+                                this.blockstemp = [];
+                            }
+
+                        } else {
+                            this.drag.parentNode.removeChild(this.drag);
+                            this.drag = null;
                         }
+
+
+                        this.rearrange = false;
                         this.active = false;
                         this.canvas_div.appendChild(document.querySelector(".indicator"));
                         break;
@@ -442,7 +490,7 @@ export default class SketchPad extends Component {
         }
     }
 
-    snap = (i, blocko) => {
+    snap = (i:number, blocko:Array<number>) => {
         if (!this.rearrange) {
             this.canvas_div.appendChild(this.drag);
         }
@@ -469,13 +517,16 @@ export default class SketchPad extends Component {
 
             if (children.childwidth > children.width) {
 
-                document.querySelector(".blockid[value='" + children.id + "']").parentNode.style.left = (this.blocks.filter(a => a.id === blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2)) + "px";
+                let tblock:any = (document.querySelector(".blockid[value='" + children.id + "']") as HTMLElement);
+                tblock.parentNode.style.left = (this.blocks.filter(a => a.id === blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2)) + "px";
 
                 children.x = this.blocks.filter(id => id.parent === blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2);
                 totalremove += children.childwidth + this.paddingx;
+
             } else {
 
-                document.querySelector(".blockid[value='" + children.id + "']").parentNode.style.left = (this.blocks.filter(a => a.id === blocko[i])[0].x - (totalwidth / 2) + totalremove) + "px";
+                let tblock:any = (document.querySelector(".blockid[value='" + children.id + "']") as HTMLElement);
+                tblock.parentNode.style.left = (this.blocks.filter(a => a.id === blocko[i])[0].x - (totalwidth / 2) + totalremove) + "px";
 
                 children.x = this.blocks.filter(id => id.parent === blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.width / 2);
                 totalremove += children.width + this.paddingx;
@@ -497,8 +548,8 @@ export default class SketchPad extends Component {
 
                 if (this.blockstemp[w].id !== parseInt(this.drag.querySelector(".blockid").value)) {
 
-                    const blockParent = document.querySelector(".blockid[value='" + this.blockstemp[w].id + "']").parentNode;
-                    const arrowParent = document.querySelector(".arrowid[value='" + this.blockstemp[w].id + "']").parentNode;
+                    const blockParent:any = (document.querySelector(".blockid[value='" + this.blockstemp[w].id + "']") as HTMLElement).parentNode;
+                    const arrowParent:any = (document.querySelector(".arrowid[value='" + this.blockstemp[w].id + "']") as HTMLElement).parentNode;
 
                     blockParent.style.left = ((blockParent.getBoundingClientRect().left) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
 
@@ -540,17 +591,20 @@ export default class SketchPad extends Component {
 
             this.canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + this.drag.querySelector(".blockid").value + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (this.blocks.filter(a => a.id === blocko[i])[0].x - arrowhelp.x + 5) + ' 0L' + (this.blocks.filter(a => a.id === blocko[i])[0].x - arrowhelp.x + 5) + ' ' + (this.paddingy / 2) + 'L5 ' + (this.paddingy / 2) + 'L5 ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (arrowy - 5) + 'H10L5 ' + arrowy + 'L0 ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
 
-            document.querySelector('.arrowid[value="' + this.drag.querySelector(".blockid").value + '"]').parentNode.style.left = ((arrowhelp.x - 5) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
+            let tArrow:any = document.querySelector('.arrowid[value="' + this.drag.querySelector(".blockid").value + '"]') as HTMLElement;
+            tArrow.parentNode.style.left = ((arrowhelp.x - 5) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
 
         } else {
 
             this.canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + this.drag.querySelector(".blockid").value + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L20 ' + (this.paddingy / 2) + 'L' + (arrowx) + ' ' + (this.paddingy / 2) + 'L' + arrowx + ' ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M' + (arrowx - 5) + ' ' + (arrowy - 5) + 'H' + (arrowx + 5) + 'L' + arrowx + ' ' + arrowy + 'L' + (arrowx - 5) + ' ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
 
-            document.querySelector('.arrowid[value="' + parseInt(this.drag.querySelector(".blockid").value) + '"]').parentNode.style.left = (this.blocks.filter(a => a.id === blocko[i])[0].x - 20 - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
+            let tArrow:any = document.querySelector('.arrowid[value="' + parseInt(this.drag.querySelector(".blockid").value) + '"]') as HTMLElement;
+            tArrow.parentNode.style.left = (this.blocks.filter(a => a.id === blocko[i])[0].x - 20 - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
 
         }
 
-        document.querySelector('.arrowid[value="' + parseInt(this.drag.querySelector(".blockid").value) + '"]').parentNode.style.top = (this.blocks.filter(a => a.id === blocko[i])[0].y + (this.blocks.filter(a => a.id === blocko[i])[0].height / 2)) + "px";
+        let rArrow:any = document.querySelector('.arrowid[value="' + parseInt(this.drag.querySelector(".blockid").value) + '"]') as HTMLElement;
+        rArrow.parentNode.style.top = (this.blocks.filter(a => a.id === blocko[i])[0].y + (this.blocks.filter(a => a.id === blocko[i])[0].height / 2)) + "px";
 
         if (this.blocks.filter(a => a.id === blocko[i])[0].parent !== -1) {
             let flag = false;
@@ -629,8 +683,8 @@ export default class SketchPad extends Component {
             for (let w = 0; w < this.blocks.filter(id => id.parent === result[z]).length; w++) {
 
                 let children = this.blocks.filter(id => id.parent === result[z])[w];
-                const r_block = document.querySelector(".blockid[value='" + children.id + "']").parentNode;
-                const r_array = this.blocks.filter(id => id.id === result[z]);
+                const r_block:any = (document.querySelector(".blockid[value='" + children.id + "']") as HTMLElement).parentNode;
+                const r_array:any = this.blocks.filter(id => id.id === result[z]);
                 if(!r_array.length){
                     break;
                 }
@@ -663,20 +717,24 @@ export default class SketchPad extends Component {
 
                 let arrowy = arrowhelp.y - (arrowhelp.height / 2) - (this.blocks.filter(a => a.id === children.parent)[0].y + (this.blocks.filter(a => a.id === children.parent)[0].height / 2));
 
-                document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.style.top = (this.blocks.filter(id => id.id === children.parent)[0].y + (this.blocks.filter(id => id.id === children.parent)[0].height / 2) - (this.canvas_div.getBoundingClientRect().top)) + "px";
+                let xArrow:any = document.querySelector('.arrowid[value="' + children.id + '"]') as HTMLElement;
+                xArrow.parentNode.style.top = (this.blocks.filter(id => id.id === children.parent)[0].y + (this.blocks.filter(id => id.id === children.parent)[0].height / 2) - (this.canvas_div.getBoundingClientRect().top)) + "px";
 
                 if (arrowx < 0) {
 
-                    document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.style.left = ((arrowhelp.x - 5) - (this.canvas_div.getBoundingClientRect().left)) + "px";
+                    let yArrow:any = document.querySelector('.arrowid[value="' + children.id + '"]') as HTMLElement;
+                    yArrow.parentNode.style.left = ((arrowhelp.x - 5) - (this.canvas_div.getBoundingClientRect().left)) + "px";
 
-                    document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.innerHTML = '<input type="hidden" class="arrowid" value="' + children.id + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (this.blocks.filter(id => id.id === children.parent)[0].x - arrowhelp.x + 5) + ' 0L' + (this.blocks.filter(id => id.id === children.parent)[0].x - arrowhelp.x + 5) + ' ' + (this.paddingy / 2) + 'L5 ' + (this.paddingy / 2) + 'L5 ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (arrowy - 5) + 'H10L5 ' + arrowy + 'L0 ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg>';
+                    let y1Arrow:any = document.querySelector('.arrowid[value="' + children.id + '"]') as HTMLElement;
+                    y1Arrow.parentNode.innerHTML = '<input type="hidden" class="arrowid" value="' + children.id + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (this.blocks.filter(id => id.id === children.parent)[0].x - arrowhelp.x + 5) + ' 0L' + (this.blocks.filter(id => id.id === children.parent)[0].x - arrowhelp.x + 5) + ' ' + (this.paddingy / 2) + 'L5 ' + (this.paddingy / 2) + 'L5 ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (arrowy - 5) + 'H10L5 ' + arrowy + 'L0 ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg>';
 
                 } else {
 
-                    document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.style.left = (this.blocks.filter(id => id.id === children.parent)[0].x - 20 - (this.canvas_div.getBoundingClientRect().left)) + "px";
+                    let yArrow:any = document.querySelector('.arrowid[value="' + children.id + '"]') as HTMLElement;
+                    yArrow.parentNode.style.left = (this.blocks.filter(id => id.id === children.parent)[0].x - 20 - (this.canvas_div.getBoundingClientRect().left)) + "px";
 
-
-                    document.querySelector('.arrowid[value="' + children.id + '"]').parentNode.innerHTML = '<input type="hidden" class="arrowid" value="' + children.id + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L20 ' + (this.paddingy / 2) + 'L' + (arrowx) + ' ' + (this.paddingy / 2) + 'L' + arrowx + ' ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M' + (arrowx - 5) + ' ' + (arrowy - 5) + 'H' + (arrowx + 5) + 'L' + arrowx + ' ' + arrowy + 'L' + (arrowx - 5) + ' ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg>';
+                    let y1Arrow:any = document.querySelector('.arrowid[value="' + children.id + '"]') as HTMLElement;
+                    y1Arrow.parentNode.innerHTML = '<input type="hidden" class="arrowid" value="' + children.id + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L20 ' + (this.paddingy / 2) + 'L' + (arrowx) + ' ' + (this.paddingy / 2) + 'L' + arrowx + ' ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M' + (arrowx - 5) + ' ' + (arrowy - 5) + 'H' + (arrowx + 5) + 'L' + arrowx + ' ' + arrowy + 'L' + (arrowx - 5) + ' ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg>';
                 }
             }
         }
@@ -685,7 +743,7 @@ export default class SketchPad extends Component {
     checkOffset = () => {
         this.offsetleft = this.blocks.map(a => a.x);
         let widths = this.blocks.map(a => a.width);
-        let mathmin = this.offsetleft.map((item, index) => {
+        let mathmin = this.offsetleft.map((item:any, index:any) => {
             return item - (widths[index] / 2);
         })
         this.offsetleft = Math.min.apply(Math, mathmin);
@@ -694,28 +752,39 @@ export default class SketchPad extends Component {
             let blocko = this.blocks.map(a => a.id);
             for (let w = 0; w < this.blocks.length; w++) {
 
-                document.querySelector(".blockid[value='" + this.blocks.filter(a => a.id === blocko[w])[0].id + "']").parentNode.style.left = (this.blocks.filter(a => a.id === blocko[w])[0].x - (this.blocks.filter(a => a.id === blocko[w])[0].width / 2) - this.offsetleft + 20) +"px";
+                let oBlock:any = document.querySelector(".blockid[value='" + this.blocks.filter(a => a.id === blocko[w])[0].id + "']") as HTMLElement;
+                oBlock.parentNode.style.left = (this.blocks.filter(a => a.id === blocko[w])[0].x - (this.blocks.filter(a => a.id === blocko[w])[0].width / 2) - this.offsetleft + 20) +"px";
 
                 if (this.blocks.filter(a => a.id === blocko[w])[0].parent !== -1) {
                     let arrowhelp = this.blocks.filter(a => a.id === blocko[w])[0];
                     let arrowx = arrowhelp.x - this.blocks.filter(a => a.id === this.blocks.filter(a => a.id === blocko[w])[0].parent)[0].x;
                     if (arrowx < 0) {
-                        document.querySelector('.arrowid[value="' + blocko[w] + '"]').parentNode.style.left = (arrowhelp.x - this.offsetleft + 20 - 5) + "px";
+
+                        let oArrow:any = document.querySelector('.arrowid[value="' + blocko[w] + '"]') as HTMLElement;
+                        oArrow.parentNode.style.left = (arrowhelp.x - this.offsetleft + 20 - 5) + "px";
+
                     } else {
-                        document.querySelector('.arrowid[value="' + blocko[w] + '"]').parentNode.style.left = (this.blocks.filter(id => id.id === this.blocks.filter(a => a.id === blocko[w])[0].parent)[0].x - 20 - this.offsetleft + 20) + "px";
+
+                        let oArrow:any = document.querySelector('.arrowid[value="' + blocko[w] + '"]') as HTMLElement;
+                        oArrow.parentNode.style.left = (this.blocks.filter(id => id.id === this.blocks.filter(a => a.id === blocko[w])[0].parent)[0].x - 20 - this.offsetleft + 20) + "px";
+
                     }
                 }
             }
+
             for (let w = 0; w < this.blocks.length; w++) {
 
-                this.blocks[w].x = (document.querySelector(".blockid[value='" + this.blocks[w].id + "']").parentNode.getBoundingClientRect().left) + (this.canvas_div.getBoundingClientRect().left + this.canvas_div.scrollLeft) - (parseInt(window.getComputedStyle(document.querySelector(".blockid[value='" + this.blocks[w].id + "']").parentNode).width) / 2) - 40;
+                let tBlock:any = document.querySelector(".blockid[value='" + this.blocks[w].id + "']") as HTMLElement;
+
+                this.blocks[w].x = (tBlock.parentNode.getBoundingClientRect().left) + (this.canvas_div.getBoundingClientRect().left + this.canvas_div.scrollLeft) - (parseInt(window.getComputedStyle(tBlock.parentNode).width) / 2) - 40;
 
             }
+
             this.offsetleftold = this.offsetleft;
         }
     }
 
-    touchblock = (event) => {
+    touchblock = (event:any) => {
         this.dragblock = false;
         if (this.hasParentClass(event.target, "block")) {
             let theblock = event.target.closest(".block");
@@ -739,14 +808,14 @@ export default class SketchPad extends Component {
         }
     }
 
-    hasParentClass = (element, classname) => {
+    hasParentClass:any = (element:any, classname:string) => {
         if (element.className) {
             if (element.className.split(' ').indexOf(classname)>=0) return true;
         }
         return element.parentNode && this.hasParentClass(element.parentNode, classname);
     }
 
-    moveBlock = (event) => {
+    moveBlock = (event:any) => {
 
         if (event.targetTouches) {
             this.mouse_x = event.targetTouches[0].clientX;
@@ -767,13 +836,13 @@ export default class SketchPad extends Component {
             });
 
             if (blockid !== 0) {
-                let parentArrow = document.querySelector(".arrowid[value='" + blockid + "']");
+                let parentArrow:any = document.querySelector(".arrowid[value='" + blockid + "']");
                 if(parentArrow) parentArrow.parentNode.remove();
             }
 
             let layer = this.blocks.filter(a => a.parent === blockid);
             let flag = false;
-            let foundids = [];
+            let foundids:any = [];
             let allids = [];
 
             while (!flag) {
@@ -782,9 +851,9 @@ export default class SketchPad extends Component {
 
                         this.blockstemp.push(this.blocks.filter(a => a.id === layer[i].id)[0]);
 
-                        const blockParent = document.querySelector(".blockid[value='" + layer[i].id + "']").parentNode;
+                        const blockParent:any = (document.querySelector(".blockid[value='" + layer[i].id + "']") as HTMLElement).parentNode;
 
-                        const arrowParent = document.querySelector(".arrowid[value='" + layer[i].id + "']").parentNode;
+                        const arrowParent:any = (document.querySelector(".arrowid[value='" + layer[i].id + "']") as HTMLElement).parentNode;
 
                         blockParent.style.left = ((blockParent.getBoundingClientRect().left) - (this.drag.getBoundingClientRect().left)) + "px";
 
@@ -840,9 +909,10 @@ export default class SketchPad extends Component {
 
             this.drag.style.top = (this.mouse_y - this.dragy - (this.canvas_div.getBoundingClientRect().top) + this.canvas_div.scrollTop) + "px";
 
-            this.blockstemp.filter(a => a.id === parseInt(this.drag.querySelector(".blockid").value)).x = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft;
+            let bsBlock:any = this.blockstemp.filter(a => a.id === parseInt(this.drag.querySelector(".blockid").value));
+            bsBlock.x = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft;
 
-            this.blockstemp.filter(a => a.id === parseInt(this.drag.querySelector(".blockid").value)).y = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).height) / 2) + this.canvas_div.scrollTop;
+            bsBlock.y = (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).height) / 2) + this.canvas_div.scrollTop;
 
         }
         if (this.active || this.rearrange) {
@@ -866,21 +936,25 @@ export default class SketchPad extends Component {
                     &&
                     (ypos <= (this.blocks.filter(a => a.id === blocko[i])[0].y + this.blocks.filter(a => a.id === blocko[i])[0].height))
                 ) {
+
                     this.link = true;
 
-                    document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode.appendChild(document.querySelector(".indicator"));
+                    let linkInd:any = document.querySelector(".indicator") as HTMLElement;
+                    let cBlock:any = document.querySelector(".blockid[value='" + blocko[i] + "']") as HTMLElement;
 
-                    document.querySelector(".indicator").style.left = ((parseInt(window.getComputedStyle(document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode).width) / 2) - 5) + "px";
+                    cBlock.parentNode.appendChild(linkInd);
 
-                    document.querySelector(".indicator").style.top = (window.getComputedStyle(document.querySelector(".blockid[value='" + blocko[i] + "']").parentNode).height) + "px";
+                    linkInd.style.left = ((parseInt(window.getComputedStyle(cBlock.parentNode).width) / 2) - 5) + "px";
 
-                    document.querySelector(".indicator").classList.remove("invisible");
+                    linkInd.style.top = (window.getComputedStyle(cBlock.parentNode).height) + "px";
+
+                    linkInd.classList.remove("invisible");
 
                     break;
                 } else if (i === this.blocks.length - 1) {
 
-                    if (!document.querySelector(".indicator").classList.contains("invisible")) {
-                        document.querySelector(".indicator").classList.add("invisible");
+                    if (!(document.querySelector(".indicator") as HTMLElement).classList.contains("invisible")) {
+                        (document.querySelector(".indicator") as HTMLElement).classList.add("invisible");
                     }
                 } else {
                     this.link = false;
@@ -896,9 +970,11 @@ export default class SketchPad extends Component {
             let blocko = this.blocks.map(a => a.id);
             for (let w = 0; w < this.blocks.length; w++) {
 
-                document.querySelector(".blockid[value='" + this.blocks.filter(a => a.id === blocko[w])[0].id + "']").parentNode.style.left = (this.blocks.filter(a => a.id === blocko[w])[0].x - (this.blocks.filter(a => a.id === blocko[w])[0].width / 2) - this.offsetleftold - 20) + "px";
+                let offBlock:any = document.querySelector(".blockid[value='" + this.blocks.filter(a => a.id === blocko[w])[0].id + "']") as HTMLElement;
 
-                this.blocks.filter(a => a.id === blocko[w])[0].x = (document.querySelector(".blockid[value='" + this.blocks.filter(a => a.id === blocko[w])[0].id + "']").parentNode.getBoundingClientRect().left) + (this.blocks.filter(a => a.id === blocko[w])[0].width / 2);
+                offBlock.parentNode.style.left = (this.blocks.filter(a => a.id === blocko[w])[0].x - (this.blocks.filter(a => a.id === blocko[w])[0].width / 2) - this.offsetleftold - 20) + "px";
+
+                this.blocks.filter(a => a.id === blocko[w])[0].x = (offBlock.parentNode.getBoundingClientRect().left) + (this.blocks.filter(a => a.id === blocko[w])[0].width / 2);
 
                 if (this.blocks.filter(a => a.id === blocko[w])[0].parent !== -1) {
 
@@ -907,11 +983,15 @@ export default class SketchPad extends Component {
 
                     if (arrowx < 0) {
 
-                        document.querySelector('.arrowid[value="' + blocko[w] + '"]').parentNode.style.left = (arrowhelp.x - 5 - (this.canvas_div.getBoundingClientRect().left)) + "px";
+                        let offArrow:any = document.querySelector('.arrowid[value="' + blocko[w] + '"]') as HTMLElement;
+
+                        offArrow.parentNode.style.left = (arrowhelp.x - 5 - (this.canvas_div.getBoundingClientRect().left)) + "px";
 
                     } else {
 
-                        document.querySelector('.arrowid[value="' + blocko[w] + '"]').parentNode.style.left = (this.blocks.filter(id => id.id === this.blocks.filter(a => a.id === blocko[w])[0].parent)[0].x - 20 - (this.canvas_div.getBoundingClientRect().left)) + "px";
+                        let offArrow:any = document.querySelector('.arrowid[value="' + blocko[w] + '"]') as HTMLElement;
+
+                        offArrow.parentNode.style.left = (this.blocks.filter(id => id.id === this.blocks.filter(a => a.id === blocko[w])[0].parent)[0].x - 20 - (this.canvas_div.getBoundingClientRect().left)) + "px";
                     }
                 }
             }
@@ -919,7 +999,7 @@ export default class SketchPad extends Component {
         }
     }
 
-    load (canvas, spacing_x, spacing_y) {
+    load (canvas:HTMLDivElement, spacing_x:number, spacing_y:number) {
         if (!this.loaded)
             this.loaded = true;
         else
@@ -934,12 +1014,12 @@ export default class SketchPad extends Component {
         this.offsetleftold = 0;
         this.rearrange = false;
         this.lastevent = false;
-        this.dragx = undefined;
-        this.dragy = undefined;
+        this.dragx = 0;
+        this.dragy = 0;
         this.original = undefined;
         this.drag = undefined;
-        this.mouse_x = undefined;
-        this.mouse_y = undefined;
+        this.mouse_x = 0;
+        this.mouse_y = 0;
         this.dragblock = false;
         let el = document.createElement("DIV");
         el.classList.add('indicator');
@@ -977,26 +1057,18 @@ export default class SketchPad extends Component {
 
     }
 
-    exportData= e => {
+    exportData= () => {
         this.chartData = JSON.stringify(this.output());
         localStorage.setItem("journey_1",this.chartData);
         this.deleteBlocks();
     }
 
-    importData = e => {
+    importData = () => {
 
         this.chartData = localStorage.getItem("journey_1");
         if(this.chartData){
             this.import(JSON.parse(this.chartData));
         }
-
-    }
-
-    zoomIn = e => {
-
-    }
-
-    zoomOut = e => {
 
     }
 
