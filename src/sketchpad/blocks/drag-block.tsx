@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 
 import eye from '../assets/eye.svg';
 import action from '../assets/action.svg';
@@ -67,25 +67,56 @@ const flowBlocks = [
 
 ];
 
-const DraggedBlock = (props) => {
-    return(
-        <div className="blockelem noselect block dragging">
-            <input type="hidden" name="blockelemtype" className="blockelemtype" value={props.type}/>
-            <div className="blockin">
-                <div className="blockico">
-                    <span></span>
-                    <img src={flowBlocks[props.type-1].icon} alt=""/>
+type DragProps = {
+    style: any;
+    type: number;
+    id: number;
+    setDragRef:(drag:any) => void;
+};
 
+class DraggedBlock extends Component<DragProps> {
+
+    dragRef:any;
+
+    constructor (props:DragProps) {
+        super(props);
+        this.dragRef = React.createRef<HTMLDivElement>();
+    }
+
+    componentDidUpdate(){
+        const {setDragRef} = this.props;
+
+        setDragRef(this.dragRef.current);
+    }
+
+    componentWillUnmount(){
+        const {setDragRef} = this.props;
+
+        setDragRef(null);
+    }
+
+    render() {
+
+        return(
+            <div className="blockelem noselect block dragging" style={this.props.style} ref={this.dragRef}>
+                <input type="hidden" name="blockelemtype" className="blockelemtype" value={this.props.type}/>
+                <div className="blockin">
+                    <div className="blockico">
+                        <span></span>
+                        <img src={flowBlocks[this.props.type-1].icon} alt=""/>
+
+                    </div>
+                    <div className="blocktext">
+                        <p className="blocktitle">{flowBlocks[this.props.type-1].title}</p>
+                        <p className="blockdesc">{flowBlocks[this.props.type-1].desc}</p>
+                    </div>
                 </div>
-                <div className="blocktext">
-                    <p className="blocktitle">{flowBlocks[props.type-1].title}</p>
-                    <p className="blockdesc">{flowBlocks[props.type-1].desc}</p>
-                </div>
+                <input type="hidden" name="blockid" className="blockid" value={this.props.id}/>
+
             </div>
-            <input type="hidden" name="blockid" className="blockid" value={props.id}/>
+        )
+    }
 
-        </div>
-    )
 };
 
 export default DraggedBlock;

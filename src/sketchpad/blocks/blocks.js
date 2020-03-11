@@ -190,8 +190,8 @@ const Blocks = (props) => {
             tabs={tabs}
             initialSelectedTab={tabs[0]}
             onTabClick={tab => {}}
+            expand={true}
             size="s"
-            expand={false}
         />
     )
 };

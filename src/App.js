@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route
 } from "react-router-dom";
@@ -11,9 +11,12 @@ import Login from './login/login';
 import Home from './home/home';
 import SketchPad from './sketchpad/sketchpad';
 
+const appHistory = require('history').createHashHistory();
+
+
 const App = ({store}) =>(
     <Provider store={store}>
-        <Router>
+        <Router >
             <Switch>
             <Route path="/login" render={props => <Login {...props}  />}>
 

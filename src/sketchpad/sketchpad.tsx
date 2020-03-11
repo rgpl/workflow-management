@@ -26,22 +26,26 @@ import logred from './assets/logred.svg';
 import errorred from './assets/errorred.svg';
 
 import Flyout from './flyout';
-import Blocks from './blocks';
+import {Blocks, DraggedBlock, FlowBlock} from './blocks';
 
 type SketchProps = {
     editMode:boolean
 };
 
 type SketchState ={
-    showSettings:boolean,
-    editMode: boolean
+    showSettings:boolean;
+    editMode: boolean;
+    draggedBlock:any;
+    blocks:Array<any>
 };
 
 export default class SketchPad extends Component<SketchProps, SketchState> {
 
     state:SketchState ={
         showSettings: false,
-        editMode: this.props.editMode
+        editMode: this.props.editMode,
+        draggedBlock: null,
+        blocks:[]
     }
     breadcrumbs:any = [];
     tempblock2:any;
@@ -79,7 +83,9 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         super(props);
         this.state ={
             showSettings:false,
-            editMode: this.props.editMode
+            editMode: this.props.editMode,
+            draggedBlock:null,
+            blocks:[]
         };
         this.breadcrumbs = [];
 
@@ -117,7 +123,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         this.flowy(this.canvasRef.current);
     }
 
-    closeSettings = (event:MouseEvent) => {
+    closeSettings = () => {
         if (this.rightcard) {
             this.rightcard = false;
             this.setState({showSettings:false});
@@ -271,26 +277,45 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         }
         if (event.which !== 3 && event.target.closest(".create-flowy")) {
             this.original = event.target.closest(".create-flowy");
-            let newNode = event.target.closest(".create-flowy").cloneNode(true);
+            let blockType = Number(this.original.querySelector(".blockelemtype").value);
+            console.log("blockIndex->",blockType);
+            let blockId = 0;
+           /*  let newNode = event.target.closest(".create-flowy").cloneNode(true);
             event.target.closest(".create-flowy").classList.add("dragnow");
             newNode.classList.add("block");
-            newNode.classList.remove("create-flowy");
+            newNode.classList.remove("create-flowy"); */
             if (this.blocks.length === 0) {
-                newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + this.blocks.length + "'>";
+                blockId=0;
+                /* newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + this.blocks.length + "'>";
                 document.body.appendChild(newNode);
-                this.drag = (document.querySelector(".blockid[value='" + this.blocks.length + "']") as HTMLElement).parentNode;
+                this.drag = (document.querySelector(".blockid[value='" + this.blocks.length + "']") as HTMLElement).parentNode; */
             } else {
-                newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + (Math.max.apply(Math, this.blocks.map(a => a.id)) + 1) + "'>";
+                blockId = (Math.max.apply(Math, this.blocks.map(a => a.id)) + 1);
+                /* newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + (Math.max.apply(Math, this.blocks.map(a => a.id)) + 1) + "'>";
                 document.body.appendChild(newNode);
-                this.drag = (document.querySelector(".blockid[value='" + ((Math.max.apply(Math, this.blocks.map(a => a.id))) + 1) + "']") as HTMLElement).parentNode;
+                this.drag = (document.querySelector(".blockid[value='" + ((Math.max.apply(Math, this.blocks.map(a => a.id))) + 1) + "']") as HTMLElement).parentNode; */
             }
             this.blockGrabbed(event.target.closest(".create-flowy"));
-            this.drag.classList.add("dragging");
+            //this.drag.classList.add("dragging");
             this.active = true;
             this.dragx = this.mouse_x - (event.target.closest(".create-flowy").offsetLeft);
             this.dragy = this.mouse_y - (event.target.closest(".create-flowy").offsetTop);
-            this.drag.style.left = (this.mouse_x - this.dragx) + "px";
-            this.drag.style.top = (this.mouse_y - this.dragy) + "px";
+            /* this.drag.style.left = (this.mouse_x - this.dragx) + "px";
+            this.drag.style.top = (this.mouse_y - this.dragy) + "px"; */
+
+            let _left = (this.mouse_x - this.dragx) + "px";
+            let _top = (this.mouse_y - this.dragy) + "px";
+
+            this.setState({
+                draggedBlock:{
+                    type: blockType,
+                    id: blockId,
+                    style:{
+                        left:_left,
+                        top:_top
+                    }
+                }
+            });
         }
     }
 
@@ -299,6 +324,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     }
 
     endDrag = (event:any) => {
+        console.log("drag->",this.drag);
 
         if (event.type === "mouseup" && this.aclick) {
             if (!this.rightcard && this.hasParentClass(event.target,'block')) {
@@ -402,13 +428,27 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
             } else if (this.active && !this.link && (this.drag.getBoundingClientRect().top) > (this.canvas_div.getBoundingClientRect().top) && (this.drag.getBoundingClientRect().left) > (this.canvas_div.getBoundingClientRect().left)) {
 
-                this.blockSnap();
+                console.log("calling here->");
+
+                //this.blockSnap();
                 this.active = false;
-                this.drag.style.top = ((this.drag.getBoundingClientRect().top) - (this.canvas_div.getBoundingClientRect().top) + this.canvas_div.scrollTop) + "px";
 
-                this.drag.style.left = ((this.drag.getBoundingClientRect().left) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
+                let top = ((this.drag.getBoundingClientRect().top) - (this.canvas_div.getBoundingClientRect().top) + this.canvas_div.scrollTop) + "px";
 
-                this.canvas_div.appendChild(this.drag);
+                let left = ((this.drag.getBoundingClientRect().left) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
+
+                const drag = this.state.draggedBlock;
+
+                drag.style = {
+                    left,
+                    top
+                }
+
+
+
+                console.log("dragsfer->",this.drag);
+
+                //this.canvas_div.appendChild(this.drag);
 
                 this.blocks.push({
                     parent: -1,
@@ -417,8 +457,17 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                     x: (this.drag.getBoundingClientRect().left) + (parseInt(window.getComputedStyle(this.drag).width) / 2) + this.canvas_div.scrollLeft,
                     y: (this.drag.getBoundingClientRect().top) + (parseInt(window.getComputedStyle(this.drag).height) / 2) + this.canvas_div.scrollTop,
                     width: parseInt(window.getComputedStyle(this.drag).width),
-                    height: parseInt(window.getComputedStyle(this.drag).height)
+                    height: parseInt(window.getComputedStyle(this.drag).height),
+                    style:{left,top},
+                    type: Number(this.drag.querySelector(".blockelemtype").value)
                 });
+
+                this.setState({
+                    draggedBlock:null,
+                    blocks:this.blocks
+                });
+
+
             } else if (this.active && this.blocks.length === 0) {
 
                 this.canvas_div.appendChild(document.querySelector(".indicator"));
@@ -899,9 +948,19 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         }
 
         if (this.active) {
+            const drag = this.state.draggedBlock;
 
-            this.drag.style.left = (this.mouse_x - this.dragx) + "px";
-            this.drag.style.top = (this.mouse_y - this.dragy) + "px";
+            let left = (this.mouse_x - this.dragx) + "px";
+            let top = (this.mouse_y - this.dragy) + "px";
+
+            drag.style= {
+                left,
+                top
+            };
+
+            this.setState({
+                draggedBlock:drag
+            });
 
         } else if (this.rearrange) {
 
@@ -1072,7 +1131,12 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
     }
 
+    setDragRef = (drag:any) => {
+        this.drag = drag;
+    }
+
     render() {
+        const { draggedBlock, showSettings, editMode, blocks } = this.state;
         return(
             <EuiPage className="full-height">
                 <EuiPageBody>
@@ -1091,9 +1155,9 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
                             <EuiButtonToggle
                                 label="Edit"
-                                fill={this.state.editMode}
+                                fill={editMode}
                                 onChange={this.startEdit}
-                                isSelected={this.state.editMode}
+                                isSelected={editMode}
                                 size="s"
 
                             />
@@ -1123,15 +1187,20 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                     <EuiFlexGroup gutterSize="none">
                         <EuiFlexItem grow={false}>
 
-                            {this.state.editMode ? <Blocks></Blocks> : null}
+                            {editMode ? <Blocks></Blocks> : null}
 
                         </EuiFlexItem>
                         <EuiFlexItem>
                             <EuiPageContent paddingSize="none" >
-                                {this.state.showSettings? <Flyout closeSettings={this.closeSettings} /> : null}
-                                <div className={`canvas ${(this.state.editMode ? 'edit-bg' : 'view-bg')}`} ref={this.canvasRef}></div>
+                                {showSettings? <Flyout closeSettings={this.closeSettings} /> : null}
+                                <div className={`canvas ${(editMode ? 'edit-bg' : 'view-bg')}`} ref={this.canvasRef}>
+                                    {blocks.length ? (
+                                        blocks.map((block, index) => <FlowBlock type={block.type} id={block.id} style={block.style} key={`.${index}`}></FlowBlock>)
+                                    ) : null }
+                                </div>
                             </EuiPageContent>
                         </EuiFlexItem>
+                        {draggedBlock ? <DraggedBlock type={draggedBlock.type} id={draggedBlock.id} style={draggedBlock.style} setDragRef={this.setDragRef}></DraggedBlock> : null}
                     </EuiFlexGroup>
                 </EuiPageBody>
             </EuiPage>
