@@ -83,7 +83,7 @@ class DraggedBlock extends Component<DragProps> {
         this.dragRef = React.createRef<HTMLDivElement>();
     }
 
-    componentDidUpdate(){
+    componentDidMount(){
         const {setDragRef} = this.props;
 
         setDragRef(this.dragRef.current);

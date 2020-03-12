@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
+import FlowPop from './flow-pop';
 
 import eyeblue from '../assets/eyeblue.svg';
-import more from '../assets/more.svg';
 import actionblue from '../assets/actionblue.svg';
 import timeblue from '../assets/timeblue.svg';
 import errorblue from '../assets/errorblue.svg';
@@ -71,12 +71,26 @@ const flowBlocks = [
 ];
 
 type FlowProps = {
-    style:any,
-    type:number,
-    id:number
+    style:any;
+    type:number;
+    id:number;
+    setFlowRef:(flow:any) => void;
 }
 
 class FlowBlock extends Component<FlowProps> {
+
+    flowRef:any;
+
+    constructor (props:FlowProps) {
+        super(props);
+        this.flowRef = React.createRef<HTMLDivElement>();
+    }
+
+    componentDidMount() {
+        const {setFlowRef} = this.props;
+
+        setFlowRef(this.flowRef.current);
+    }
 
     render (){
         return(
@@ -86,9 +100,9 @@ class FlowBlock extends Component<FlowProps> {
                     <img width='25' height='25' src={flowBlocks[(this.props.type-1)].icon} alt="" />
                     <p className='blockyname'>{flowBlocks[(this.props.type-1)].title}</p>
                 </div>
-                <div className="blockyright">
-                    <img src={more} alt=""/>
-                </div>
+
+                <FlowPop/>
+
                 <div className="blockydiv"></div>
                 <div className="blockyinfo" dangerouslySetInnerHTML={({__html:flowBlocks[(this.props.type-1)].desc})}></div>
                 <input type="hidden" name="blockid" className="blockid" value={this.props.id}/>
