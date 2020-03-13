@@ -74,7 +74,7 @@ type FlowProps = {
     style:any;
     type:number;
     id:number;
-    setFlowRef:(flow:any) => void;
+    setFlowRef:(id:number,flow:any) => void;
 }
 
 class FlowBlock extends Component<FlowProps> {
@@ -87,9 +87,9 @@ class FlowBlock extends Component<FlowProps> {
     }
 
     componentDidMount() {
-        const {setFlowRef} = this.props;
+        const {setFlowRef, id} = this.props;
 
-        setFlowRef(this.flowRef.current);
+        setFlowRef(id,this.flowRef.current);
     }
 
     render (){

@@ -69,7 +69,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     dragblock:boolean;
     link:boolean;
     canvasRef:any;
-    flowRef:Array<any>;
+    flowRef:any;
     chartData:any;
     aclick:boolean;
     rightcard:boolean;
@@ -112,7 +112,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         this.link = false;
 
         this.canvasRef = React.createRef<HTMLDivElement>();
-        this.flowRef = [];
+        this.flowRef = {};
         this.chartData = '';
 
         this.aclick = false;
@@ -434,7 +434,9 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                     top
                 }
 
-
+                this.setState({
+                    draggedBlock:drag
+                });
 
                 console.log("dragsfer->",this.drag);
 
@@ -513,14 +515,16 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                             }
 
                         } else {
-                            this.drag.parentNode.removeChild(this.drag);
-                            this.drag = null;
+                            this.setState({
+                                draggedBlock:null
+                            })
+
                         }
 
 
                         this.rearrange = false;
                         this.active = false;
-                        this.canvas_div.appendChild(document.querySelector(".indicator"));
+                        //this.canvas_div.appendChild(document.querySelector(".indicator"));
                         break;
 
                     }
@@ -530,9 +534,8 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     }
 
     snap = (i:number, blocko:Array<number>) => {
-        /* if (!this.rearrange) {
-            this.canvas_div.appendChild(this.drag);
-        } */
+
+        const drag = this.state.draggedBlock;
         let blockId = this.drag.querySelector(".blockid").value;
         let totalwidth = 0;
         let totalremove = 0;
@@ -558,6 +561,9 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
             if (children.childwidth > children.width) {
 
                 let tblock:any = (document.querySelector(".blockid[value='" + children.id + "']") as HTMLElement);
+                let tblock2:any = this.flowRef[children.id];
+
+                console.log("check-blocks->",tblock ==tblock2);
                 tblock.parentNode.style.left = (this.blocks.filter(a => a.id === blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2)) + "px";
 
                 children.x = this.blocks.filter(id => id.parent === blocko[i])[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2);
@@ -576,6 +582,17 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         let left = (this.blocks.filter(id => id.id === blocko[i])[0].x - (totalwidth / 2) + totalremove - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
 
         let top = (this.blocks.filter(id => id.id === blocko[i])[0].y + (this.blocks.filter(id => id.id === blocko[i])[0].height / 2) + this.paddingy - (this.canvas_div.getBoundingClientRect().top)) + "px";
+
+        drag.style = {
+            left,
+            top
+        };
+
+        this.setState({
+            draggedBlock:drag
+        });
+
+        console.log("drag-left-->",left, this.drag.getBoundingClientRect().left);
 
         if (this.rearrange) {
 
@@ -611,12 +628,9 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
             this.blockstemp = [];
         } else {
 
-            const drag = this.state.draggedBlock;
 
-            drag.style = {
-                left,
-                top
-            }
+
+            console.log("drag-keft->",this.drag.getBoundingClientRect().left);
 
             this.blocks.push({
                 childwidth: 0,
@@ -644,14 +658,14 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         let arrowy = parseFloat(arrowhelp.y - (arrowhelp.height / 2) - (this.blocks.filter(id => id.parent === blocko[i])[0].y + (this.blocks.filter(id => id.parent === blocko[i])[0].height / 2)) + this.canvas_div.scrollTop);
 
         if (arrowx < 0) {
-
+            console.log("arrow less than 0");
             this.canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + blockId + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M' + (this.blocks.filter(a => a.id === blocko[i])[0].x - arrowhelp.x + 5) + ' 0L' + (this.blocks.filter(a => a.id === blocko[i])[0].x - arrowhelp.x + 5) + ' ' + (this.paddingy / 2) + 'L5 ' + (this.paddingy / 2) + 'L5 ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M0 ' + (arrowy - 5) + 'H10L5 ' + arrowy + 'L0 ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
 
             let tArrow:any = document.querySelector('.arrowid[value="' + blockId + '"]') as HTMLElement;
             tArrow.parentNode.style.left = ((arrowhelp.x - 5) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft) + "px";
 
         } else {
-
+            console.log("arrow greater");
             this.canvas_div.innerHTML += '<div class="arrowblock"><input type="hidden" class="arrowid" value="' + blockId + '"><svg preserveaspectratio="none" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 0L20 ' + (this.paddingy / 2) + 'L' + (arrowx) + ' ' + (this.paddingy / 2) + 'L' + arrowx + ' ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/><path d="M' + (arrowx - 5) + ' ' + (arrowy - 5) + 'H' + (arrowx + 5) + 'L' + arrowx + ' ' + arrowy + 'L' + (arrowx - 5) + ' ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/></svg></div>';
 
             let tArrow:any = document.querySelector('.arrowid[value="' + parseInt(blockId) + '"]') as HTMLElement;
@@ -777,7 +791,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                 xArrow.parentNode.style.top = (this.blocks.filter(id => id.id === children.parent)[0].y + (this.blocks.filter(id => id.id === children.parent)[0].height / 2) - (this.canvas_div.getBoundingClientRect().top)) + "px";
 
                 if (arrowx < 0) {
-
+                    console.log("arrow-less")
                     let yArrow:any = document.querySelector('.arrowid[value="' + children.id + '"]') as HTMLElement;
                     yArrow.parentNode.style.left = ((arrowhelp.x - 5) - (this.canvas_div.getBoundingClientRect().left)) + "px";
 
@@ -1002,7 +1016,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                     &&
                     (ypos <= (this.blocks.filter(a => a.id === blocko[i])[0].y + this.blocks.filter(a => a.id === blocko[i])[0].height))
                 ) {
-
+                    console.log("link=true");
                     this.link = true;
 
                     let linkInd:any = document.querySelector(".indicator") as HTMLElement;
@@ -1142,8 +1156,8 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         this.drag = drag;
     }
 
-    setFlowRef = (flow:any) => {
-        this.flowRef.push(flow);
+    setFlowRef = (id:number,flow:any) => {
+        this.flowRef[id] = flow;
     }
 
     render() {
