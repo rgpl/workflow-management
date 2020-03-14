@@ -261,7 +261,11 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
     deleteBlocks = () => {
         this.blocks = [];
-        this.canvas_div.innerHTML = "<div class='indicator invisible'></div>";
+        this.setState({
+            draggedBlock:null,
+            blocks:this.blocks
+        });
+        //this.canvas_div.innerHTML = "<div class='indicator invisible'></div>";
     }
 
     beginDrag = (event:any) => {
@@ -278,28 +282,19 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
             let blockType = Number(this.original.querySelector(".blockelemtype").value);
             console.log("blockIndex->",blockType);
             let blockId = 0;
-           /*  let newNode = event.target.closest(".create-flowy").cloneNode(true);
-            event.target.closest(".create-flowy").classList.add("dragnow");
-            newNode.classList.add("block");
-            newNode.classList.remove("create-flowy"); */
+
             if (this.blocks.length === 0) {
                 blockId=0;
-                /* newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + this.blocks.length + "'>";
-                document.body.appendChild(newNode);
-                this.drag = (document.querySelector(".blockid[value='" + this.blocks.length + "']") as HTMLElement).parentNode; */
+
             } else {
                 blockId = (Math.max.apply(Math, this.blocks.map(a => a.id)) + 1);
-                /* newNode.innerHTML += "<input type='hidden' name='blockid' class='blockid' value='" + (Math.max.apply(Math, this.blocks.map(a => a.id)) + 1) + "'>";
-                document.body.appendChild(newNode);
-                this.drag = (document.querySelector(".blockid[value='" + ((Math.max.apply(Math, this.blocks.map(a => a.id))) + 1) + "']") as HTMLElement).parentNode; */
+
             }
             this.blockGrabbed(event.target.closest(".create-flowy"));
             //this.drag.classList.add("dragging");
             this.active = true;
             this.dragx = this.mouse_x - (event.target.closest(".create-flowy").offsetLeft);
             this.dragy = this.mouse_y - (event.target.closest(".create-flowy").offsetTop);
-            /* this.drag.style.left = (this.mouse_x - this.dragx) + "px";
-            this.drag.style.top = (this.mouse_y - this.dragy) + "px"; */
 
             let left = (this.mouse_x - this.dragx) + "px";
             let top = (this.mouse_y - this.dragy) + "px";
@@ -492,7 +487,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
                         this.active = false;
 
-                        if (!this.rearrange && this.blockSnap()) {
+                        if (!this.rearrange) {
 
                             this.snap(i, blocko);
 
@@ -1007,14 +1002,17 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
             for (let i = 0; i < this.blocks.length; i++) {
 
+                let curBlock:any = this.blocks.filter(a => a.id === blocko[i])[0];
+                console.log("move-block-cur-block->",curBlock);
+
                 if (
-                    (xpos >= (this.blocks.filter(a => a.id === blocko[i])[0].x - (this.blocks.filter(a => a.id === blocko[i])[0].width / 2) - this.paddingx))
+                    (xpos >= (curBlock.x - (curBlock.width / 2) - this.paddingx))
                     &&
-                    (xpos <= (this.blocks.filter(a => a.id === blocko[i])[0].x + (this.blocks.filter(a => a.id === blocko[i])[0].width / 2) + this.paddingx))
+                    (xpos <= (curBlock.x + (curBlock.width / 2) + this.paddingx))
                     &&
-                    (ypos >= (this.blocks.filter(a => a.id === blocko[i])[0].y - (this.blocks.filter(a => a.id === blocko[i])[0].height / 2)))
+                    (ypos >= (curBlock.y - (curBlock.height / 2)))
                     &&
-                    (ypos <= (this.blocks.filter(a => a.id === blocko[i])[0].y + this.blocks.filter(a => a.id === blocko[i])[0].height))
+                    (ypos <= (curBlock.y + curBlock.height))
                 ) {
                     console.log("link=true");
                     this.link = true;
