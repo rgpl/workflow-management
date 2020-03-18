@@ -70,11 +70,32 @@ const flowBlocks = [
 
 ];
 
+const linkPos:any = {
+    "left":{
+        top:'50%',
+        left:'0%'
+    },
+    "top":{
+        top:'0%',
+        left:'50%'
+    },
+    "right":{
+        top:'50%',
+        left:'100%'
+    },
+    "bottom":{
+        top:'100%',
+        left:'50%'
+    }
+}
+
 type FlowProps = {
     style:any;
     type:number;
     id:number;
+    link:any
     setFlowRef:(id:number,flow:any) => void;
+    openConfigurator:()=> void;
 }
 
 class FlowBlock extends Component<FlowProps> {
@@ -93,20 +114,23 @@ class FlowBlock extends Component<FlowProps> {
     }
 
     render (){
+        
+        const { style, type, id, link, openConfigurator } = this.props;
+
         return(
-            <div className="blockelem noselect block dragging" style={this.props.style}>
-                <input type="hidden" name="blockelemtype" className="blockelemtype" value={this.props.type}/>
+            <div className="blockelem noselect block dragging" style={style} ref={this.flowRef}>
+                <input type="hidden" name="blockelemtype" className="blockelemtype" value={type}/>
                 <div className="blockyleft">
-                    <img width='25' height='25' src={flowBlocks[(this.props.type-1)].icon} alt="" />
-                    <p className='blockyname'>{flowBlocks[(this.props.type-1)].title}</p>
+                    <img width='25' height='25' src={flowBlocks[(type-1)].icon} alt="" />
+                    <p className='blockyname'>{flowBlocks[(type-1)].title}</p>
                 </div>
 
-                <FlowPop/>
+                <FlowPop id={this.props.id} openConfigurator={openConfigurator}/>
 
                 <div className="blockydiv"></div>
-                <div className="blockyinfo" dangerouslySetInnerHTML={({__html:flowBlocks[(this.props.type-1)].desc})}></div>
-                <input type="hidden" name="blockid" className="blockid" value={this.props.id}/>
-
+                <div className="blockyinfo" dangerouslySetInnerHTML={({__html:flowBlocks[(type-1)].desc})}></div>
+                <input type="hidden" name="blockid" className="blockid" value={id}/>
+                <div className={`indicator ${link.show ? '': 'invisible'}`} style={linkPos[link.position]}></div>
             </div>
         )
 

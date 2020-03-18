@@ -40,7 +40,7 @@ body, html {
 
 .blockelem {
     padding: 0.15rem;
-    width: 184px;
+    width: 192px;
     border: 1px solid #D3DAE6;
     transition-property: box-shadow, height;
     transition-duration: .2s;
@@ -279,4 +279,7 @@ body, html {
 }
 .blocklist > div {
     margin-bottom: 5px;
+}
+.event-svg {
+    pointer-events: none;
 }

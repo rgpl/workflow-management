@@ -4,7 +4,6 @@ import {
   EuiAvatar,
   EuiFlexGroup,
   EuiFlexItem,
-  EuiHeaderAlert,
   EuiHeaderSectionItemButton,
   EuiNotificationBadge,
   EuiLink,

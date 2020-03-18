@@ -184,7 +184,7 @@ const tabs= [
     }
 ];
 
-const Blocks = (props) => {
+const BlockMenu = () => {
     return(
         <EuiTabbedContent
             tabs={tabs}
@@ -196,4 +196,4 @@ const Blocks = (props) => {
     )
 };
 
-export default Blocks;
+export default BlockMenu;

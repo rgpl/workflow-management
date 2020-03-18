@@ -1,16 +1,34 @@
 import React ,{Component} from 'react';
 
+type ArrowProps = {
+    id:number,
+    path1:string,
+    path2:string,
+    style:any,
+    setArrowRef:(id:number,arrow:any) => void;
+}
+export default class Arrow extends Component<ArrowProps> {
 
-export default class Arrow extends Component {
+    arrowRef:any;
+
+    constructor(props:ArrowProps) {
+        super(props);
+        this.arrowRef = React.createRef<HTMLDivElement>();
+    }
+
+    componentDidMount() {
+        const { setArrowRef, id } = this.props;
+        setArrowRef(id,this.arrowRef.current);
+    }
 
     render(){
-
+        const {id, path1, path2, style} = this.props;
         return (
-            <div className="arrowblock">
-                <input type="hidden" className="arrowid" value="' + blockId + '"/>
+            <div className="arrowblock" style={style} ref={this.arrowRef}>
+                <input type="hidden" className="arrowid" value={id}/>
                 <svg preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M' + (this.blocks.filter(a => a.id === blocko[i])[0].x - arrowhelp.x + 5) + ' 0L' + (this.blocks.filter(a => a.id === blocko[i])[0].x - arrowhelp.x + 5) + ' ' + (this.paddingy / 2) + 'L5 ' + (this.paddingy / 2) + 'L5 ' + arrowy + '" stroke="#C5CCD0" stroke-width="2px"/>
-                    <path d="M0 ' + (arrowy - 5) + 'H10L5 ' + arrowy + 'L0 ' + (arrowy - 5) + 'Z" fill="#C5CCD0"/>
+                    <path d={path1} stroke="#C5CCD0" strokeWidth="2px"/>
+                    <path d={path2} fill="#C5CCD0"/>
                 </svg>
             </div>
         )

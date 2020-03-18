@@ -1,19 +1,27 @@
-import { EuiPopover, EuiButton } from '@elastic/eui';
+import { 
+    EuiPopover,
+    EuiListGroup,
+    EuiListGroupItem
+} from '@elastic/eui';
 import React, { Component } from 'react';
 
 import more from '../assets/more.svg';
 
+type PopProp = {
+    id:number;
+    openConfigurator:()=> void;
+};
 type PopState= {
     isPopoverOpen:boolean
 };
 
-export default class FlowPop extends Component<any,PopState> {
+export default class FlowPop extends Component<PopProp,PopState> {
 
     state:PopState = {
         isPopoverOpen:false
     }
 
-    constructor(props:any) {
+    constructor(props:PopProp) {
         super(props);
 
         this.state = {
@@ -21,35 +29,57 @@ export default class FlowPop extends Component<any,PopState> {
         };
     }
 
-    onButtonClick() {
+    onButtonClick = ()=> {
+        console.log("calling popover")
         this.setState({
             isPopoverOpen: !this.state.isPopoverOpen,
         });
     }
 
-    closePopover() {
+    closePopover = () => {
+        console.log("closing pop")
         this.setState({
             isPopoverOpen: false,
         });
     }
 
     render() {
+        const { openConfigurator } = this.props;
         const button = (
-            <div className="blockyright" onClick={this.onButtonClick.bind(this)}>
+            <div className="blockyright" onClick={this.onButtonClick}>
                 <img src={more} alt="" />
             </div>
         );
 
         return (
         <EuiPopover
-            id="popover"
+        ownFocus
             button={button}
             isOpen={this.state.isPopoverOpen}
-            closePopover={this.closePopover.bind(this)}
-            anchorPosition="rightCenter">
-            <div style={{ width: '150px' }}>
-                Popover content that&rsquo;s wider than the default width
-            </div>
+            closePopover={this.closePopover}
+            anchorPosition="rightCenter"
+            panelPaddingSize="none">
+            <EuiListGroup>
+                
+                <EuiListGroupItem 
+                    id="confCard" 
+                    iconType="gear" 
+                    onClick={openConfigurator}
+                    label="Configure"  
+                    size="m"
+                />
+                
+
+                
+                <EuiListGroupItem
+                    id="deleteCard"
+                    iconType="trash"
+                    onClick={() => {}}
+                    label="Delete"
+                    size="m"
+                />
+                
+            </EuiListGroup>
         </EuiPopover>
         );
     }

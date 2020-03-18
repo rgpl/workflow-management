@@ -11,8 +11,6 @@ import Login from './login/login';
 import Home from './home/home';
 import SketchPad from './sketchpad/sketchpad';
 
-const appHistory = require('history').createHashHistory();
-
 
 const App = ({store}) =>(
     <Provider store={store}>
