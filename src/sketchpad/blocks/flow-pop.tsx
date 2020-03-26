@@ -30,14 +30,12 @@ export default class FlowPop extends Component<PopProp,PopState> {
     }
 
     onButtonClick = ()=> {
-        console.log("calling popover")
         this.setState({
             isPopoverOpen: !this.state.isPopoverOpen,
         });
     }
 
     closePopover = () => {
-        console.log("closing pop")
         this.setState({
             isPopoverOpen: false,
         });

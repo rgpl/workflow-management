@@ -22,8 +22,28 @@ import {
 
 import SuperSelectComplexExample from './super_select_complex';
 
-export default class Flyout extends Component {
-  constructor(props) {
+type FlyProp ={
+  closeSettings: ()=> void;
+}
+
+type FlyState ={
+  isFlyoutVisible:boolean;
+  isSwitchChecked:boolean;
+  selectedTabId:string;
+  isPopoverOpen:boolean;
+}
+
+export default class Flyout extends Component<FlyProp,FlyState> {
+
+  tabs:Array<any>;
+  state:FlyState = {
+    isFlyoutVisible: false,
+    isSwitchChecked: true,
+    selectedTabId: '1',
+    isPopoverOpen: false
+  }
+
+  constructor(props:FlyProp) {
     super(props);
 
     this.state = {
@@ -70,7 +90,7 @@ export default class Flyout extends Component {
     this.setState(({ isPopoverOpen }) => ({ isPopoverOpen: !isPopoverOpen }));
   };
 
-  onSelectedTabChanged = id => {
+  onSelectedTabChanged = (id:string) => {
     this.setState({
       selectedTabId: id,
     });

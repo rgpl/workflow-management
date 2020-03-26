@@ -39,7 +39,7 @@ const tabs= [
                             <img src={action} alt=""/>
                         </div>
                         <div className="blocktext">
-                            <p className="blocktitle">Action is performed</p>
+                            <p className="blocktitle">Event occurred</p>
                             <p className="blockdesc">Triggers when somebody performs a specified action</p>
                         </div>
                     </div>

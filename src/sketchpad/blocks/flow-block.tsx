@@ -19,7 +19,7 @@ const flowBlocks = [
     },
     {
         icon:actionblue,
-        title:'Action is performed',
+        title:'Event occurred',
         desc:'When <span>Action 1</span> is performed'
     },
     {
@@ -90,7 +90,8 @@ const linkPos:any = {
 }
 
 type FlowProps = {
-    style:any;
+    left:number;
+    top:number;
     type:number;
     id:number;
     link:any
@@ -108,6 +109,7 @@ class FlowBlock extends Component<FlowProps> {
     }
 
     componentDidMount() {
+        
         const {setFlowRef, id} = this.props;
 
         setFlowRef(id,this.flowRef.current);
@@ -115,17 +117,17 @@ class FlowBlock extends Component<FlowProps> {
 
     render (){
         
-        const { style, type, id, link, openConfigurator } = this.props;
+        const { left, top, type, id, link, openConfigurator } = this.props;
 
         return(
-            <div className="blockelem noselect block dragging" style={style} ref={this.flowRef}>
+            <div className="blockelem noselect block dragging" style={{left:left,top:top}} ref={this.flowRef}>
                 <input type="hidden" name="blockelemtype" className="blockelemtype" value={type}/>
                 <div className="blockyleft">
                     <img width='25' height='25' src={flowBlocks[(type-1)].icon} alt="" />
                     <p className='blockyname'>{flowBlocks[(type-1)].title}</p>
                 </div>
 
-                <FlowPop id={this.props.id} openConfigurator={openConfigurator}/>
+                <FlowPop id={id} openConfigurator={openConfigurator}/>
 
                 <div className="blockydiv"></div>
                 <div className="blockyinfo" dangerouslySetInnerHTML={({__html:flowBlocks[(type-1)].desc})}></div>

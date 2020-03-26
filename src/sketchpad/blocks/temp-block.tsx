@@ -19,7 +19,7 @@ const tempBlocks = [
     },
     {
         icon:actionblue,
-        title:'Action is performed',
+        title:'Event occurred',
         desc:'When <span>Action 1</span> is performed'
     },
     {
@@ -71,15 +71,17 @@ const tempBlocks = [
 ];
 
 type TempProp = {
-    style:any;
-    type:number;
-    id:number;
-    blocksTemp:Array<any>;
-    arrowsTemp:Array<any>;
-    setTempRef:(temp:any) => void;
+    left: number;
+    top: number;
+    type: number;
+    id: number;
+    blocksTemp: Array<any>;
+    arrowsTemp: Array<any>;
+    setTempRef: (temp:any) => void;
 }
 
 class TempBlock extends Component<TempProp> {
+    
     tempRef:any;
 
     constructor(props:TempProp){
@@ -88,16 +90,20 @@ class TempBlock extends Component<TempProp> {
     }
 
     componentDidMount() {
-        const { setTempRef } = this.props;
+        const { setTempRef, id } = this.props;
 
-        setTempRef(this.tempRef.current);
+        let dragRef:any = {};
+        dragRef[id] = this.tempRef.current;
+
+        setTempRef(dragRef);
+
     }
 
     render(){
-        const { style, type, id, blocksTemp, arrowsTemp } = this.props;
+        const { left, top, type, id, blocksTemp, arrowsTemp } = this.props;
 
         return(
-            <div className="blockelem noselect block dragging" style={style} ref={this.tempRef}>
+            <div className="blockelem noselect block dragging" style={{left:left,top:top}} ref={this.tempRef}>
                 <input type="hidden" name="blockelemtype" className="blockelemtype" value={type}/>
                 <div className="blockyleft">
                     <img width='25' height='25' src={tempBlocks[(type-1)].icon} alt="" />
@@ -112,7 +118,7 @@ class TempBlock extends Component<TempProp> {
                 <input type="hidden" name="blockid" className="blockid" value={id}/>
                 {
                     blocksTemp ? blocksTemp.map((val,index) =>(
-                        <div className="blockelem noselect block dragging" style={val.style} key={`--${index}`}>
+                        <div className="blockelem noselect block dragging" style={{left:val.left,top:val.top}} key={`--${index}`}>
                             <input type="hidden" name="blockelemtype" className="blockelemtype" value={val.type}/>
                             <div className="blockyleft">
                                 <img width='25' height='25' src={tempBlocks[(val.type-1)].icon} alt="" />
@@ -130,7 +136,7 @@ class TempBlock extends Component<TempProp> {
                 }
                 {
                     arrowsTemp ? arrowsTemp.map((val,index) =>(
-                        <div className="arrowblock" style={val.style} key={`__${index}`}>
+                        <div className="arrowblock" style={{left:val.left,top:val.top}} key={`__${index}`} >
                             <input type="hidden" className="arrowid" value={val.id}/>
                             <svg preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d={val.path1} stroke="#C5CCD0" strokeWidth="2px"/>

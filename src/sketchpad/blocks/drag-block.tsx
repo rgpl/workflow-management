@@ -16,7 +16,7 @@ const flowBlocks = [
     },
     {
         icon:action,
-        title:'Action is performed',
+        title:'Event occurred',
         desc:'Triggers when somebody performs a specified action'
     },
     {
@@ -68,7 +68,8 @@ const flowBlocks = [
 ];
 
 type DragProps = {
-    style: any;
+    left: number;
+    top: number;
     type: number;
     id: number;
     setDragRef:(drag:any) => void;
@@ -97,21 +98,23 @@ class DraggedBlock extends Component<DragProps> {
 
     render() {
 
+        const { left, top, type, id} = this.props;
+
         return(
-            <div className="blockelem noselect block dragging" style={this.props.style} ref={this.dragRef}>
-                <input type="hidden" name="blockelemtype" className="blockelemtype" value={this.props.type}/>
+            <div className="blockelem noselect block dragging" style={{left:left,top:top}} ref={this.dragRef}>
+                <input type="hidden" name="blockelemtype" className="blockelemtype" value={type}/>
                 <div className="blockin">
                     <div className="blockico">
                         <span></span>
-                        <img src={flowBlocks[this.props.type-1].icon} alt=""/>
+                        <img src={flowBlocks[type-1].icon} alt=""/>
 
                     </div>
                     <div className="blocktext">
-                        <p className="blocktitle">{flowBlocks[this.props.type-1].title}</p>
-                        <p className="blockdesc">{flowBlocks[this.props.type-1].desc}</p>
+                        <p className="blocktitle">{flowBlocks[type-1].title}</p>
+                        <p className="blockdesc">{flowBlocks[type-1].desc}</p>
                     </div>
                 </div>
-                <input type="hidden" name="blockid" className="blockid" value={this.props.id}/>
+                <input type="hidden" name="blockid" className="blockid" value={id}/>
 
             </div>
         )

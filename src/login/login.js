@@ -22,8 +22,6 @@ import {
 import './login.css';
 import { Redirect} from 'react-router-dom';
 import axios from 'axios';
-import { userLogin } from '../store/actions';
-import { connect } from 'react-redux'
 
 class Login extends React.Component {
     constructor(props) {
@@ -75,7 +73,6 @@ class Login extends React.Component {
                 this.setState({
                     authenticated:true
                 });
-                this.props.userLogin(this.state.userName);
             })
             .finally(() => {
                 // always executed
@@ -190,10 +187,4 @@ class Login extends React.Component {
     }
 }
 
-const mapStateToProps = ({ reducer }) => ({ reducer });
-const actions = { userLogin };
-
-export default connect(
-  mapStateToProps,
-  actions
-)(Login);
+export default Login;

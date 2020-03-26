@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
     EuiPage,
     EuiPageBody,
@@ -12,19 +12,21 @@ import {
     EuiButton,
     EuiFlexItem,
     EuiFlexGroup,
-    EuiSideNav,
     EuiPageContent,
     EuiPageContentHeaderSection,
     EuiTitle,
     EuiPageContentBody,
     EuiPageContentHeader,
-    EuiPanel
+	EuiPanel,
+	EuiText
 } from '@elastic/eui';
 import { Redirect } from 'react-router-dom';
 
 import HeaderAppMenu from './header/header_app_menu';
 import HeaderUserMenu from './header/header_user_menu';
 import HeaderSpacesMenu from './header/header_spaces_menu';
+import { EuiPageHeader } from '@elastic/eui';
+import { EuiPageHeaderSection } from '@elastic/eui';
 
 
 export default class Home extends React.Component {
@@ -32,35 +34,12 @@ export default class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isSideNavOpenOnMobile: false,
-            selectedItemName: 'Lion stuff',
             authenticated: true,
             editJourney:false
         };
     }
 
-    toggleOpenOnMobile = () => {
-        this.setState({
-            isSideNavOpenOnMobile: !this.state.isSideNavOpenOnMobile,
-        });
-    };
-
-    selectItem = name => {
-        this.setState({
-            selectedItemName: name,
-        });
-    };
-
-    createItem = (name, data = {}) => {
-        // NOTE: Duplicate `name` values will cause `id` collisions.
-        return {
-            ...data,
-            id: name,
-            name,
-            isSelected: this.state.selectedItemName === name,
-            onClick: () => this.selectItem(name),
-        };
-    };
+    
 
     renderLogo() {
         return (
@@ -147,105 +126,61 @@ export default class Home extends React.Component {
                 <Redirect to="/sketchpad" />
             )
         }
-        const sideNav = [
-            this.createItem('Elasticsearch', {
-              icon: <EuiIcon type="logoElasticsearch" />,
-              items: [
-                this.createItem('Data sources'),
-                this.createItem('Users'),
-                this.createItem('Roles'),
-                this.createItem('Watches'),
-                this.createItem(
-                  'Extremely long title will become truncated when the browser is narrow enough'
-                ),
-              ],
-            }),
-            this.createItem('Kibana', {
-              icon: <EuiIcon type="logoKibana" />,
-              items: [
-                this.createItem('Advanced settings', {
-                  items: [
-                    this.createItem('General'),
-                    this.createItem('Timelion', {
-                      items: [
-                        this.createItem('Time stuff', {
-                          icon: <EuiIcon type="clock" />,
-                        }),
-                        this.createItem('Lion stuff', {
-                          icon: <EuiIcon type="stats" />,
-                        }),
-                      ],
-                    }),
-                    this.createItem('Visualizations'),
-                  ],
-                }),
-                this.createItem('Index Patterns'),
-                this.createItem('Saved Objects'),
-                this.createItem('Reporting'),
-              ],
-            }),
-            this.createItem('Logstash', {
-              icon: <EuiIcon type="logoLogstash" />,
-              items: [this.createItem('Pipeline viewer')],
-            }),
-          ];
 
         return (
-            <EuiPage style={{padding:'0px'}}>
+          <Fragment>
+            <EuiHeader>
+              <EuiHeaderSection grow={false}>
+              <EuiHeaderSectionItem border="right">
+                  {this.renderLogo()}
+              </EuiHeaderSectionItem>
+              <EuiHeaderSectionItem border="right">
+                  <HeaderSpacesMenu />
+              </EuiHeaderSectionItem>
+              </EuiHeaderSection>
+
+              {this.renderBreadcrumbs()}
+
+              <EuiHeaderSection side="right">
+              <EuiHeaderSectionItem>{this.renderSearch()}</EuiHeaderSectionItem>
+
+              <EuiHeaderSectionItem>
+                  <HeaderUserMenu onLogoutClick = {() => this.handleLogout()}/>
+              </EuiHeaderSectionItem>
+
+              <EuiHeaderSectionItem>
+                  <HeaderAppMenu />
+              </EuiHeaderSectionItem>
+              </EuiHeaderSection>
+          </EuiHeader>
+			{/* cut here*/}
+          <EuiPage>
                 <EuiPageBody>
-                    <EuiHeader>
-                        <EuiHeaderSection grow={false}>
-                        <EuiHeaderSectionItem border="right">
-                            {this.renderLogo()}
-                        </EuiHeaderSectionItem>
-                        <EuiHeaderSectionItem border="right">
-                            <HeaderSpacesMenu />
-                        </EuiHeaderSectionItem>
-                        </EuiHeaderSection>
-
-                        {this.renderBreadcrumbs()}
-
-                        <EuiHeaderSection side="right">
-                        <EuiHeaderSectionItem>{this.renderSearch()}</EuiHeaderSectionItem>
-
-                        <EuiHeaderSectionItem>
-                            <HeaderUserMenu onLogoutClick = {() => this.handleLogout()}/>
-                        </EuiHeaderSectionItem>
-
-                        <EuiHeaderSectionItem>
-                            <HeaderAppMenu />
-                        </EuiHeaderSectionItem>
-                        </EuiHeaderSection>
-                    </EuiHeader>
+                <EuiPageHeader>
+                  <EuiPageHeaderSection>
+                  <EuiTitle size="l">
+                        <h1>Journeys</h1>
+                  </EuiTitle>
+                  </EuiPageHeaderSection>
+                </EuiPageHeader>
                     <EuiFlexGroup>
-                        <EuiFlexItem grow={false}>
-                        <EuiSideNav
-                                mobileTitle="Navigate within $APP_NAME"
-                                toggleOpenOnMobile={this.toggleOpenOnMobile}
-                                isOpenOnMobile={this.state.isSideNavOpenOnMobile}
-                                items={sideNav}
-                                style={{ width: 192 }}
-                            />
-                        </EuiFlexItem>
+                        
                         <EuiFlexItem>
                         <EuiPageContent>
 
                         <EuiPageContentHeader>
-                        <EuiPageContentHeaderSection>
-                            <EuiTitle>
-                            <h2>Journeys</h2>
-                            </EuiTitle>
-                        </EuiPageContentHeaderSection>
-                        <EuiPageContentHeaderSection>
+                        <EuiPageContentHeaderSection >
                             <EuiButton fill onClick={this.openSketchPad}>
                             Create Journey
                             </EuiButton>
                         </EuiPageContentHeaderSection>
                         </EuiPageContentHeader>
                         <EuiPageContentBody>
-                            <EuiPanel paddingSize="s" style={{marginBottom:10}}>
+                            <EuiPanel paddingSize="m" hasShadow={true} style={{marginBottom:10}}>
                                 <EuiFlexGroup justifyContent="spaceBetween">
-                                    <EuiFlexItem>Frequent user flow</EuiFlexItem>
+                                    <EuiFlexItem>
+										<EuiText>Frequent user flow</EuiText>
+									</EuiFlexItem>
                                     <EuiFlexItem grow={false}>
                                         <EuiButton
                                         color="secondary"
@@ -257,9 +192,11 @@ export default class Home extends React.Component {
                                     </EuiFlexItem>
                                 </EuiFlexGroup>
                             </EuiPanel>
-                            <EuiPanel  paddingSize="s" style={{marginBottom:10}}>
+                            <EuiPanel  paddingSize="m" hasShadow={true} style={{marginBottom:10}}>
                                 <EuiFlexGroup justifyContent="spaceBetween">
-                                    <EuiFlexItem>Rare user flow</EuiFlexItem>
+									<EuiFlexItem>
+										<EuiText>Rare user flow</EuiText>
+									</EuiFlexItem>
                                     <EuiFlexItem grow={false}>
                                         <EuiButton
                                         color="secondary"
@@ -271,9 +208,11 @@ export default class Home extends React.Component {
                                     </EuiFlexItem>
                                 </EuiFlexGroup>
                             </EuiPanel>
-                            <EuiPanel  paddingSize="s" style={{marginBottom:10}}>
+                            <EuiPanel  paddingSize="m" hasShadow={true} style={{marginBottom:10}}>
                                 <EuiFlexGroup justifyContent="spaceBetween">
-                                    <EuiFlexItem>Addicted user flow</EuiFlexItem>
+								<EuiFlexItem>
+										<EuiText>Addicted user flow</EuiText>
+									</EuiFlexItem>
                                     <EuiFlexItem grow={false}>
                                         <EuiButton
                                         color="secondary"
@@ -292,6 +231,9 @@ export default class Home extends React.Component {
 
                 </EuiPageBody>
             </EuiPage>
+
+          </Fragment>
+            
 
         );
     }

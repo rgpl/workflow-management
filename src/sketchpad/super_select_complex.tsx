@@ -2,8 +2,18 @@ import React, { Component, Fragment } from 'react';
 
 import { EuiSuperSelect, EuiText } from '@elastic/eui';
 
-export default class extends Component {
-  constructor(props) {
+type SscState = {
+  value:string
+}
+export default class extends Component<any,SscState> {
+
+  options:Array<any>;
+  state:SscState = {
+    value: 'option_one'
+  };
+
+
+  constructor(props:any) {
     super(props);
 
     this.options = [
@@ -56,7 +66,7 @@ export default class extends Component {
     };
   }
 
-  onChange = value => {
+  onChange = (value:string) => {
     this.setState({ value });
   };
 
