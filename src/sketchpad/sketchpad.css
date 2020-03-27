@@ -170,7 +170,9 @@ body, html {
 
 .blockyleft {
     display: inline-block;
-    margin-left: 5px;
+    padding-left: 5px;
+    position: relative;
+    width: 100%;
 }
 .blockydiv {
     width: 100%;
@@ -282,4 +284,10 @@ body, html {
 }
 .event-svg {
     pointer-events: none;
+}
+
+.delete-icon {
+    position: absolute;
+    top:0;
+    right:0;
 }

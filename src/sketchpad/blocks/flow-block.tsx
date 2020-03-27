@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import FlowPop from './flow-pop';
+import { EuiIcon } from '@elastic/eui';
 
 import eyeblue from '../assets/eyeblue.svg';
 import actionblue from '../assets/actionblue.svg';
@@ -116,19 +116,24 @@ class FlowBlock extends Component<FlowProps> {
         setFlowRef(id,this.flowRef.current);
     }
 
+    deleteFlow = (e:any) => {
+        e.stopPropagation();
+        const { id, deleteBlock } = this.props;
+        deleteBlock(id);
+    }
+
     render (){
         
-        const { left, top, type, id, link, openConfigurator, deleteBlock } = this.props;
+        const { left, top, type, id, link, openConfigurator } = this.props;
 
         return(
             <div className="blockelem noselect block dragging" style={{left:left,top:top}} ref={this.flowRef}>
                 <input type="hidden" name="blockelemtype" className="blockelemtype" value={type}/>
-                <div className="blockyleft">
+                <div className="blockyleft" onClick={openConfigurator}>
                     <img width='25' height='25' src={flowBlocks[(type-1)].icon} alt="" />
                     <p className='blockyname'>{flowBlocks[(type-1)].title}</p>
+                    <EuiIcon type="cross" size="s" className="delete-icon" onClick={this.deleteFlow}/>
                 </div>
-
-                <FlowPop id={id} openConfigurator={openConfigurator} deleteBlock={deleteBlock}/>
 
                 <div className="blockydiv"></div>
                 <div className="blockyinfo" dangerouslySetInnerHTML={({__html:flowBlocks[(type-1)].desc})}></div>

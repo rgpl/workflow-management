@@ -9,7 +9,6 @@ import twitterorange from '../assets/twitterorange.svg';
 import actionorange from '../assets/actionorange.svg';
 import logred from '../assets/logred.svg';
 import errorred from '../assets/errorred.svg';
-import more from '../assets/more.svg';
 
 const tempBlocks = [
     {
@@ -109,9 +108,7 @@ class TempBlock extends Component<TempProp> {
                     <img width='25' height='25' src={tempBlocks[(type-1)].icon} alt="" />
                     <p className='blockyname'>{tempBlocks[(type-1)].title}</p>
                 </div>
-                <div className="blockyright">
-                    <img src={more} alt="" />
-                </div>
+                
 
                 <div className="blockydiv"></div>
                 <div className="blockyinfo" dangerouslySetInnerHTML={({__html:tempBlocks[(type-1)].desc})}></div>
@@ -124,9 +121,7 @@ class TempBlock extends Component<TempProp> {
                                 <img width='25' height='25' src={tempBlocks[(val.type-1)].icon} alt="" />
                                 <p className='blockyname'>{tempBlocks[(val.type-1)].title}</p>
                             </div>
-                            <div className="blockyright">
-                                <img src={more} alt="" />
-                            </div>
+                            
 
                             <div className="blockydiv"></div>
                             <div className="blockyinfo" dangerouslySetInnerHTML={({__html:tempBlocks[(val.type-1)].desc})}></div>
