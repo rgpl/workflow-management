@@ -210,7 +210,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         }
     }
 
-    deleteBlocks = () => {
+    clearSketch = () => {
         this.flowRef = {};
         this.blocks = [];
         this.arrows= [];
@@ -218,6 +218,56 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
             blocks:this.blocks.slice(),
             arrows:this.arrows.slice()
         });
+    }
+
+    deleteBlock = (id:number)=> {
+        
+        this.blocks = this.blocks.filter((e) => {
+            return e.id !== id
+        });
+        
+        if (id !== 0) {
+
+            let arrowIndex = this.arrows.findIndex(a=>a.id === id);
+            if (arrowIndex > -1) {
+                this.arrows.splice(arrowIndex, 1);
+            }
+        }
+
+        let layer = this.blocks.slice().filter(a => a.parent === id);
+            
+        let flag = false;
+        let foundids:any = [];
+
+        while (!flag) {
+            for (let i = 0; i < layer.length; i++) {
+                if (layer[i] !== id) {
+
+                    let blockIndex = this.blocks.findIndex(b=>b.id===layer[i].id);
+                    let arrIndex = this.arrows.findIndex(a=>a.id===layer[i].id);
+
+                    this.blocks.splice(blockIndex, 1);
+                    this.arrows.splice(arrIndex, 1);
+
+                    foundids.push(layer[i].id);
+
+                }
+            }
+            if (foundids.length === 0) {
+                flag = true;
+            } else {
+                layer = this.blocks.filter(a => foundids.includes(a.parent));
+                foundids = [];
+            }
+        }
+        
+        if (this.blocks.length > 1) {
+            this.rearrangeMe();
+        }
+        if (this.lastevent) {
+            this.fixOffset();
+        }
+        this.draw();
     }
 
     beginDrag = (event:any) => {
@@ -892,6 +942,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     }
 
     touchblock = (event:any) => {
+
         this.dragblock = false;
         if (this.hasParentClass(event.target, "block")) {    
             let selectedBlock = event.target.closest(".block");
@@ -919,7 +970,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
     hasParentClass:any = (element:any, classname:string) => {
         if (element.className) {
-            if (element.className.split(' ').indexOf(classname)>=0) return true;
+            if (element.className.split && element.className.split(' ').indexOf(classname)>=0) return true;
         }
         return element.parentNode && this.hasParentClass(element.parentNode, classname);
     }
@@ -1215,7 +1266,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     exportData= () => {
         this.chartData = JSON.stringify(this.output());
         localStorage.setItem("journey_1",this.chartData);
-        this.deleteBlocks();
+        this.clearSketch();
     }
 
     importData = () => {
@@ -1291,7 +1342,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
                             <EuiButton
                                 fill
-                                onClick={this.deleteBlocks}
+                                onClick={this.clearSketch}
                                 size="s"
                                 color="danger"
                                 style={{ marginLeft: 10, marginRight: 10 }}
@@ -1313,7 +1364,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                                 <div className={`canvas ${(editMode ? 'edit-bg' : 'view-bg')}`} ref={this.canvasRef}>
                                     {
                                         showBlock? (
-                                            blocks.map((block, index) => <FlowBlock type={block.type} id={block.id} left={block.left} top={block.top} link={block.link} key={`.${index}`} setFlowRef={this.setFlowRef} openConfigurator={this.openConfigurator}></FlowBlock>)
+                                            blocks.map((block, index) => <FlowBlock type={block.type} id={block.id} left={block.left} top={block.top} link={block.link} key={`.${index}`} setFlowRef={this.setFlowRef} openConfigurator={this.openConfigurator} deleteBlock={this.deleteBlock}></FlowBlock>)
                                         ) : null 
                                     }
 

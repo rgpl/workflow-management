@@ -10,6 +10,7 @@ import more from '../assets/more.svg';
 type PopProp = {
     id:number;
     openConfigurator:()=> void;
+    deleteBlock: (id:number) => void;
 };
 type PopState= {
     isPopoverOpen:boolean
@@ -39,6 +40,11 @@ export default class FlowPop extends Component<PopProp,PopState> {
         this.setState({
             isPopoverOpen: false,
         });
+    }
+
+    triggerDelete = () => {
+        const { id, deleteBlock } = this.props;
+        deleteBlock(id);
     }
 
     render() {
@@ -72,7 +78,7 @@ export default class FlowPop extends Component<PopProp,PopState> {
                 <EuiListGroupItem
                     id="deleteCard"
                     iconType="trash"
-                    onClick={() => {}}
+                    onClick={this.triggerDelete}
                     label="Delete"
                     size="m"
                 />

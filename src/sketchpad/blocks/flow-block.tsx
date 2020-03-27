@@ -97,6 +97,7 @@ type FlowProps = {
     link:any
     setFlowRef:(id:number,flow:any) => void;
     openConfigurator:()=> void;
+    deleteBlock:(id:number)=> void;
 }
 
 class FlowBlock extends Component<FlowProps> {
@@ -117,7 +118,7 @@ class FlowBlock extends Component<FlowProps> {
 
     render (){
         
-        const { left, top, type, id, link, openConfigurator } = this.props;
+        const { left, top, type, id, link, openConfigurator, deleteBlock } = this.props;
 
         return(
             <div className="blockelem noselect block dragging" style={{left:left,top:top}} ref={this.flowRef}>
@@ -127,7 +128,7 @@ class FlowBlock extends Component<FlowProps> {
                     <p className='blockyname'>{flowBlocks[(type-1)].title}</p>
                 </div>
 
-                <FlowPop id={id} openConfigurator={openConfigurator}/>
+                <FlowPop id={id} openConfigurator={openConfigurator} deleteBlock={deleteBlock}/>
 
                 <div className="blockydiv"></div>
                 <div className="blockyinfo" dangerouslySetInnerHTML={({__html:flowBlocks[(type-1)].desc})}></div>
