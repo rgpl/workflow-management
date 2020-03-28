@@ -16,15 +16,17 @@ import {
 import './sketchpad.css';
 
 import Flyout from './flyout';
-import {BlockMenu, DraggedBlock, FlowBlock, Arrow, TempBlock } from './blocks';
+import { BlockMenu, DraggedBlock, FlowBlock, Arrow, TempBlock } from './blocks';
+
+import { JourneyStore } from '../store/journeyStore';
+import { inject, observer } from 'mobx-react';
 
 type SketchProps = {
-    editMode:boolean
+    journeyStore: JourneyStore
 };
 
 type SketchState ={
     showSettings:boolean;
-    editMode: boolean;
     draggedBlock:any;
     blocks:Array<any>;
     arrows:Array<any>;
@@ -32,11 +34,12 @@ type SketchState ={
     arrowsTemp:Array<any>;
 };
 
+@inject('journeyStore')
+@observer
 export default class SketchPad extends Component<SketchProps, SketchState> {
 
     state:SketchState ={
         showSettings: false,
-        editMode: this.props.editMode,
         draggedBlock: null,
         blocks:[],
         arrows:[],
@@ -72,13 +75,11 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     chartData:any;
     rightcard:boolean;
     tempblock:any;
-    editMode:boolean;
 
     constructor(props:SketchProps){
         super(props);
         this.state ={
             showSettings:false,
-            editMode: this.props.editMode,
             draggedBlock:null,
             blocks:[],
             arrows:[],
@@ -117,7 +118,6 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
         this.rightcard = false;
         this.tempblock = undefined;
-        this.editMode = this.props.editMode;
     }
 
     componentDidMount(){
@@ -1224,6 +1224,9 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     }
 
     load (canvas:HTMLDivElement, spacing_x:number, spacing_y:number) {
+
+        const{ editMode } = this.props.journeyStore;
+
         if (!this.loaded)
             this.loaded = true;
         else
@@ -1232,7 +1235,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         this.paddingx = spacing_x;
         this.paddingy = spacing_y;
 
-        if(this.editMode) {
+        if(editMode) {
             this.startEdit();
         }
 
@@ -1240,11 +1243,11 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
     startEdit = () => {
 
-        if(!this.editMode) {
+        const{ editMode, setEditMode } = this.props.journeyStore;
 
-            this.editMode = true;
+        if(!editMode) {
 
-            this.setState({editMode:true});
+            setEditMode(true);
 
             document.addEventListener("mousedown",this.touchblock, false);
             document.addEventListener("touchstart",this.touchblock, false);
@@ -1303,7 +1306,8 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     } 
 
     render() {
-        const { draggedBlock, showSettings, editMode, blocks, arrows, blocksTemp, arrowsTemp } = this.state;
+        const { draggedBlock, showSettings, blocks, arrows, blocksTemp, arrowsTemp } = this.state;
+        const { editMode } = this.props.journeyStore;
         const showBlock = blocks.length > 0 ? true: false;
         return(
             <EuiPage className="full-height">

@@ -127,7 +127,7 @@ class FlowBlock extends Component<FlowProps> {
         const { left, top, type, id, link, openConfigurator } = this.props;
 
         return(
-            <div className="blockelem noselect block dragging" style={{left:left,top:top}} ref={this.flowRef}>
+            <div className="blockelem noselect block" style={{left:left,top:top}} ref={this.flowRef}>
                 <input type="hidden" name="blockelemtype" className="blockelemtype" value={type}/>
                 <div className="blockyleft" onClick={openConfigurator}>
                     <img width='25' height='25' src={flowBlocks[(type-1)].icon} alt="" />

@@ -27,19 +27,21 @@ import HeaderUserMenu from './header/header_user_menu';
 import HeaderSpacesMenu from './header/header_spaces_menu';
 import { EuiPageHeader } from '@elastic/eui';
 import { EuiPageHeaderSection } from '@elastic/eui';
+import { JourneyStore } from '../store/journeyStore';
+import { inject, observer } from 'mobx-react';
 
+type JourneyProps = {
+  journeyStore:JourneyStore;
+}
 
-export default class Home extends React.Component {
+@inject('journeyStore')
+@observer
+export default class Home extends React.Component<JourneyProps> {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            authenticated: true,
-            editJourney:false
-        };
+    componentDidMount(){
+        const { getExistingJourneys } = this.props.journeyStore;
+        getExistingJourneys();
     }
-
-    
 
     renderLogo() {
         return (
@@ -56,7 +58,7 @@ export default class Home extends React.Component {
           {
             text: 'Management',
             href: '#',
-            onClick: e => {
+            onClick: (e:any) => {
               e.preventDefault();
               console.log('You clicked management');
             },
@@ -66,7 +68,7 @@ export default class Home extends React.Component {
           {
             text: 'Truncation test is here for a really long item',
             href: '#',
-            onClick: e => {
+            onClick: (e:any) => {
               e.preventDefault();
               console.log('You clicked truncation test');
             },
@@ -74,7 +76,7 @@ export default class Home extends React.Component {
           {
             text: 'hidden',
             href: '#',
-            onClick: e => {
+            onClick: (e:any) => {
               e.preventDefault();
               console.log('You clicked hidden');
             },
@@ -82,7 +84,7 @@ export default class Home extends React.Component {
           {
             text: 'Users',
             href: '#',
-            onClick: e => {
+            onClick: (e:any) => {
               e.preventDefault();
               console.log('You clicked users');
             },
@@ -103,25 +105,21 @@ export default class Home extends React.Component {
         );
     }
 
-    handleLogout = e =>  {
+    handleLogout = (e:any) =>  {
         console.log('logout-click-state-lift');
-        this.setState({
-            authenticated:false
-        });
     }
 
-    openSketchPad = e => {
-        this.setState({editJourney:true});
+    openSketchPad = (e:any,create?:boolean) => {
+        const {setJourneyEdit,setEditMode} = this.props.journeyStore;
+        if(create){
+            setEditMode(true);
+        }
+        setJourneyEdit(true);
     }
 
     render() {
-        if(!this.state.authenticated) {
-            return(
-                <Redirect to="/login" />
-            )
-
-        }
-        if(this.state.editJourney){
+        const {editJourney,journeyList} = this.props.journeyStore;
+        if(editJourney){
             return (
                 <Redirect to="/sketchpad" />
             )
@@ -145,7 +143,7 @@ export default class Home extends React.Component {
               <EuiHeaderSectionItem>{this.renderSearch()}</EuiHeaderSectionItem>
 
               <EuiHeaderSectionItem>
-                  <HeaderUserMenu onLogoutClick = {() => this.handleLogout()}/>
+                  <HeaderUserMenu onLogoutClick = {this.handleLogout}/>
               </EuiHeaderSectionItem>
 
               <EuiHeaderSectionItem>
@@ -170,60 +168,31 @@ export default class Home extends React.Component {
 
                         <EuiPageContentHeader>
                         <EuiPageContentHeaderSection >
-                            <EuiButton fill onClick={this.openSketchPad}>
+                            <EuiButton fill onClick={ (event:any) => {this.openSketchPad(event,true)}}>
                             Create Journey
                             </EuiButton>
                         </EuiPageContentHeaderSection>
                         </EuiPageContentHeader>
                         <EuiPageContentBody>
-                            <EuiPanel paddingSize="m" hasShadow={true} style={{marginBottom:10}}>
-                                <EuiFlexGroup justifyContent="spaceBetween">
-                                    <EuiFlexItem>
-										<EuiText>Frequent user flow</EuiText>
-									</EuiFlexItem>
-                                    <EuiFlexItem grow={false}>
-                                        <EuiButton
-                                        color="secondary"
-                                        fill
-                                        size="s"
-                                        onClick={this.openSketchPad}>
-                                        View
-                                        </EuiButton>
-                                    </EuiFlexItem>
-                                </EuiFlexGroup>
-                            </EuiPanel>
-                            <EuiPanel  paddingSize="m" hasShadow={true} style={{marginBottom:10}}>
-                                <EuiFlexGroup justifyContent="spaceBetween">
-									<EuiFlexItem>
-										<EuiText>Rare user flow</EuiText>
-									</EuiFlexItem>
-                                    <EuiFlexItem grow={false}>
-                                        <EuiButton
-                                        color="secondary"
-                                        fill
-                                        size="s"
-                                        onClick={this.openSketchPad}>
-                                        View
-                                        </EuiButton>
-                                    </EuiFlexItem>
-                                </EuiFlexGroup>
-                            </EuiPanel>
-                            <EuiPanel  paddingSize="m" hasShadow={true} style={{marginBottom:10}}>
-                                <EuiFlexGroup justifyContent="spaceBetween">
-								<EuiFlexItem>
-										<EuiText>Addicted user flow</EuiText>
-									</EuiFlexItem>
-                                    <EuiFlexItem grow={false}>
-                                        <EuiButton
-                                        color="secondary"
-                                        fill
-                                        size="s"
-                                        onClick={this.openSketchPad}>
-                                        View
-                                        </EuiButton>
-                                    </EuiFlexItem>
-                                </EuiFlexGroup>
-                            </EuiPanel>
+                            { journeyList.map((value)=>(
+                                <EuiPanel paddingSize="m" hasShadow={true} style={{marginBottom:10}} key={value.id}>
+                                    <EuiFlexGroup justifyContent="spaceBetween">
+                                        <EuiFlexItem>
+                                            <EuiText>{value.displayLabel}</EuiText>
+                                        </EuiFlexItem>
+                                        <EuiFlexItem grow={false}>
+                                            <EuiButton
+                                            color="secondary"
+                                            fill
+                                            size="s"
+                                            onClick={this.openSketchPad}>
+                                            View
+                                            </EuiButton>
+                                        </EuiFlexItem>
+                                    </EuiFlexGroup>
+                                </EuiPanel>
+                            ))
+                            }
                         </EuiPageContentBody>
                     </EuiPageContent>
                         </EuiFlexItem>

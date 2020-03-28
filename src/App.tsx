@@ -5,25 +5,28 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import Login from './login/login';
 import Home from './home/home';
 import SketchPad from './sketchpad/sketchpad';
+import { Provider } from 'mobx-react';
+import { journeyStore } from './store/journeyStore';
 
+const stores ={
+    journeyStore
+};
+
+//window._____APP_STATE_____ = stores;
 
 const App = () =>(
+
+    <Provider {...stores}>
         <Router >
             <Switch>
-            <Route path="/login" >
-                <Login/>
-            </Route>
-            <Home exact path="/"/>
-
-            <Route path="/sketchpad">
-                <SketchPad editMode={false}></SketchPad>
-            </Route>
-
+                <Route exact path="/" component={Home}></Route>
+                <Route path="/sketchpad" component={SketchPad}></Route>
             </Switch>
         </Router>
+    </Provider>
+        
 )
 
 
