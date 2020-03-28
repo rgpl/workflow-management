@@ -1245,9 +1245,9 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
         const{ editMode, setEditMode } = this.props.journeyStore;
 
-        if(!editMode) {
+        setEditMode(true);
 
-            setEditMode(true);
+        if(editMode) {
 
             document.addEventListener("mousedown",this.touchblock, false);
             document.addEventListener("touchstart",this.touchblock, false);
