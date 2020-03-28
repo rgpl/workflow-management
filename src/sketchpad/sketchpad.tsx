@@ -1243,9 +1243,9 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
     startEdit = () => {
 
-        const{ editMode, setEditMode } = this.props.journeyStore;
+        const{ editMode } = this.props.journeyStore;
 
-        setEditMode(true);
+        
 
         if(editMode) {
 
@@ -1264,6 +1264,15 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
         }
 
+    }
+
+    editTrigger = () => {
+        const {editMode, setEditMode } = this.props.journeyStore;
+        if(!editMode){
+            setEditMode(true);
+            this.startEdit();
+        }
+        
     }
 
     exportData= () => {
@@ -1328,7 +1337,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                             <EuiButtonToggle
                                 label="Edit"
                                 fill={editMode}
-                                onChange={this.startEdit}
+                                onChange={this.editTrigger}
                                 isSelected={editMode}
                                 size="s"
 
