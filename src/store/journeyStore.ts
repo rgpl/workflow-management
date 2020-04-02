@@ -1,4 +1,5 @@
 import { observable, action } from 'mobx';
+import  axios  from 'axios';
 
 export interface JList {
     id:string
@@ -14,7 +15,7 @@ export class JourneyStore {
     @observable journeyList:JList[] = [];
 
     @action 
-    getExistingJourneys = ()=> {
+    getExistingJourneys = async()=> {
         this.journeyList =[
             {
                 id:"j_1",
@@ -29,6 +30,16 @@ export class JourneyStore {
                 displayLabel:"Addicted User flow"
             }
         ];
+
+        await axios.get('http://localhost:4000/journeys')
+            .then( (response:any)=> {
+                console.log("login-response->",response);
+                
+            })
+            .catch((error:any) => console.log("login->",error))
+            .finally(() => {
+                // always executed
+            });
     }
 
     @action 

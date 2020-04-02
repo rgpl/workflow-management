@@ -197,6 +197,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     }
 
     import = (output:any) => {
+        
         this.setState({
             blocks: output.blocks.slice(),
             arrows: output.arrows.slice()
@@ -206,7 +207,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     output = () => {
         return {
             blocks:this.blocks.slice(),
-            arows: this.arrows.slice()
+            arrows: this.arrows.slice()
         }
     }
 
@@ -1237,6 +1238,8 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
         if(editMode) {
             this.startEdit();
+        } else {
+            this.importData();
         }
 
     }
