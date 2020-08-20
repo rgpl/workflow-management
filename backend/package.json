@@ -20,7 +20,7 @@
     "@elastic/elasticsearch": "^7.6.1",
     "@hapi/basic": "^5.1.1",
     "@hapi/hapi": "^18.4.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "jsonwebtoken": "^8.5.1"
   }
 }
