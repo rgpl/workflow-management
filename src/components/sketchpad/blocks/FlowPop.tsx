@@ -1,11 +1,11 @@
-import { 
+import {
     EuiPopover,
     EuiListGroup,
     EuiListGroupItem
 } from '@elastic/eui';
 import React, { Component } from 'react';
 
-import more from '../assets/more.svg';
+import more from '../../../assets/images/more.svg';
 
 type PopProp = {
     id:number;
@@ -64,17 +64,17 @@ export default class FlowPop extends Component<PopProp,PopState> {
             anchorPosition="rightCenter"
             panelPaddingSize="none">
             <EuiListGroup>
-                
-                <EuiListGroupItem 
-                    id="confCard" 
-                    iconType="gear" 
+
+                <EuiListGroupItem
+                    id="confCard"
+                    iconType="gear"
                     onClick={openConfigurator}
-                    label="Configure"  
+                    label="Configure"
                     size="m"
                 />
-                
 
-                
+
+
                 <EuiListGroupItem
                     id="deleteCard"
                     iconType="trash"
@@ -82,7 +82,7 @@ export default class FlowPop extends Component<PopProp,PopState> {
                     label="Delete"
                     size="m"
                 />
-                
+
             </EuiListGroup>
         </EuiPopover>
         );

@@ -13,12 +13,12 @@ import {
     EuiButtonToggle,
     EuiButton
 } from '@elastic/eui';
-import './sketchpad.css';
+import '../../assets/css/sketchpad.css';
 
-import Flyout from './flyout';
+import Flyout from './flyout/Flyout';
 import { BlockMenu, DraggedBlock, FlowBlock, Arrow, TempBlock } from './blocks';
 
-import { JourneyStore } from '../store/journeyStore';
+import { JourneyStore } from '../../store/JourneyStore';
 import { inject, observer } from 'mobx-react';
 
 type SketchProps = {
@@ -197,7 +197,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     }
 
     import = (output:any) => {
-        
+
         this.setState({
             blocks: output.blocks.slice(),
             arrows: output.arrows.slice()
@@ -222,11 +222,11 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     }
 
     deleteBlock = (id:number)=> {
-        
+
         this.blocks = this.blocks.filter((e) => {
             return e.id !== id
         });
-        
+
         if (id !== 0) {
 
             let arrowIndex = this.arrows.findIndex(a=>a.id === id);
@@ -236,7 +236,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         }
 
         let layer = this.blocks.slice().filter(a => a.parent === id);
-            
+
         let flag = false;
         let foundids:any = [];
 
@@ -261,7 +261,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                 foundids = [];
             }
         }
-        
+
         if (this.blocks.length > 1) {
             this.rearrangeMe();
         }
@@ -272,7 +272,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     }
 
     beginDrag = (event:any) => {
-        
+
         if (event.targetTouches) {
             this.mouse_x = event.changedTouches[0].clientX;
             this.mouse_y = event.changedTouches[0].clientY;
@@ -283,7 +283,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         if (event.which !== 3 && event.target.closest(".create-flowy")) {
             this.original = event.target.closest(".create-flowy");
             let blockType = Number(this.original.querySelector(".blockelemtype").value);
-            
+
             let blockId = 0;
 
             if (this.blocks.length === 0) {
@@ -296,7 +296,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
             this.dragId = blockId;
             this.blockGrabbed(event.target.closest(".create-flowy"));
-            
+
             this.active = true;
             this.dragx = this.mouse_x - (event.target.closest(".create-flowy").offsetLeft);
             this.dragy = this.mouse_y - (event.target.closest(".create-flowy").offsetTop);
@@ -331,7 +331,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
             let blockType = Number(this.drag.querySelector(".blockelemtype").value);
             let isParent = dBlock ? (dBlock.parent === -1) : false;
 
-            
+
             if (this.active) {
                 this.original.classList.remove("dragnow");
             }
@@ -368,7 +368,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
                             break;
 
-                        } 
+                        }
                     }
                     this.link = false;
                 }else{
@@ -404,7 +404,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                             let bloTop = ((tempBlock.top + dragBlock.top + this.canvas_div.getBoundingClientRect().top) - this.canvas_div.scrollTop);
 
                             let arrLeft = ((arrBlock.left + dragBlock.left + this.canvas_div.getBoundingClientRect().left) - this.canvas_div.scrollLeft);
-                            
+
                             let arrTop = ((arrBlock.top + dragBlock.top + this.canvas_div.getBoundingClientRect().top) - this.canvas_div.scrollTop);
 
                             let left = ((bloLeft) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft);
@@ -439,14 +439,14 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
 
             } else if (this.active && !this.link && (this.drag.getBoundingClientRect().top) > (this.canvas_div.getBoundingClientRect().top) && (this.drag.getBoundingClientRect().left) > (this.canvas_div.getBoundingClientRect().left)) {
-                
+
                 this.active = false;
 
                 let top = ((this.drag.getBoundingClientRect().top) - (this.canvas_div.getBoundingClientRect().top) + this.canvas_div.scrollTop);
 
                 let left = ((this.drag.getBoundingClientRect().left) - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft);
 
-                
+
 
                 this.setState({
                     draggedBlock:null
@@ -521,7 +521,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                             });
 
                         }
-                        
+
                         this.rearrange = false;
                         this.active = false;
                         break;
@@ -562,7 +562,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
             if (children.childwidth > children.width) {
 
                 let tInd = this.blocks.findIndex(a=>a.id === children.id);
-                let tblock:any = this.blocks.slice()[tInd];              
+                let tblock:any = this.blocks.slice()[tInd];
 
                 let left = (this.blocks.filter(a => a.id === snap_id)[0].x - (totalwidth / 2) + totalremove + (children.childwidth / 2) - (children.width / 2));
 
@@ -644,7 +644,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
                     arrBlock.left = aLeft;
                     arrBlock.top = aTop;
-                    
+
 
                     tempBlock.x = ((bleft + this.canvas_div.getBoundingClientRect().left) - this.canvas_div.scrollLeft) + (tempBlock.width / 2) + this.canvas_div.scrollLeft;
                     tempBlock.y = ((btop + this.canvas_div.getBoundingClientRect().top) - this.canvas_div.scrollTop) + (tempBlock.height / 2) + this.canvas_div.scrollTop;
@@ -697,7 +697,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         let aTop=0;
 
         if (arrowx < 0) {
-    
+
             path1 = `M ${(this.blocks.filter(a => a.id === snap_id)[0].x - arrowhelp.x + 5)} 0L${(this.blocks.filter(a => a.id === snap_id)[0].x - arrowhelp.x + 5)} ${(this.paddingy / 2)}L5 ${(this.paddingy / 2)}  L5 ${arrowy}`;
 
             path2 = `M0 ${(arrowy - 5)} H10L5 ${arrowy}L0 ${(arrowy - 5)} Z`;
@@ -848,7 +848,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                 let path2="";
 
                 if (arrowx < 0) {
-    
+
                     left = ((arrowhelp.x - 5) - (this.canvas_div.getBoundingClientRect().left));
 
                     path1 = `M${(this.blocks.filter(id => id.id === children.parent)[0].x - arrowhelp.x + 5)}  0L${(this.blocks.filter(id => id.id === children.parent)[0].x - arrowhelp.x + 5)} ${(this.paddingy / 2)}L5 ${(this.paddingy / 2)}L5 ${arrowy}`;
@@ -915,7 +915,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                         left = (this.blocks.filter(id => id.id === this.blocks.filter(a => a.id === blocko[w])[0].parent)[0].x - 20 - this.offsetleft + 20);
 
                     }
-                    
+
                     this.arrows[aIndex] = {
                         id:blocko[w],
                         path1:this.arrows[aIndex].path1,
@@ -929,7 +929,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
             for (let w = 0; w < this.blocks.length; w++) {
 
-                
+
                 let tBlock = this.blocks.slice()[w];
 
                 let tLeft = ((tBlock.left + this.canvas_div.getBoundingClientRect().left) - this.canvas_div.scrollLeft);
@@ -945,7 +945,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
     touchblock = (event:any) => {
 
         this.dragblock = false;
-        if (this.hasParentClass(event.target, "block")) {    
+        if (this.hasParentClass(event.target, "block")) {
             let selectedBlock = event.target.closest(".block");
             let blockId = selectedBlock.querySelector(".blockid").value;
             if (event.targetTouches) {
@@ -990,7 +990,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
         let top = (this.mouse_y - this.dragy);
 
         if (this.dragblock) {
-            
+
             this.rearrange = true;
             this.drag.classList.add("dragging");
             let blockid = this.dragId;
@@ -1013,7 +1013,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
             }
 
             let layer = this.blocks.slice().filter(a => a.parent === blockid);
-            
+
             let flag = false;
             let foundids:any = [];
 
@@ -1023,18 +1023,18 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
                         let dragBlock = this.blocks.slice().filter(a => a.id === layer[i].id)[0];
 
-                        let dragArrow = this.arrows.slice().filter(r => r.id === layer[i].id)[0];   
-                        
-                
+                        let dragArrow = this.arrows.slice().filter(r => r.id === layer[i].id)[0];
+
+
 
                         let blockLeft = ((dragBlock.left + this.canvas_div.getBoundingClientRect().left) - this.canvas_div.scrollLeft);
 
                         let blockTop = ((dragBlock.top + this.canvas_div.getBoundingClientRect().top) - this.canvas_div.scrollTop);
-                        
+
                         let arrowLeft = ((dragArrow.left + this.canvas_div.getBoundingClientRect().left) - this.canvas_div.scrollLeft);
 
                         let arrowTop = ((dragArrow.top + this.canvas_div.getBoundingClientRect().top) - this.canvas_div.scrollTop);
-                        
+
                         let left = (blockLeft - dragLeft);
 
                         let top = (blockTop - dragTop);
@@ -1045,10 +1045,10 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
                         dragBlock.left = left;
                         dragBlock.top = top;
-                        
+
                         dragArrow.left = aLeft;
                         dragArrow.top = aTop;
-                        
+
                         this.blocksTemp.push(dragBlock);
                         this.arrowsTemp.push({...dragArrow});
 
@@ -1071,7 +1071,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                     foundids = [];
                 }
             }
-            
+
             if (this.blocks.length > 1) {
                 this.rearrangeMe();
             }
@@ -1081,7 +1081,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
             this.dragblock = false;
         }
 
-        
+
 
         if (this.active) {
             const drag = this.state.draggedBlock;
@@ -1094,7 +1094,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
             });
 
         } else if (this.rearrange) {
-            
+
             let tBlock = this.blocksTemp.slice()[0];
 
             let left = (this.mouse_x - this.dragx - (this.canvas_div.getBoundingClientRect().left) + this.canvas_div.scrollLeft);
@@ -1112,7 +1112,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
             tBlock.y = (bTop) + (tBlock.height / 2) + this.canvas_div.scrollTop; // reminder:left replaced by top
 
-            this.blocksTemp[0] = tBlock; 
+            this.blocksTemp[0] = tBlock;
 
         }
         if (this.active || this.rearrange) {
@@ -1136,7 +1136,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                     &&
                     (ypos <= (curBlock.y + curBlock.height))
                 ) {
-                    
+
                     this.link = true;
 
                     let blockIndex = this.blocks.findIndex(a=>a.id===blocko[i]);
@@ -1167,14 +1167,14 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
                 }
 
-                
+
             }
         }
         this.draw();
     }
 
     fixOffset = () => {
-        
+
         if (this.offsetleftold < (this.canvas_div.getBoundingClientRect().left)) {
 
             this.lastevent = false;
@@ -1205,7 +1205,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                         aleft = (arrowhelp.x - 5 - (this.canvas_div.getBoundingClientRect().left));
 
                     } else {
-                       
+
                         aleft = (this.blocks.filter(id => id.id === offBlock.parent)[0].x - 20 - (this.canvas_div.getBoundingClientRect().left));
 
                     }
@@ -1248,7 +1248,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
         const{ editMode } = this.props.journeyStore;
 
-        
+
 
         if(editMode) {
 
@@ -1275,7 +1275,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
             setEditMode(true);
             this.startEdit();
         }
-        
+
     }
 
     exportData= () => {
@@ -1299,7 +1299,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
 
     setFlowRef = (id:number,flow:any) => {
         this.flowRef[id] = flow;
-        
+
     }
 
     setTempRef = (temp:any) => {
@@ -1315,7 +1315,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
             blocksTemp: this.blocksTemp.slice(),
             arrowsTemp: this.arrowsTemp.slice()
         });
-    } 
+    }
 
     render() {
         const { draggedBlock, showSettings, blocks, arrows, blocksTemp, arrowsTemp } = this.state;
@@ -1381,7 +1381,7 @@ export default class SketchPad extends Component<SketchProps, SketchState> {
                                     {
                                         showBlock? (
                                             blocks.map((block, index) => <FlowBlock type={block.type} id={block.id} left={block.left} top={block.top} link={block.link} key={`.${index}`} setFlowRef={this.setFlowRef} openConfigurator={this.openConfigurator} deleteBlock={this.deleteBlock}></FlowBlock>)
-                                        ) : null 
+                                        ) : null
                                     }
 
                                     {

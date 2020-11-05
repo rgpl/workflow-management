@@ -1,14 +1,14 @@
 import React , { Component } from 'react';
 
-import eyeblue from '../assets/eyeblue.svg';
-import actionblue from '../assets/actionblue.svg';
-import timeblue from '../assets/timeblue.svg';
-import errorblue from '../assets/errorblue.svg';
-import databaseorange from '../assets/databaseorange.svg';
-import twitterorange from '../assets/twitterorange.svg';
-import actionorange from '../assets/actionorange.svg';
-import logred from '../assets/logred.svg';
-import errorred from '../assets/errorred.svg';
+import eyeblue from '../../../assets/images/eyeblue.svg';
+import actionblue from '../../../assets/images/actionblue.svg';
+import timeblue from '../../../assets/images/timeblue.svg';
+import errorblue from '../../../assets/images/errorblue.svg';
+import databaseorange from '../../../assets/images/databaseorange.svg';
+import twitterorange from '../../../assets/images/twitterorange.svg';
+import actionorange from '../../../assets/images/actionorange.svg';
+import logred from '../../../assets/images/logred.svg';
+import errorred from '../../../assets/images/errorred.svg';
 
 const tempBlocks = [
     {
@@ -80,7 +80,7 @@ type TempProp = {
 }
 
 class TempBlock extends Component<TempProp> {
-    
+
     tempRef:any;
 
     constructor(props:TempProp){
@@ -108,7 +108,7 @@ class TempBlock extends Component<TempProp> {
                     <img width='25' height='25' src={tempBlocks[(type-1)].icon} alt="" />
                     <p className='blockyname'>{tempBlocks[(type-1)].title}</p>
                 </div>
-                
+
 
                 <div className="blockydiv"></div>
                 <div className="blockyinfo" dangerouslySetInnerHTML={({__html:tempBlocks[(type-1)].desc})}></div>
@@ -121,7 +121,7 @@ class TempBlock extends Component<TempProp> {
                                 <img width='25' height='25' src={tempBlocks[(val.type-1)].icon} alt="" />
                                 <p className='blockyname'>{tempBlocks[(val.type-1)].title}</p>
                             </div>
-                            
+
 
                             <div className="blockydiv"></div>
                             <div className="blockyinfo" dangerouslySetInnerHTML={({__html:tempBlocks[(val.type-1)].desc})}></div>

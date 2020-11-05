@@ -11,8 +11,11 @@ import {
 } from '@elastic/eui';
 import { Fragment } from 'react-is';
 
-export default class extends Component {
-  constructor(props) {
+export default class HeaderSpacesMenu extends Component<any, any> {
+  spaces: any;
+  additionalSpaces: any;
+
+  constructor(props: any) {
     super(props);
 
     this.spaces = [
@@ -56,13 +59,13 @@ export default class extends Component {
 
     this.state = {
       spaces: this.spaces,
-      selectedSpace: this.spaces.filter(option => option.checked)[0],
+      selectedSpace: this.spaces.filter((option: { checked: any; }) => option.checked)[0],
       isOpen: false,
     };
   }
 
   isListExtended = () => {
-    return this.state.spaces.length > 4 ? true : false;
+    return this.state.spaces.length > 4;
   };
 
   onMenuButtonClick = () => {
@@ -77,10 +80,10 @@ export default class extends Component {
     });
   };
 
-  onChange = options => {
+  onChange = (options: any[]) => {
     this.setState({
       spaces: options,
-      selectedSpace: options.filter(option => option.checked)[0],
+      selectedSpace: options.filter((option: { checked: any; }) => option.checked)[0],
       isOpen: false,
     });
   };
@@ -113,6 +116,7 @@ export default class extends Component {
         anchorPosition="downLeft"
         closePopover={this.closePopover}
         panelPaddingSize="none">
+        // @ts-ignore
         <EuiSelectable
           searchable={this.isListExtended()}
           searchProps={{
@@ -128,6 +132,7 @@ export default class extends Component {
             showIcons: false,
           }}>
           {(list, search) => (
+            // @ts-ignore
             <Fragment>
               <EuiPopoverTitle>{search || 'Your spaces'}</EuiPopoverTitle>
               {list}

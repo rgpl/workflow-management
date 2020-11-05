@@ -22,12 +22,12 @@ import {
 } from '@elastic/eui';
 import { Redirect } from 'react-router-dom';
 
-import HeaderAppMenu from './header/header_app_menu';
-import HeaderUserMenu from './header/header_user_menu';
-import HeaderSpacesMenu from './header/header_spaces_menu';
+import HeaderAppMenu from './header/HeaderAppMenu';
+import HeaderUserMenu from './header/HeaderUserMenu';
+import HeaderSpacesMenu from './header/HeaderSpacesMenu';
 import { EuiPageHeader } from '@elastic/eui';
 import { EuiPageHeaderSection } from '@elastic/eui';
-import { JourneyStore } from '../store/journeyStore';
+import { JourneyStore } from '../../store/JourneyStore';
 import { inject, observer } from 'mobx-react';
 
 type JourneyProps = {
@@ -162,7 +162,7 @@ export default class Home extends React.Component<JourneyProps> {
                   </EuiPageHeaderSection>
                 </EuiPageHeader>
                     <EuiFlexGroup>
-                        
+
                         <EuiFlexItem>
                         <EuiPageContent>
 
@@ -202,7 +202,7 @@ export default class Home extends React.Component<JourneyProps> {
             </EuiPage>
 
           </Fragment>
-            
+
 
         );
     }

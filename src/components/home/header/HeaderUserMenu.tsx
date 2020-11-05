@@ -12,8 +12,8 @@ import {
   EuiPopover,
 } from '@elastic/eui';
 
-export default class extends Component {
-  constructor(props) {
+export default class HeaderUserMenu extends Component<any, any> {
+  constructor(props: any) {
     super(props);
 
     this.state = {
@@ -71,16 +71,13 @@ export default class extends Component {
               <EuiText>
                 <p>John Smith</p>
               </EuiText>
-
               <EuiSpacer size="m" />
-
               <EuiFlexGroup>
                 <EuiFlexItem>
                   <EuiFlexGroup justifyContent="spaceBetween">
                     <EuiFlexItem grow={false}>
                       <EuiLink href="">Edit profile</EuiLink>
                     </EuiFlexItem>
-
                     <EuiFlexItem grow={false}>
                       <EuiLink onClick={() => this.props.onLogoutClick()}>Log out</EuiLink>
                     </EuiFlexItem>
@@ -89,8 +86,6 @@ export default class extends Component {
               </EuiFlexGroup>
             </EuiFlexItem>
           </EuiFlexGroup>
-
-
         </div>
       </EuiPopover>
     );

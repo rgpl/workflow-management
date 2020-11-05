@@ -8,8 +8,8 @@ import {
   EuiPopover,
 } from '@elastic/eui';
 
-export default class extends Component {
-  constructor(props) {
+export default class HeaderAppMenu extends Component<any, any> {
+  constructor(props: any) {
     super(props);
 
     this.state = {

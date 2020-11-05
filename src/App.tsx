@@ -5,10 +5,10 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-import Home from './home/home';
-import SketchPad from './sketchpad/sketchpad';
+import Home from './components/home/Home';
+import SketchPad from './components/sketchpad/SketchPad';
 import { Provider } from 'mobx-react';
-import { journeyStore } from './store/journeyStore';
+import { journeyStore } from './store/JourneyStore';
 
 const stores ={
     journeyStore
@@ -26,7 +26,7 @@ const App = () =>(
             </Switch>
         </Router>
     </Provider>
-        
+
 )
 
 

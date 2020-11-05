@@ -5,7 +5,7 @@ import { EuiSuperSelect, EuiText } from '@elastic/eui';
 type SscState = {
   value:string
 }
-export default class extends Component<any,SscState> {
+export default class SuperSelectComplex extends Component<any,SscState> {
 
   options:Array<any>;
   state:SscState = {

@@ -20,7 +20,7 @@ import {
   EuiTitle,
 } from '@elastic/eui';
 
-import SuperSelectComplexExample from './super_select_complex';
+import SuperSelectComplex from './SuperSelectComplex';
 
 type FlyProp ={
   closeSettings: ()=> void;
@@ -212,7 +212,7 @@ export default class Flyout extends Component<FlyProp,FlyState> {
             <EuiSpacer size="m" />
             <EuiForm>
               <EuiFormRow label="A SuperSelect field">
-                <SuperSelectComplexExample />
+                <SuperSelectComplex />
               </EuiFormRow>
             </EuiForm>
             <EuiSpacer />

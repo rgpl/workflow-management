@@ -1,15 +1,11 @@
 import React, {Component} from 'react';
 import { EuiIcon } from '@elastic/eui';
 
-import eyeblue from '../assets/eyeblue.svg';
-import actionblue from '../assets/actionblue.svg';
-import timeblue from '../assets/timeblue.svg';
-import errorblue from '../assets/errorblue.svg';
-import databaseorange from '../assets/databaseorange.svg';
-import twitterorange from '../assets/twitterorange.svg';
-import actionorange from '../assets/actionorange.svg';
-import logred from '../assets/logred.svg';
-import errorred from '../assets/errorred.svg';
+import eyeblue from '../../../assets/images/eyeblue.svg';
+import actionblue from '../../../assets/images/actionblue.svg';
+import timeblue from '../../../assets/images/timeblue.svg';
+import errorblue from '../../../assets/images/errorblue.svg';
+import actionorange from '../../../assets/images/actionorange.svg';
 
 const flowBlocks = [
     {
@@ -28,46 +24,30 @@ const flowBlocks = [
         desc:'When <span>10 seconds</span> have passed'
     },
     {
-        icon:errorblue,
+        icon: errorblue,
         title:'Exit Workflow',
         desc:'When <span>10 seconds</span> have passed'
     },
     {
-        icon:databaseorange,
-        title:'New database entry',
-        desc:'Add <span>Data object</span> to <span>Database 1</span>'
+        icon: actionorange,
+        title: 'Push Action',
+        desc: 'Push <span>Action 1</span>'
     },
     {
-        icon:databaseorange,
-        title:'Update database',
-        desc:'Update <span>Database 1</span>'
+        icon: actionorange,
+        title: 'SMS Action',
+        desc: 'SMS <span>Action 1</span>'
     },
     {
-        icon:actionorange,
-        title:'Perform an action',
-        desc:'Perform <span>Action 1</span>'
+        icon: actionorange,
+        title: 'E-mail Action',
+        desc: 'E-mail <span>Action 1</span>'
     },
     {
-        icon:twitterorange,
-        title:'Make a tweet',
-        desc:'Tweet <span>Query 1</span> with the account <span>@twitter</span>'
-    },
-    {
-        icon:logred,
-        title:'Add new log entry',
-        desc:'Add new <span>success</span> log entry'
-    },
-    {
-        icon:logred,
-        title:'Update logs',
-        desc:'Edit <span>Log Entry 1</span>'
-    },
-    {
-        icon:errorred,
-        title:'Prompt an error',
-        desc:'Trigger <span>Exit</span>'
+        icon: actionorange,
+        title: 'Web Api Action',
+        desc: 'Web Api <span>Action 1</span>'
     }
-
 ];
 
 const linkPos:any = {
@@ -110,7 +90,7 @@ class FlowBlock extends Component<FlowProps> {
     }
 
     componentDidMount() {
-        
+
         const {setFlowRef, id} = this.props;
 
         setFlowRef(id,this.flowRef.current);
@@ -123,7 +103,7 @@ class FlowBlock extends Component<FlowProps> {
     }
 
     render (){
-        
+
         const { left, top, type, id, link, openConfigurator } = this.props;
 
         return(
