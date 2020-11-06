@@ -28,11 +28,6 @@ const flowBlocks = [
   },
   {
     icon: action,
-    title: 'E-mail Action',
-    desc: 'Email Communication will be sent out based on the action definition'
-  },
-  {
-    icon: action,
     title: 'Push Action',
     desc: 'Push notification based on the action definition'
   },
@@ -40,6 +35,11 @@ const flowBlocks = [
     icon: action,
     title: 'SMS Action',
     desc: 'SMS Messages will be sent out based on the action definition'
+  },
+  {
+    icon: action,
+    title: 'E-mail Action',
+    desc: 'Email Communication will be sent out based on the action definition'
   },
   {
     icon: action,
