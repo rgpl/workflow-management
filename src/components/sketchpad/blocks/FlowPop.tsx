@@ -1,90 +1,66 @@
 import {
-    EuiPopover,
-    EuiListGroup,
-    EuiListGroupItem
+  EuiPopover,
+  EuiListGroup,
+  EuiListGroupItem
 } from '@elastic/eui';
-import React, { Component } from 'react';
+import React, {Component, useState} from 'react';
 
 import more from '../../../assets/images/more.svg';
 
 type PopProp = {
-    id:number;
-    openConfigurator:()=> void;
-    deleteBlock: (id:number) => void;
-};
-type PopState= {
-    isPopoverOpen:boolean
+  id: number;
+  openConfigurator: () => void;
+  deleteBlock: (id: number) => void;
 };
 
-export default class FlowPop extends Component<PopProp,PopState> {
+function FlowPop(props: PopProp) {
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const { id, deleteBlock, openConfigurator } = props;
 
-    state:PopState = {
-        isPopoverOpen:false
-    }
+  const onButtonClick = () => {
+    setIsPopoverOpen(!isPopoverOpen);
+  }
 
-    constructor(props:PopProp) {
-        super(props);
+  const closePopover = () => {
+    setIsPopoverOpen(false);
+  }
 
-        this.state = {
-            isPopoverOpen: false,
-        };
-    }
+  const triggerDelete = () => {
+    deleteBlock(id);
+  }
 
-    onButtonClick = ()=> {
-        this.setState({
-            isPopoverOpen: !this.state.isPopoverOpen,
-        });
-    }
+  const button = (
+    <div className="blockyright" onClick={onButtonClick}>
+      <img src={more} alt="" />
+    </div>
+  );
 
-    closePopover = () => {
-        this.setState({
-            isPopoverOpen: false,
-        });
-    }
-
-    triggerDelete = () => {
-        const { id, deleteBlock } = this.props;
-        deleteBlock(id);
-    }
-
-    render() {
-        const { openConfigurator } = this.props;
-        const button = (
-            <div className="blockyright" onClick={this.onButtonClick}>
-                <img src={more} alt="" />
-            </div>
-        );
-
-        return (
-        <EuiPopover
-        ownFocus
-            button={button}
-            isOpen={this.state.isPopoverOpen}
-            closePopover={this.closePopover}
-            anchorPosition="rightCenter"
-            panelPaddingSize="none">
-            <EuiListGroup>
-
-                <EuiListGroupItem
-                    id="confCard"
-                    iconType="gear"
-                    onClick={openConfigurator}
-                    label="Configure"
-                    size="m"
-                />
-
-
-
-                <EuiListGroupItem
-                    id="deleteCard"
-                    iconType="trash"
-                    onClick={this.triggerDelete}
-                    label="Delete"
-                    size="m"
-                />
-
-            </EuiListGroup>
-        </EuiPopover>
-        );
-    }
+  return (
+    <EuiPopover
+      ownFocus
+      button={button}
+      isOpen={isPopoverOpen}
+      closePopover={closePopover}
+      anchorPosition="rightCenter"
+      panelPaddingSize="none">
+      <EuiListGroup>
+        <EuiListGroupItem
+          id="confCard"
+          iconType="gear"
+          onClick={openConfigurator}
+          label="Configure"
+          size="m"
+        />
+        <EuiListGroupItem
+          id="deleteCard"
+          iconType="trash"
+          onClick={triggerDelete}
+          label="Delete"
+          size="m"
+        />
+      </EuiListGroup>
+    </EuiPopover>
+  );
 }
+
+export default FlowPop;

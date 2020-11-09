@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 
 import eye from '../../../assets/images/eye.svg';
 import action from '../../../assets/images/action.svg';
@@ -48,7 +48,7 @@ const flowBlocks = [
   },
 ];
 
-type DragProps = {
+export type IDraggedBlock = {
   left: number;
   top: number;
   type: number;
@@ -56,48 +56,36 @@ type DragProps = {
   setDragRef:(drag:any) => void;
 };
 
-class DraggedBlock extends Component<DragProps> {
+function DraggedBlock(props: IDraggedBlock) {
+  let dragRef: any = React.createRef<HTMLDivElement>();
+  const {setDragRef} = props;
 
-  dragRef: any;
+  useEffect(() => {
+    setDragRef(dragRef.current);
 
-  constructor (props:DragProps) {
-    super(props);
-    this.dragRef = React.createRef<HTMLDivElement>();
-  }
+    return () => {
+      setDragRef(null);
+    };
+  }, []);
 
-  componentDidMount(){
-    const {setDragRef} = this.props;
+  const { left, top, type, id } = props;
 
-    setDragRef(this.dragRef.current);
-  }
-
-  componentWillUnmount(){
-    const {setDragRef} = this.props;
-
-    setDragRef(null);
-  }
-
-  render() {
-    const { left, top, type, id} = this.props;
-
-    return (
-      <div className="blockelem noselect block dragging" style={{left:left,top:top}} ref={this.dragRef}>
-        <input type="hidden" name="blockelemtype" className="blockelemtype" value={type}/>
-        <div className="blockin">
-          <div className="blockico">
-            <img src={flowBlocks[type-1].icon} alt=""/>
-
-          </div>
-          <div className="blocktext">
-            <p className="blocktitle">{flowBlocks[type-1].title}</p>
-            <p className="blockdesc">{flowBlocks[type-1].desc}</p>
-          </div>
+  return (
+    <div className="blockelem noselect block dragging" style={{left:left,top:top}} ref={dragRef}>
+      <input type="hidden" name="blockelemtype" className="blockelemtype" value={type}/>
+      <div className="blockin">
+        <div className="blockico">
+          <img src={flowBlocks[type-1].icon} alt=""/>
         </div>
-        <input type="hidden" name="blockid" className="blockid" value={id}/>
-
+        <div className="blocktext">
+          <p className="blocktitle">{flowBlocks[type-1].title}</p>
+          <p className="blockdesc">{flowBlocks[type-1].desc}</p>
+        </div>
       </div>
-    )
-  }
+      <input type="hidden" name="blockid" className="blockid" value={id}/>
+    </div>
+  );
 }
 
 export default DraggedBlock;
+

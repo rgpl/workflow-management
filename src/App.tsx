@@ -7,27 +7,20 @@ import {
 } from "react-router-dom";
 import Home from './components/home/Home';
 import SketchPad from './components/sketchpad/SketchPad';
-import { Provider } from 'mobx-react';
-import { journeyStore } from './store/JourneyStore';
+import {JourneyStoreProvider} from "./store/JourneyStore";
+import {BlocksStoreProvider} from "./store/BlocksStore";
 
-const stores ={
-    journeyStore
-};
-
-//window._____APP_STATE_____ = stores;
-
-const App = () =>(
-
-    <Provider {...stores}>
-        <Router >
-            <Switch>
-                <Route exact path="/" component={Home}></Route>
-                <Route path="/sketchpad" component={SketchPad}></Route>
-            </Switch>
+function App() {
+  return (
+    <JourneyStoreProvider>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/sketchpad" component={SketchPad} />
+          </Switch>
         </Router>
-    </Provider>
-
-)
-
+    </JourneyStoreProvider>
+  );
+}
 
 export default App;
