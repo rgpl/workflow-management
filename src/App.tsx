@@ -6,9 +6,9 @@ import {
   Route
 } from "react-router-dom";
 import Home from './components/home/Home';
-import SketchPad from './components/sketchpad/SketchPad';
 import {JourneyStoreProvider} from "./store/JourneyStore";
 import {BlocksStoreProvider} from "./store/BlocksStore";
+import SketchPad from "./components/sketchpad/SketchPad";
 
 function App() {
   return (

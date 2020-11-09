@@ -1,7 +1,7 @@
 import React ,{Component} from 'react';
 import {ArrowInstance} from "../../../store/BlocksStore";
 
-function Arrow(props: ArrowInstance) {
+function Arrow(props: any) {
   const {id, path1, path2, left, top} = props;
 
   return (
