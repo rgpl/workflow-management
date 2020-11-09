@@ -58,13 +58,6 @@ const chartSimple = {
             value: 'yes',
           },
         },
-        port2: {
-          id: 'port2',
-          type: 'output',
-          properties: {
-            value: 'no',
-          },
-        },
       },
     },
   },
