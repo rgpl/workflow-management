@@ -27,7 +27,7 @@ export const JourneyStoreProvider = ({children} : { children: any }) => {
 export const useJourneyStore = () => {
   const store = React.useContext(JourneyStoreContext);
   if (!store) {
-    throw new Error('useStore must be used within a StoreProvider.');
+    throw new Error('useJourneyStore must be used within a JourneyStoreProvider.');
   }
   return store;
 };
