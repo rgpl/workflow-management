@@ -1,4 +1,3 @@
-import blockTypes from '../config/nodes.json';
 import { useLocalObservable } from "mobx-react-lite";
 import React from "react";
 import { IChart } from "@mrblenny/react-flow-chart";
@@ -6,6 +5,7 @@ import { ISelectedOrHovered } from "@mrblenny/react-flow-chart/src/types/chart";
 
 interface IChartStore {
   chart: IChart,
+  showNodeSettings: boolean;
 }
 
 const ChartStoreContext = React.createContext<IChartStore|null>(null);
@@ -15,6 +15,8 @@ export const ChartStoreProvider = ({ children }: { children: any }) => {
   return <ChartStoreContext.Provider value={store}>{children}</ChartStoreContext.Provider>;
 };
 
+export const FIXED_ZOOM_VALUE: number = 1;
+
 const createChartStore = (): IChartStore => {
   return {
     chart: {
@@ -22,7 +24,7 @@ const createChartStore = (): IChartStore => {
         x: 0,
         y: 0,
       },
-      scale: 1,
+      scale: FIXED_ZOOM_VALUE,
       nodes: {
         node1: {
           id: 'node1',
@@ -45,7 +47,8 @@ const createChartStore = (): IChartStore => {
       links: {},
       selected: {} as ISelectedOrHovered,
       hovered: {} as ISelectedOrHovered,
-    }
+    },
+    showNodeSettings: false,
   };
 };
 

@@ -1,4 +1,4 @@
-import React, {Component, useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 
 import {
   EuiButton,
@@ -21,6 +21,7 @@ import {
 } from '@elastic/eui';
 
 import SuperSelectComplex from './SuperSelectComplex';
+import { Observer } from "mobx-react-lite";
 
 type FlyProps = {
   closeSettings: () => void;
@@ -144,67 +145,69 @@ function Flyout(props: FlyProps) {
   const { closeSettings } = props;
 
   return (
-    <EuiFlyout
-      onClose={closeFlyout}
-      hideCloseButton
-      aria-labelledby="flyoutComplicatedTitle">
-      <EuiFlyoutHeader hasBorder>
-        <EuiTitle size="m">
-          <h2 id="flyoutComplicatedTitle">Flyout header</h2>
-        </EuiTitle>
-        <EuiSpacer size="s" />
-        <EuiText color="subdued">
-          <p>
-            Put navigation items in the header, and cross tab actions in a
-            footer.
-          </p>
-        </EuiText>
-        <EuiTabs style={{ marginBottom: '-25px' }}>
-          {renderTabs()}
-        </EuiTabs>
-      </EuiFlyoutHeader>
-      <EuiFlyoutBody>
-        <EuiPopover
-          closePopover={closePopover}
-          button={
-            <EuiButton onClick={togglePopover}>
-              Even popovers can be included
-            </EuiButton>
-          }
-          isOpen={isPopoverOpen}>
-          <p>
-            This is the popover content, notice how it can overflow the
-            flyout!
-          </p>
-        </EuiPopover>
-        <EuiSpacer size="m" />
-        <EuiForm>
-          <EuiFormRow label="A SuperSelect field">
-            <SuperSelectComplex />
-          </EuiFormRow>
-        </EuiForm>
-        <EuiSpacer />
-        {flyoutContent}
-        <EuiCodeBlock language="html">{htmlCode}</EuiCodeBlock>
-      </EuiFlyoutBody>
-      <EuiFlyoutFooter>
-        <EuiFlexGroup justifyContent="spaceBetween">
-          <EuiFlexItem grow={false}>
-            <EuiButtonEmpty
-              iconType="cross"
-              onClick={closeSettings}
-              flush="left">
-              Close
-            </EuiButtonEmpty>
-          </EuiFlexItem>
-          <EuiFlexItem grow={false}>
-            <EuiButton onClick={closeFlyout} fill>
-              Save
-            </EuiButton>
-          </EuiFlexItem>
-        </EuiFlexGroup>
-      </EuiFlyoutFooter>
-    </EuiFlyout>
+    <Observer>{() =>
+      <EuiFlyout
+        onClose={closeFlyout}
+        hideCloseButton
+        aria-labelledby="flyoutComplicatedTitle">
+        <EuiFlyoutHeader hasBorder>
+          <EuiTitle size="m">
+            <h2 id="flyoutComplicatedTitle">Flyout header</h2>
+          </EuiTitle>
+          <EuiSpacer size="s"/>
+          <EuiText color="subdued">
+            <p>
+              Put navigation items in the header, and cross tab actions in a
+              footer.
+            </p>
+          </EuiText>
+          <EuiTabs style={{marginBottom: '-25px'}}>
+            {renderTabs()}
+          </EuiTabs>
+        </EuiFlyoutHeader>
+        <EuiFlyoutBody>
+          <EuiPopover
+            closePopover={closePopover}
+            button={
+              <EuiButton onClick={togglePopover}>
+                Even popovers can be included
+              </EuiButton>
+            }
+            isOpen={isPopoverOpen}>
+            <p>
+              This is the popover content, notice how it can overflow the
+              flyout!
+            </p>
+          </EuiPopover>
+          <EuiSpacer size="m"/>
+          <EuiForm>
+            <EuiFormRow label="A SuperSelect field">
+              <SuperSelectComplex/>
+            </EuiFormRow>
+          </EuiForm>
+          <EuiSpacer/>
+          {flyoutContent}
+          <EuiCodeBlock language="html">{htmlCode}</EuiCodeBlock>
+        </EuiFlyoutBody>
+        <EuiFlyoutFooter>
+          <EuiFlexGroup justifyContent="spaceBetween">
+            <EuiFlexItem grow={false}>
+              <EuiButtonEmpty
+                iconType="cross"
+                onClick={closeSettings}
+                flush="left">
+                Close
+              </EuiButtonEmpty>
+            </EuiFlexItem>
+            <EuiFlexItem grow={false}>
+              <EuiButton onClick={closeFlyout} fill>
+                Save
+              </EuiButton>
+            </EuiFlexItem>
+          </EuiFlexGroup>
+        </EuiFlyoutFooter>
+      </EuiFlyout>
+    }</Observer>
   );
 }
 

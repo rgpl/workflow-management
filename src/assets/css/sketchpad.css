@@ -55,6 +55,18 @@ body, html {
     background-color: #FFF;
     cursor: pointer;
 }
+
+.blockinstance {
+    padding: 1.15rem;
+    border: 1px solid #D3DAE6;
+    transition-property: box-shadow, height;
+    transition-duration: .2s;
+    transition-timing-function: cubic-bezier(.05,.03,.35,1);
+    border-radius: 4px;
+    box-shadow: 0 2px 2px -1px rgba(152, 162, 179, 0.3), 0 1px 5px -2px rgba(152, 162, 179, 0.3);
+    box-sizing: border-box;
+}
+
 .blockico {
     display: inline-block;
 }

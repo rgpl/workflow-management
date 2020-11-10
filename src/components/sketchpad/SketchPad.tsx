@@ -3,42 +3,26 @@ import React, { useCallback, useMemo } from "react";
 import { Observer } from "mobx-react-lite";
 import {
   EuiButton,
-  EuiButtonEmpty, EuiButtonToggle,
+  EuiButtonEmpty, EuiButtonToggle, EuiFlexGroup,
   EuiHeader,
   EuiHeaderBreadcrumbs,
   EuiHeaderSection,
   EuiHeaderSectionItem,
 } from "@elastic/eui";
-import { Content, Message, Page, PickSidebar, PickSidebarItem } from "./layout";
-import styled from "styled-components";
 import '../../assets/css/sketchpad.css';
-import { FlyoutSidebar } from "./layout/FlyoutSidebar";
-import { useChartStore } from "../../store/ChartStore";
-import {NodeInner} from "./node/NodeInner";
+import { FIXED_ZOOM_VALUE, useChartStore } from "../../store/ChartStore";
+import { NodeInner } from "./layout/NodeInner";
 import NodeMenu from "./NodeMenu";
-
-const Button = styled.div`
-  padding: 10px 15px;
-  background: cornflowerblue;
-  color: white;
-  border-radius: 3px;
-  text-align: center;
-  transition: 0.3s ease all;
-  cursor: pointer;
-  &:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,.1);
-  }
-  &:active {
-    background: #5682d2;
-  }
-`
+import Flyout from "./flyout/Flyout";
+import { CanvasOuter } from "./layout/CanvasOuter";
+import { EuiFlexItem } from "@elastic/eui";
 
 function SketchPad() {
   const chartStore = useChartStore();
   const config = { readonly: false };
 
   const handleNodeClick = (nodeId: string) => {
-
+    // place custom click event here
   };
 
   const NodeInnerCustom = useCallback(
@@ -125,32 +109,29 @@ function SketchPad() {
             </EuiButton>
           </EuiHeaderSection>
         </EuiHeader>
-        <Page>
-          <NodeMenu />
-          <Content>
+        <EuiFlexGroup gutterSize="none">
+          <EuiFlexItem grow={false}>
+            <NodeMenu />
+          </EuiFlexItem>
+          <EuiFlexItem>
             <FlowChart
               chart={chartStore.chart}
               callbacks={stateActionCallbacks}
+              // set a fixed zoom
+              config={{zoom: {
+                  minScale: FIXED_ZOOM_VALUE,
+                  maxScale: FIXED_ZOOM_VALUE,
+              }}}
               Components={{
-                NodeInner: NodeInnerCustom
+                NodeInner: NodeInnerCustom,
+                CanvasOuter: CanvasOuter,
               }}
             />
-          </Content>
+          </EuiFlexItem>
           {chartStore.chart.selected.type
-            ? <FlyoutSidebar>
-              <Message>
-                <div>Type: {chartStore.chart.selected.type}</div>
-                <div>ID: {chartStore.chart.selected.id}</div>
-                <br/>
-                {/*
-                    We can re-use the onDeleteKey action. This will delete whatever is selected.
-                    Otherwise, we have access to the state here so we can do whatever we want.
-                */}
-                <Button onClick={() => stateActionCallbacks.onDeleteKey({config})}>Delete</Button>
-              </Message>
-            </FlyoutSidebar>
+            ? <Flyout closeSettings={() => { chartStore.showNodeSettings = false }} />
             : ''}
-        </Page>
+        </EuiFlexGroup>
       </>
     }</Observer>
   );

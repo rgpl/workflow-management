@@ -1,6 +1,7 @@
 [
   {
     "type": "Enter Workflow",
+    "description": "Triggers when somebody visits a specified page",
     "ports": {
       "port1": {
         "id": "port1",
@@ -23,6 +24,7 @@
   },
   {
     "type": "Event occurred",
+    "description": "Triggers when somebody performs a specified action",
     "ports": {
       "port1": {
         "id": "port1",
@@ -45,6 +47,7 @@
   },
   {
     "type": "Time has passed",
+    "description": "Triggers after a specified amount of time",
     "ports": {
       "port1": {
         "id": "port1",
@@ -67,6 +70,7 @@
   },
   {
     "type": "Exit Workflow",
+    "description": "Triggers when a specified error happens",
     "ports": {
       "port1": {
         "id": "port1",
@@ -89,6 +93,7 @@
   },
   {
     "type": "Push Action",
+    "description": "Push notification based on the action definition",
     "ports": {
       "port1": {
         "id": "port1",
@@ -111,6 +116,7 @@
   },
   {
     "type": "SMS Action",
+    "description": "SMS Messages will be sent out based on the action definition",
     "ports": {
       "port1": {
         "id": "port1",
@@ -133,6 +139,7 @@
   },
   {
     "type": "E-mail Action",
+    "description": "Email Communication will be sent out based on the action definition",
     "ports": {
       "port1": {
         "id": "port1",
@@ -155,6 +162,7 @@
   },
   {
     "type": "Web Action",
+    "description": "Web Api will be sent out based on the action definition",
     "ports": {
       "port1": {
         "id": "port1",
