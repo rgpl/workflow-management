@@ -1,4 +1,4 @@
-import blockTypes from '../config/blocks-config.json';
+import blockTypes from '../config/nodes.json';
 import { useLocalObservable } from "mobx-react-lite";
 import React from "react";
 import { IChart } from "@mrblenny/react-flow-chart";

@@ -1,0 +1,178 @@
+[
+  {
+    "type": "Enter Workflow",
+    "ports": {
+      "port1": {
+        "id": "port1",
+        "type": "top",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "port2": {
+        "id": "port1",
+        "type": "bottom",
+        "properties": {
+          "custom": "property"
+        }
+      }
+    },
+    "properties": {
+      "custom": "property"
+    }
+  },
+  {
+    "type": "Event occurred",
+    "ports": {
+      "port1": {
+        "id": "port1",
+        "type": "top",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "port2": {
+        "id": "port1",
+        "type": "bottom",
+        "properties": {
+          "custom": "property"
+        }
+      }
+    },
+    "properties": {
+      "custom": "property"
+    }
+  },
+  {
+    "type": "Time has passed",
+    "ports": {
+      "port1": {
+        "id": "port1",
+        "type": "top",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "port2": {
+        "id": "port1",
+        "type": "bottom",
+        "properties": {
+          "custom": "property"
+        }
+      }
+    },
+    "properties": {
+      "custom": "property"
+    }
+  },
+  {
+    "type": "Exit Workflow",
+    "ports": {
+      "port1": {
+        "id": "port1",
+        "type": "top",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "port2": {
+        "id": "port1",
+        "type": "bottom",
+        "properties": {
+          "custom": "property"
+        }
+      }
+    },
+    "properties": {
+      "custom": "property"
+    }
+  },
+  {
+    "type": "Push Action",
+    "ports": {
+      "port1": {
+        "id": "port1",
+        "type": "top",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "port2": {
+        "id": "port1",
+        "type": "bottom",
+        "properties": {
+          "custom": "property"
+        }
+      }
+    },
+    "properties": {
+      "custom": "property"
+    }
+  },
+  {
+    "type": "SMS Action",
+    "ports": {
+      "port1": {
+        "id": "port1",
+        "type": "top",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "port2": {
+        "id": "port1",
+        "type": "bottom",
+        "properties": {
+          "custom": "property"
+        }
+      }
+    },
+    "properties": {
+      "custom": "property"
+    }
+  },
+  {
+    "type": "E-mail Action",
+    "ports": {
+      "port1": {
+        "id": "port1",
+        "type": "top",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "port2": {
+        "id": "port1",
+        "type": "bottom",
+        "properties": {
+          "custom": "property"
+        }
+      }
+    },
+    "properties": {
+      "custom": "property"
+    }
+  },
+  {
+    "type": "Web Action",
+    "ports": {
+      "port1": {
+        "id": "port1",
+        "type": "top",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "port2": {
+        "id": "port1",
+        "type": "bottom",
+        "properties": {
+          "custom": "property"
+        }
+      }
+    },
+    "properties": {
+      "custom": "property"
+    }
+  }
+]
