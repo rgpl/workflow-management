@@ -1,16 +1,18 @@
 import * as React from 'react'
 import {INode} from "@mrblenny/react-flow-chart";
 import {EuiIcon} from "@elastic/eui";
+import NodeIconWrapper from "./icon/NodeIconWrapper";
 
 export interface INodeInnerDefaultProps {
-  node: INode
+  node: INode,
+  icon: string
 }
 
-export const NodeInner = ({ node }: INodeInnerDefaultProps) => {
+export const NodeInner = ({ node }: INodeInnerDefaultProps, icon: string) => {
   return (
     <div className="blockinstance lock">
       <div className="blockyleft">
-        <img width='25' height='25' src="" alt="" />
+        <NodeIconWrapper iconName={icon} />
         <p className='blockyname'>{node.type}</p>
         <EuiIcon type="cross" size="s" className="delete-icon"/>
       </div>
@@ -18,4 +20,4 @@ export const NodeInner = ({ node }: INodeInnerDefaultProps) => {
       <div className="blockyinfo">Test description</div>
     </div>
   );
-};
+}

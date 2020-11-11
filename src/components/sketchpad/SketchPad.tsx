@@ -16,28 +16,29 @@ import NodeMenu from "./NodeMenu";
 import Flyout from "./flyout/Flyout";
 import { CanvasOuter } from "./layout/CanvasOuter";
 import { EuiFlexItem } from "@elastic/eui";
+import PortCustom from "./layout/PortCustom";
 
 function SketchPad() {
   const chartStore = useChartStore();
   const config = { readonly: false };
 
-  const handleNodeClick = (nodeId: string) => {
+  const handleNodeMouseEnter = (nodeId: string) => {
     // place custom click event here
   };
 
   const NodeInnerCustom = useCallback(
-    (props) => <NodeInner {...props} handleNodeClick={handleNodeClick} />,
-    [handleNodeClick]
+    (props) => <NodeInner {...props} handleNodeMouseEnter={handleNodeMouseEnter} />,
+    [handleNodeMouseEnter]
   );
 
   const customCallbacks = useMemo<{ [key: string]: any }>(() => {
     return {
-      onNodeClick: ({ nodeId }: { nodeId: string }) => {
-        console.log('Clicked!', nodeId);
-        handleNodeClick(nodeId);
+      onNodeMouseEnter: ({ nodeId }: { nodeId: string }) => {
+        // console.log('Clicked!', nodeId);
+        // handleNodeMouseEnter(nodeId);
       },
     }
-  }, [handleNodeClick]);
+  }, [handleNodeMouseEnter]);
 
   const stateActionCallbacks = useMemo(() => {
     return Object.entries(actions).reduce(
@@ -118,18 +119,28 @@ function SketchPad() {
               chart={chartStore.chart}
               callbacks={stateActionCallbacks}
               // set a fixed zoom
-              config={{zoom: {
+              config={{
+                zoom: {
                   minScale: FIXED_ZOOM_VALUE,
                   maxScale: FIXED_ZOOM_VALUE,
-              }}}
+                },
+                validateLink: ({ linkId, fromNodeId, fromPortId, toNodeId, toPortId, chart }): boolean => {
+                  // avoid incorrect links between nodes and the ports of the same node
+                  console.log(chart.nodes[fromNodeId].ports[fromPortId].type);
+                  console.log(chart.nodes[toNodeId].ports[toPortId].type);
+                  return !(fromNodeId === toNodeId
+                    || chart.nodes[fromNodeId].ports[fromPortId].type === chart.nodes[toNodeId].ports[toPortId].type);
+                },
+              }}
               Components={{
                 NodeInner: NodeInnerCustom,
                 CanvasOuter: CanvasOuter,
+                Port: PortCustom,
               }}
             />
           </EuiFlexItem>
           {chartStore.chart.selected.type
-            ? <Flyout closeSettings={() => { chartStore.showNodeSettings = false }} />
+            ? <Flyout closeSettings={() => { }} />
             : ''}
         </EuiFlexGroup>
       </>

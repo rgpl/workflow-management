@@ -5,7 +5,6 @@ import { ISelectedOrHovered } from "@mrblenny/react-flow-chart/src/types/chart";
 
 interface IChartStore {
   chart: IChart,
-  showNodeSettings: boolean;
 }
 
 const ChartStoreContext = React.createContext<IChartStore|null>(null);
@@ -48,7 +47,6 @@ const createChartStore = (): IChartStore => {
       selected: {} as ISelectedOrHovered,
       hovered: {} as ISelectedOrHovered,
     },
-    showNodeSettings: false,
   };
 };
 
