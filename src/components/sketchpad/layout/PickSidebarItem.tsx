@@ -1,6 +1,7 @@
 import * as React from 'react';
-import {INode, REACT_FLOW_CHART} from "@mrblenny/react-flow-chart";
 import PickItemIconWrapper from "./icon/PickItemIconWrapper";
+import {INode} from "../flowchart/types";
+import {REACT_FLOW_CHART} from "../flowchart";
 
 export interface ISidebarItemProps {
   type: string,

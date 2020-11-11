@@ -1,7 +1,7 @@
 import * as React from 'react'
-import {INode} from "@mrblenny/react-flow-chart";
 import {EuiIcon} from "@elastic/eui";
 import NodeIconWrapper from "./icon/NodeIconWrapper";
+import {INode} from "../flowchart/types";
 
 export interface INodeInnerDefaultProps {
   node: INode,

@@ -1359,17 +1359,6 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@mrblenny/react-flow-chart@^0.0.14":
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/@mrblenny/react-flow-chart/-/react-flow-chart-0.0.14.tgz#be11d06345c7222b41f488b38011b109e48a04b3"
-  integrity sha512-3bFjlmlYuqHpCRCPoA59jok2Vhe59ZKT5g9lb6U5IM+Zk2fIsKmXp8LEcliW0TrHtNMtZw5Gm3/rScrg/DwAFQ==
-  dependencies:
-    pathfinding "^0.4.18"
-    react-draggable "^4.4.3"
-    react-resize-observer "^1.1.1"
-    react-zoom-pan-pinch "^1.6.1"
-    uuid "^3.3.2"
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -1646,6 +1635,11 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.149.tgz#1342d63d948c6062838fbf961012f74d4e638440"
   integrity sha512-ijGqzZt/b7BfzcK9vTrS6MFljQRPn5BFWOx8oE0GYxribu6uV+aA9zZuXI1zc/etK9E8nrgdoF2+LgUw7+9tJQ==
 
+"@types/lodash@^4.14.118":
+  version "4.14.165"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.165.tgz#74d55d947452e2de0742bad65270433b63a8c30f"
+  integrity sha512-tjSSOTHhI5mCHTy/OOXYIhi2Wt1qcbHmuXD1Ha7q70CgI/I71afO4XtLb/cVexki1oVYchpul/TOuu3Arcdxrg==
+
 "@types/minimatch@*":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
@@ -1665,6 +1659,11 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
+
+"@types/pathfinding@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@types/pathfinding/-/pathfinding-0.0.4.tgz#e878b8ef5c014743e95495afc4291df2b1c94726"
+  integrity sha512-W/gYSgsGaA6gofQNktySOL3ekUqgcrGmmS/XUdCMO+RgOkaqQVnk7yri1vbfU9Dun3jgQxsOphdbOlbNZlr4Nw==
 
 "@types/prop-types@*":
   version "15.7.3"
@@ -1759,6 +1758,11 @@
     "@types/react-dom" "*"
     "@types/testing-library__dom" "*"
     pretty-format "^25.1.0"
+
+"@types/uuid@^3.4.4":
+  version "3.4.9"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-3.4.9.tgz#fcf01997bbc9f7c09ae5f91383af076d466594e1"
+  integrity sha512-XDwyIlt/47l2kWLTzw/mtrpLdB+GPSskR2n/PIcPn+VYhVO77rGhRncIR5GPU0KRzXuqkDO+J5qqrG0Y8P6jzQ==
 
 "@types/yargs-parser@*":
   version "15.0.0"
