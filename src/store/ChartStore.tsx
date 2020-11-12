@@ -5,6 +5,7 @@ import { ISelectedOrHovered } from "@mrblenny/react-flow-chart/src/types/chart";
 
 interface IChartStore {
   chart: IChart,
+  removeNode: (nodeId: string) => void,
 }
 
 const ChartStoreContext = React.createContext<IChartStore|null>(null);
@@ -41,12 +42,20 @@ const createChartStore = (): IChartStore => {
               },
             },
           },
+          properties: {
+            description: "Triggers when somebody visits a specified page",
+            descriptionInstance: "When a New User goes to Site 1",
+            icon: "eye",
+          }
         },
       },
       links: {},
       selected: {} as ISelectedOrHovered,
       hovered: {} as ISelectedOrHovered,
     },
+    removeNode(nodeId: string): void {
+      delete this.chart.nodes[nodeId];
+    }
   };
 };
 

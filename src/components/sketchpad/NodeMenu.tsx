@@ -8,8 +8,6 @@ function NodeMenu() {
       {pickableNodes.map((node: any) =>
         <PickSidebarItem
           type={node.type}
-          description={node.description}
-          icon={node.icon}
           ports={node.ports}
           properties={node.properties}
         />

@@ -4,13 +4,11 @@ import PickItemIconWrapper from "./icon/PickItemIconWrapper";
 
 export interface ISidebarItemProps {
   type: string,
-  description: string,
-  icon: string,
   ports: INode['ports'],
   properties?: any,
 }
 
-export const PickSidebarItem = ({ type, description, icon, ports, properties }: ISidebarItemProps) => {
+export const PickSidebarItem = ({ type, ports, properties }: ISidebarItemProps) => {
   return (
     <div
       draggable={true}
@@ -22,11 +20,11 @@ export const PickSidebarItem = ({ type, description, icon, ports, properties }: 
         <input type="hidden" name='blockelemtype' className="blockelemtype"/>
         <div className="blockin">
           <div className="blockico">
-            <PickItemIconWrapper iconName={icon} />
+            <PickItemIconWrapper iconName={properties.icon} />
           </div>
           <div className="blocktext">
             <p className="blocktitle">{type}</p>
-            <p className="blockdesc">{description}</p>
+            <p className="blockdesc">{properties.description}</p>
           </div>
         </div>
       </div>

@@ -1,8 +1,6 @@
 [
   {
     "type": "Enter Workflow",
-    "description": "Triggers when somebody visits a specified page",
-    "icon": "eye",
     "ports": {
       "port1": {
         "id": "port1",
@@ -20,13 +18,13 @@
       }
     },
     "properties": {
-      "custom": "property"
+      "description": "Triggers when somebody visits a specified page",
+      "descriptionInstance": "When a New User goes to Site 1",
+      "icon": "eye"
     }
   },
   {
     "type": "Event occurred",
-    "description": "Triggers when somebody performs a specified action",
-    "icon": "action",
     "ports": {
       "port1": {
         "id": "port1",
@@ -51,13 +49,13 @@
       }
     },
     "properties": {
-      "custom": "property"
+      "description": "Triggers when somebody performs a specified action",
+      "descriptionInstance": "When a Action 1 is performed",
+      "icon": "action"
     }
   },
   {
     "type": "Time has passed",
-    "description": "Triggers after a specified amount of time",
-    "icon": "time",
     "ports": {
       "port1": {
         "id": "port1",
@@ -75,13 +73,13 @@
       }
     },
     "properties": {
-      "custom": "property"
+      "description": "Triggers after a specified amount of time",
+      "descriptionInstance": "When 10 seconds have passed",
+      "icon": "time"
     }
   },
   {
     "type": "Exit Workflow",
-    "description": "Triggers when a specified error happens",
-    "icon": "error",
     "ports": {
       "port1": {
         "id": "port1",
@@ -92,13 +90,13 @@
       }
     },
     "properties": {
-      "custom": "property"
+      "description": "Triggers when a specified error happens",
+      "descriptionInstance": "...",
+      "icon": "error"
     }
   },
   {
     "type": "Push Action",
-    "description": "Push notification based on the action definition",
-    "icon": "action",
     "ports": {
       "port1": {
         "id": "port1",
@@ -123,13 +121,13 @@
       }
     },
     "properties": {
-      "custom": "property"
+      "description": "Push notification based on the action definition",
+      "descriptionInstance": "Perform Action 1",
+      "icon": "action"
     }
   },
   {
     "type": "SMS Action",
-    "description": "SMS Messages will be sent out based on the action definition",
-    "icon": "action",
     "ports": {
       "port1": {
         "id": "port1",
@@ -154,13 +152,13 @@
       }
     },
     "properties": {
-      "custom": "property"
+      "description": "SMS Messages will be sent out based on the action definition",
+      "descriptionInstance": "Perform Action 2",
+      "icon": "action"
     }
   },
   {
     "type": "E-mail Action",
-    "description": "Email Communication will be sent out based on the action definition",
-    "icon": "action",
     "ports": {
       "port1": {
         "id": "port1",
@@ -192,13 +190,13 @@
       }
     },
     "properties": {
-      "custom": "property"
+      "description": "Email Communication will be sent out based on the action definition",
+      "descriptionInstance": "Perform Action 3",
+      "icon": "action"
     }
   },
   {
     "type": "Web Action",
-    "description": "Web Api will be sent out based on the action definition",
-    "icon": "action",
     "ports": {
       "port1": {
         "id": "port1",
@@ -223,7 +221,9 @@
       }
     },
     "properties": {
-      "custom": "property"
+      "description": "Web Api will be sent out based on the action definition",
+      "descriptionInstance": "Perform Action 4",
+      "icon": "action"
     }
   }
 ]

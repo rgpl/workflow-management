@@ -20,7 +20,6 @@ import PortCustom from "./layout/PortCustom";
 
 function SketchPad() {
   const chartStore = useChartStore();
-  const config = { readonly: false };
 
   const handleNodeMouseEnter = (nodeId: string) => {
     // place custom click event here
@@ -118,10 +117,10 @@ function SketchPad() {
             <FlowChart
               chart={chartStore.chart}
               callbacks={stateActionCallbacks}
-              // set a fixed zoom
               config={{
+                readonly: false,
+                smartRouting: true,
                 zoom: {
-                  minScale: FIXED_ZOOM_VALUE,
                   maxScale: FIXED_ZOOM_VALUE,
                 },
                 validateLink: ({ linkId, fromNodeId, fromPortId, toNodeId, toPortId, chart }): boolean => {
