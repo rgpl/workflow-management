@@ -1,6 +1,7 @@
 import { useLocalObservable } from "mobx-react-lite";
 import React from "react";
-import {IChart, ISelectedOrHovered} from "../components/sketchpad/flowchart/types";
+import { IChart } from "@mrblenny/react-flow-chart";
+import { ISelectedOrHovered } from "@mrblenny/react-flow-chart/src/types/chart";
 
 interface IChartStore {
   chart: IChart,

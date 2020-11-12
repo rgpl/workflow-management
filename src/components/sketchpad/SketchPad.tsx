@@ -1,3 +1,4 @@
+import {actions, FlowChart, IFlowChartCallbacks} from "@mrblenny/react-flow-chart";
 import React, { useCallback, useMemo } from "react";
 import { Observer } from "mobx-react-lite";
 import {
@@ -16,29 +17,28 @@ import Flyout from "./flyout/Flyout";
 import { CanvasOuter } from "./layout/CanvasOuter";
 import { EuiFlexItem } from "@elastic/eui";
 import PortCustom from "./layout/PortCustom";
-import {FlowChart, IFlowChartCallbacks} from "./flowchart/components/FlowChart";
-import {actions} from "./flowchart/container";
 
 function SketchPad() {
   const chartStore = useChartStore();
+  const config = { readonly: false };
 
-  const handleLinkStart = (nodeId: string) => {
+  const handleNodeMouseEnter = (nodeId: string) => {
     // place custom click event here
-    return false;
   };
 
   const NodeInnerCustom = useCallback(
-    (props) => <NodeInner {...props} handleLinkStart={handleLinkStart} />,
-    [handleLinkStart]
+    (props) => <NodeInner {...props} handleNodeMouseEnter={handleNodeMouseEnter} />,
+    [handleNodeMouseEnter]
   );
 
   const customCallbacks = useMemo<{ [key: string]: any }>(() => {
     return {
-      onLinkStart: ({ nodeId }: { nodeId: string }) => {
-
+      onNodeMouseEnter: ({ nodeId }: { nodeId: string }) => {
+        // console.log('Clicked!', nodeId);
+        // handleNodeMouseEnter(nodeId);
       },
     }
-  }, [handleLinkStart]);
+  }, [handleNodeMouseEnter]);
 
   const stateActionCallbacks = useMemo(() => {
     return Object.entries(actions).reduce(
@@ -120,14 +120,16 @@ function SketchPad() {
               callbacks={stateActionCallbacks}
               // set a fixed zoom
               config={{
-                readonly: false,
                 zoom: {
                   minScale: FIXED_ZOOM_VALUE,
                   maxScale: FIXED_ZOOM_VALUE,
                 },
                 validateLink: ({ linkId, fromNodeId, fromPortId, toNodeId, toPortId, chart }): boolean => {
-                  // disable manual link creation (only drop will be supported)
-                  return true;
+                  // avoid incorrect links between nodes and the ports of the same node
+                  console.log(chart.nodes[fromNodeId].ports[fromPortId].type);
+                  console.log(chart.nodes[toNodeId].ports[toPortId].type);
+                  return !(fromNodeId === toNodeId
+                    || chart.nodes[fromNodeId].ports[fromPortId].type === chart.nodes[toNodeId].ports[toPortId].type);
                 },
               }}
               Components={{
