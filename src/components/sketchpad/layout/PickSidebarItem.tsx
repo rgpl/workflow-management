@@ -16,7 +16,7 @@ export const PickSidebarItem = ({ type, ports, properties }: ISidebarItemProps) 
         event.dataTransfer.setData(REACT_FLOW_CHART, JSON.stringify({ type, ports, properties }))
       } }
     >
-      <div className="blockelem">
+      <div className="blockelem noselect">
         <input type="hidden" name='blockelemtype' className="blockelemtype"/>
         <div className="blockin">
           <div className="blockico">

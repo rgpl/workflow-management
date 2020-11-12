@@ -10,7 +10,7 @@ import {
   EuiHeaderSectionItem,
 } from "@elastic/eui";
 import '../../assets/css/sketchpad.css';
-import { FIXED_ZOOM_VALUE, useChartStore } from "../../store/ChartStore";
+import { MAX_ZOOM_VALUE, useChartStore } from "../../store/ChartStore";
 import { NodeInner } from "./layout/NodeInner";
 import NodeMenu from "./NodeMenu";
 import Flyout from "./flyout/Flyout";
@@ -121,7 +121,7 @@ function SketchPad() {
                 readonly: false,
                 smartRouting: true,
                 zoom: {
-                  maxScale: FIXED_ZOOM_VALUE,
+                  maxScale: MAX_ZOOM_VALUE,
                 },
                 validateLink: ({ linkId, fromNodeId, fromPortId, toNodeId, toPortId, chart }): boolean => {
                   // avoid incorrect links between nodes and the ports of the same node

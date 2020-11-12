@@ -30,14 +30,16 @@
         "id": "port1",
         "type": "output",
         "properties": {
-          "custom": "property"
+          "title": "Yes",
+          "linkColor": "#00ff00"
         }
       },
       "port2": {
         "id": "port2",
         "type": "output",
         "properties": {
-          "custom": "property"
+          "title": "No",
+          "linkColor": "#ff0000"
         }
       },
       "port3": {

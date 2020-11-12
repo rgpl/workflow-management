@@ -4,7 +4,7 @@ import { PickSidebarItem } from "./layout/PickSidebarItem";
 
 function NodeMenu() {
   return (
-    <div className="blocklist">
+    <div className="blocklist noselect">
       {pickableNodes.map((node: any) =>
         <PickSidebarItem
           type={node.type}
