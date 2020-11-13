@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {INode, IPortDefaultProps} from "@artemantcev/react-flow-chart";
+import {ILink, INode, IPortDefaultProps} from "@artemantcev/react-flow-chart";
 import styled from "styled-components";
 import { Observer } from "mobx-react-lite";
 import { useChartStore } from "../../../store/ChartStore";
@@ -38,13 +38,29 @@ function PortCustom(props: IPortDefaultProps) {
         onDrop={ (event) => {
           const newNode = JSON.parse(event.dataTransfer.getData("react-flow-chart")) as INode;
           const newNodeId = v4();
+
           newNode.position = {
             x: props.node.position.x,
             y: props.node.position.y + 150,
           }
           newNode.id = newNodeId;
-          console.log(newNode);
           chartStore.addNode(newNode, newNodeId);
+
+
+          const newLinkId = v4();
+          const newLink: ILink = {
+            id: newLinkId,
+            from: {
+              nodeId: props.node.id,
+              portId: props.port.id,
+            },
+            to: {
+              nodeId: newNode.id,
+              portId: newNode.ports["portInput"].id,
+            },
+          };
+
+          chartStore.addLink(newLink, newLinkId);
         }}
       >
         <PortDefaultInner

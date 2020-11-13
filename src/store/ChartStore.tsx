@@ -2,12 +2,14 @@ import { useLocalObservable } from "mobx-react-lite";
 import React from "react";
 import {IChart, ILink, INode} from "@artemantcev/react-flow-chart";
 import { ISelectedOrHovered } from "@artemantcev/react-flow-chart/src/types/chart";
+import v4 from "uuid/v4";
 
 interface IChartStore {
   chart: IChart,
   removeNode: (nodeId: string) => void,
   removeLink: (linkId: string) => void,
   addNode: (newNode: INode, newId: string) => void,
+  addLink: (newLink: ILink, newId: string) => void,
 }
 
 const ChartStoreContext = React.createContext<IChartStore|null>(null);
@@ -58,6 +60,9 @@ const createChartStore = (): IChartStore => {
     },
     addNode(newNode: INode, newId: string) {
       this.chart.nodes[newId] = newNode;
+    },
+    addLink(newLink: ILink, newId: string) {
+      this.chart.links[newId] = newLink;
     },
     removeNode(nodeId: string): void {
       // remove the related links to prevent an error

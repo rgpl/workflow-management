@@ -16,7 +16,7 @@ import Flyout from "./flyout/Flyout";
 import { CanvasOuter } from "./layout/CanvasOuter";
 import { EuiFlexItem } from "@elastic/eui";
 import PortCustom from "./layout/PortCustom";
-import { actions, FlowChart, IFlowChartCallbacks } from "@artemantcev/react-flow-chart";
+import {actions, FlowChart, IFlowChartCallbacks, IOnCanvasDropInput} from "@artemantcev/react-flow-chart";
 
 function SketchPad() {
   const chartStore = useChartStore();
@@ -120,6 +120,7 @@ function SketchPad() {
               config={{
                 readonly: false,
                 smartRouting: true,
+                isFreeDraggingRestricted: true,
                 zoom: {
                   maxScale: MAX_ZOOM_VALUE,
                 },

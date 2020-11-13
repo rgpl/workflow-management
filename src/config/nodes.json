@@ -2,27 +2,27 @@
   {
     "type": "Event occurred",
     "ports": {
-      "port1": {
-        "id": "port1",
+      "portInput": {
+        "id": "portInput",
+        "type": "input",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "portOutput1": {
+        "id": "portOutput1",
         "type": "output",
         "properties": {
           "title": "Yes",
           "linkColor": "#00ff00"
         }
       },
-      "port2": {
-        "id": "port2",
+      "portOutput2": {
+        "id": "portOutput2",
         "type": "output",
         "properties": {
           "title": "No",
           "linkColor": "#ff0000"
-        }
-      },
-      "port3": {
-        "id": "port3",
-        "type": "input",
-        "properties": {
-          "custom": "property"
         }
       }
     },
@@ -35,15 +35,15 @@
   {
     "type": "Time has passed",
     "ports": {
-      "port1": {
-        "id": "port1",
+      "portInput": {
+        "id": "portInput",
         "type": "input",
         "properties": {
           "custom": "property"
         }
       },
-      "port2": {
-        "id": "port2",
+      "portOutput1": {
+        "id": "portOutput1",
         "type": "output",
         "properties": {
           "custom": "property"
@@ -59,8 +59,8 @@
   {
     "type": "Exit Workflow",
     "ports": {
-      "port1": {
-        "id": "port1",
+      "portInput": {
+        "id": "portInput",
         "type": "input",
         "properties": {
           "custom": "property"
@@ -76,22 +76,22 @@
   {
     "type": "Push Action",
     "ports": {
-      "port1": {
-        "id": "port1",
+      "portInput": {
+        "id": "portInput",
         "type": "input",
         "properties": {
           "custom": "property"
         }
       },
-      "port2": {
-        "id": "port2",
+      "portOutput1": {
+        "id": "portOutput1",
         "type": "output",
         "properties": {
           "custom": "property"
         }
       },
-      "port3": {
-        "id": "port3",
+      "portOutput2": {
+        "id": "portOutput2",
         "type": "output",
         "properties": {
           "custom": "property"
@@ -107,22 +107,22 @@
   {
     "type": "SMS Action",
     "ports": {
-      "port1": {
-        "id": "port1",
+      "portInput": {
+        "id": "portInput",
         "type": "input",
         "properties": {
           "custom": "property"
         }
       },
-      "port2": {
-        "id": "port2",
+      "portOutput1": {
+        "id": "portOutput1",
         "type": "output",
         "properties": {
           "custom": "property"
         }
       },
-      "port3": {
-        "id": "port3",
+      "portOutput2": {
+        "id": "portOutput2",
         "type": "output",
         "properties": {
           "custom": "property"
@@ -138,29 +138,29 @@
   {
     "type": "E-mail Action",
     "ports": {
-      "port1": {
-        "id": "port1",
+      "portInput": {
+        "id": "portInput",
         "type": "input",
         "properties": {
           "custom": "property"
         }
       },
-      "port2": {
-        "id": "port2",
+      "portOutput1": {
+        "id": "portOutput1",
         "type": "output",
         "properties": {
           "custom": "property"
         }
       },
-      "port3": {
-        "id": "port3",
+      "portOutput2": {
+        "id": "portOutput2",
         "type": "output",
         "properties": {
           "custom": "property"
         }
       },
-      "port4": {
-        "id": "port4",
+      "portOutput3": {
+        "id": "portOutput3",
         "type": "output",
         "properties": {
           "custom": "property"
@@ -176,22 +176,22 @@
   {
     "type": "Web Action",
     "ports": {
-      "port1": {
-        "id": "port1",
+      "portInput": {
+        "id": "portInput",
         "type": "input",
         "properties": {
           "custom": "property"
         }
       },
-      "port2": {
-        "id": "port2",
+      "portOutput1": {
+        "id": "portOutput1",
         "type": "output",
         "properties": {
           "custom": "property"
         }
       },
-      "port3": {
-        "id": "port3",
+      "portOutput2": {
+        "id": "portOutput2",
         "type": "output",
         "properties": {
           "custom": "property"
