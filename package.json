@@ -6,7 +6,7 @@
   "dependencies": {
     "@elastic/datemath": "^5.0.2",
     "@elastic/eui": "^18.3.0",
-    "@mrblenny/react-flow-chart": "^0.0.14",
+    "@artemantcev/react-flow-chart": "^0.0.16",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -34,7 +34,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "tslint -p tsconfig.json -c tslint.json"
   },
   "eslintConfig": {
     "extends": "react-app"

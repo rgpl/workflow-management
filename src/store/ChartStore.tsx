@@ -1,7 +1,7 @@
 import { useLocalObservable } from "mobx-react-lite";
 import React from "react";
-import {IChart, ILink, INode} from "@mrblenny/react-flow-chart";
-import { ISelectedOrHovered } from "@mrblenny/react-flow-chart/src/types/chart";
+import {IChart, ILink, INode} from "@artemantcev/react-flow-chart";
+import { ISelectedOrHovered } from "@artemantcev/react-flow-chart/src/types/chart";
 
 interface IChartStore {
   chart: IChart,
@@ -18,6 +18,7 @@ export const ChartStoreProvider = ({ children }: { children: any }) => {
 };
 
 export const MAX_ZOOM_VALUE: number = 1;
+export const NODE_TYPE_ENTER_WORKFLOW = "Enter Workflow";
 
 const createChartStore = (): IChartStore => {
   return {
@@ -30,7 +31,7 @@ const createChartStore = (): IChartStore => {
       nodes: {
         node1: {
           id: 'node1',
-          type: 'Enter Workflow',
+          type: NODE_TYPE_ENTER_WORKFLOW,
           position: {
             x: 500,
             y: 100,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {INode, REACT_FLOW_CHART} from "@mrblenny/react-flow-chart";
+import {INode, REACT_FLOW_CHART} from "@artemantcev/react-flow-chart";
 import PickItemIconWrapper from "./icon/PickItemIconWrapper";
 
 export interface ISidebarItemProps {

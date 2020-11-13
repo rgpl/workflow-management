@@ -1,4 +1,3 @@
-import {actions, FlowChart, IFlowChartCallbacks} from "@mrblenny/react-flow-chart";
 import React, { useCallback, useMemo } from "react";
 import { Observer } from "mobx-react-lite";
 import {
@@ -17,6 +16,7 @@ import Flyout from "./flyout/Flyout";
 import { CanvasOuter } from "./layout/CanvasOuter";
 import { EuiFlexItem } from "@elastic/eui";
 import PortCustom from "./layout/PortCustom";
+import { actions, FlowChart, IFlowChartCallbacks } from "@artemantcev/react-flow-chart";
 
 function SketchPad() {
   const chartStore = useChartStore();
@@ -139,7 +139,9 @@ function SketchPad() {
             />
           </EuiFlexItem>
           {chartStore.chart.selected.type
-            ? <Flyout closeSettings={() => { }} />
+            // IN PROGRESS; TEMPORARILY DISABLED
+            // ? <Flyout closeSettings={() => { }} />
+            ? ''
             : ''}
         </EuiFlexGroup>
       </>

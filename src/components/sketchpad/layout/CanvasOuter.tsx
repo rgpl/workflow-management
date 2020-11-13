@@ -1,4 +1,4 @@
-import {ICanvasOuterDefaultProps} from "@mrblenny/react-flow-chart";
+import {ICanvasOuterDefaultProps} from "@artemantcev/react-flow-chart";
 import styled from "styled-components";
 
 export const CanvasOuter = styled.div<ICanvasOuterDefaultProps>`

@@ -1,29 +1,5 @@
 [
   {
-    "type": "Enter Workflow",
-    "ports": {
-      "port1": {
-        "id": "port1",
-        "type": "input",
-        "properties": {
-          "custom": "property"
-        }
-      },
-      "port2": {
-        "id": "port2",
-        "type": "output",
-        "properties": {
-          "custom": "property"
-        }
-      }
-    },
-    "properties": {
-      "description": "Triggers when somebody visits a specified page",
-      "descriptionInstance": "When a New User goes to Site 1",
-      "icon": "eye"
-    }
-  },
-  {
     "type": "Event occurred",
     "ports": {
       "port1": {

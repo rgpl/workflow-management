@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { INode } from "@mrblenny/react-flow-chart";
+import { INode } from "@artemantcev/react-flow-chart";
 import { EuiIcon } from "@elastic/eui";
 import NodeIconWrapper from "./icon/NodeIconWrapper";
 import { Observer } from "mobx-react-lite";
-import { useChartStore } from "../../../store/ChartStore";
+import {NODE_TYPE_ENTER_WORKFLOW, useChartStore} from "../../../store/ChartStore";
 
 export interface INodeInnerDefaultProps {
   node: INode,
@@ -18,7 +18,10 @@ export const NodeInner = ({ node }: INodeInnerDefaultProps) => {
         <div className="blockyleft">
           <NodeIconWrapper iconName={node.properties.icon}/>
           <p className='blockyname'>{node.type}</p>
-          <EuiIcon type="cross" size="s" className="delete-icon" onClick={() => chartStore.removeNode(node.id)}/>
+          { node.type !== NODE_TYPE_ENTER_WORKFLOW
+            ? <EuiIcon type="cross" size="s" className="delete-icon" onClick={() => chartStore.removeNode(node.id)}/>
+            : ''
+          }
         </div>
         <div className="blockydiv"/>
         <div className="blockyinfo">{node.properties.descriptionInstance}</div>

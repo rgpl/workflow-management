@@ -2,6 +2,17 @@
 # yarn lockfile v1
 
 
+"@artemantcev/react-flow-chart@^0.0.16":
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/@artemantcev/react-flow-chart/-/react-flow-chart-0.0.16.tgz#dbe3638db462dcd22a2fe08ae03c872a0da5082f"
+  integrity sha512-TEAm8ThTbb1L98M4vcUrQRzPF6L99FNPC3UKksD6ehay/e0hipxEl+j/9DKV64B+9Ykj2EgHXcCpHWY6avrXbQ==
+  dependencies:
+    pathfinding "^0.4.18"
+    react-draggable "^4.4.3"
+    react-resize-observer "^1.1.1"
+    react-zoom-pan-pinch "^1.6.1"
+    uuid "^3.3.2"
+
 "@babel/code-frame@7.8.3", "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.8.3":
   version "7.8.3"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.8.3.tgz#33e25903d7481181534e12ec0a25f16b6fcf419e"
@@ -1358,17 +1369,6 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
-
-"@mrblenny/react-flow-chart@^0.0.14":
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/@mrblenny/react-flow-chart/-/react-flow-chart-0.0.14.tgz#be11d06345c7222b41f488b38011b109e48a04b3"
-  integrity sha512-3bFjlmlYuqHpCRCPoA59jok2Vhe59ZKT5g9lb6U5IM+Zk2fIsKmXp8LEcliW0TrHtNMtZw5Gm3/rScrg/DwAFQ==
-  dependencies:
-    pathfinding "^0.4.18"
-    react-draggable "^4.4.3"
-    react-resize-observer "^1.1.1"
-    react-zoom-pan-pinch "^1.6.1"
-    uuid "^3.3.2"
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"

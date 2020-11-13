@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {INode, IPortDefaultProps} from "@mrblenny/react-flow-chart";
+import {INode, IPortDefaultProps} from "@artemantcev/react-flow-chart";
 import styled from "styled-components";
 import { Observer } from "mobx-react-lite";
 import { useChartStore } from "../../../store/ChartStore";
@@ -39,8 +39,8 @@ function PortCustom(props: IPortDefaultProps) {
           const newNode = JSON.parse(event.dataTransfer.getData("react-flow-chart")) as INode;
           const newNodeId = v4();
           newNode.position = {
-            x: 50,
-            y: 50,
+            x: props.node.position.x,
+            y: props.node.position.y + 150,
           }
           newNode.id = newNodeId;
           console.log(newNode);
