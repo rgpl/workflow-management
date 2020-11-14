@@ -2,7 +2,7 @@ import * as React from 'react'
 import {ILink, INode, IPortDefaultProps} from "@artemantcev/react-flow-chart";
 import styled from "styled-components";
 import { Observer } from "mobx-react-lite";
-import {PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
+import {PORT_ID_INPUT, PROPERTY_NODE_IS_DISCONNECTED, useChartStore} from "../../../store/ChartStore";
 import v4 from "uuid/v4";
 
 const PortDefaultOuter = styled.div`
@@ -49,6 +49,14 @@ function PortCustom(props: IPortDefaultProps) {
           const newNode = JSON.parse(event.dataTransfer.getData("react-flow-chart")) as INode;
           const newNodeId = v4();
 
+
+
+
+
+
+
+
+
           let linksCount = Object.keys(chartStore.chart.links).length;
 
           if (linksCount === 0) {
@@ -91,6 +99,14 @@ function PortCustom(props: IPortDefaultProps) {
               }
             }
           }
+
+
+
+
+
+
+
+
 
           newNode.id = newNodeId;
           chartStore.addNode(newNode, newNodeId);

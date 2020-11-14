@@ -9,7 +9,7 @@ import {
   EuiHeaderSectionItem,
 } from "@elastic/eui";
 import '../../assets/css/sketchpad.css';
-import { MAX_ZOOM_VALUE, useChartStore } from "../../store/ChartStore";
+import {MAX_ZOOM_VALUE, PROPERTY_NODE_IS_DISCONNECTED, useChartStore} from "../../store/ChartStore";
 import { NodeInner } from "./layout/NodeInner";
 import NodeMenu from "./NodeMenu";
 import Flyout from "./flyout/Flyout";
@@ -20,7 +20,7 @@ import {
   actions,
   FlowChart,
   IFlowChartCallbacks, ILink,
-  IOnDragCanvasInput, IOnDragNodeStopInput
+  IOnDragNodeStopInput
 } from "@artemantcev/react-flow-chart";
 
 function SketchPad() {
@@ -42,14 +42,51 @@ function SketchPad() {
         // handleNodeMouseEnter(nodeId);
       },
       onDragNode: (input: IOnDragNodeStopInput) => {
-        for (let linkId in chartStore.chart.links) {
-          let linkObject: ILink = chartStore.chart.links[linkId];
-          if ((linkObject.to.nodeId && linkObject.from.nodeId === input.id)
-            || (linkObject.from.nodeId && linkObject.to.nodeId === input.id)
-          ) {
-            chartStore.removeLink(linkId)
+        const removeIncomingLink = (currentLinks: any) => {
+          for (let linkId in currentLinks) {
+            let linkObject: ILink = currentLinks[linkId];
+
+            if (linkObject.from.nodeId && linkObject.to.nodeId === input.id) {
+              delete currentLinks[linkId];
+            }
           }
-        }
+        };
+
+        const searchForChildrenNodes = (parentNodeId: string): string[] => {
+          let childNodesIds: string[] = [];
+
+          for (let linkId in currentLinks) {
+            let linkObject: ILink = currentLinks[linkId];
+
+            if (linkObject.to.nodeId && linkObject.from.nodeId === parentNodeId) {
+              childNodesIds.push(linkObject.to.nodeId);
+              childNodesIds = childNodesIds.concat(searchForChildrenNodes(linkObject.to.nodeId));
+            }
+          }
+
+          return childNodesIds;
+        };
+
+        const moveChildrenBlocks = (childNodesIds: string[], currentNodes: any, currentLinks: any) => {
+          childNodesIds.forEach((childNodeId: string) => {
+            if (currentNodes[childNodeId]) {
+              currentNodes[childNodeId].position = {
+                x: currentNodes[childNodeId].position.x + input.data.deltaX,
+                y: currentNodes[childNodeId].position.y + input.data.deltaY
+              }
+            }
+          });
+
+          chartStore.chart.nodes = currentNodes;
+          chartStore.chart.links = currentLinks;
+        };
+
+        let currentNodes = Object.assign({}, chartStore.chart.nodes);
+        let currentLinks = Object.assign({}, chartStore.chart.links);
+
+        removeIncomingLink(currentLinks);
+        let childrenNodesIds: string[] = searchForChildrenNodes(input.id);
+        moveChildrenBlocks(childrenNodesIds, currentNodes, currentLinks);
       },
     }
   }, [handleNodeMouseEnter]);
