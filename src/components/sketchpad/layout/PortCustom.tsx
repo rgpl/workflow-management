@@ -57,7 +57,15 @@ function PortCustom(props: IPortDefaultProps) {
 
 
 
-          let linksCount = Object.keys(chartStore.chart.links).length;
+          // let linksCount = Object.keys(chartStore.chart.links).length;
+          let linksCount: number = 0;
+
+          for (let linkId in chartStore.chart.links) {
+            let linkObject: ILink = chartStore.chart.links[linkId];
+            if (linkObject.to.nodeId && linkObject.from.nodeId === props.node.id) {
+              linksCount++;
+            }
+          }
 
           if (linksCount === 0) {
             newNode.position = {

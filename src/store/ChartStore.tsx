@@ -38,7 +38,7 @@ const createChartStore = (): IChartStore => {
           type: NODE_TYPE_ENTER_WORKFLOW,
           position: {
             x: 500,
-            y: 100,
+            y: 30,
           },
           ports: {
             port1: {
