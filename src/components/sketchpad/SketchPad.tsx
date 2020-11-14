@@ -16,7 +16,12 @@ import Flyout from "./flyout/Flyout";
 import { CanvasOuter } from "./layout/CanvasOuter";
 import { EuiFlexItem } from "@elastic/eui";
 import PortCustom from "./layout/PortCustom";
-import {actions, FlowChart, IFlowChartCallbacks, IOnCanvasDropInput} from "@artemantcev/react-flow-chart";
+import {
+  actions,
+  FlowChart,
+  IFlowChartCallbacks, ILink,
+  IOnDragCanvasInput, IOnDragNodeStopInput
+} from "@artemantcev/react-flow-chart";
 
 function SketchPad() {
   const chartStore = useChartStore();
@@ -35,6 +40,16 @@ function SketchPad() {
       onNodeMouseEnter: ({ nodeId }: { nodeId: string }) => {
         // console.log('Clicked!', nodeId);
         // handleNodeMouseEnter(nodeId);
+      },
+      onDragNode: (input: IOnDragNodeStopInput) => {
+        for (let linkId in chartStore.chart.links) {
+          let linkObject: ILink = chartStore.chart.links[linkId];
+          if ((linkObject.to.nodeId && linkObject.from.nodeId === input.id)
+            || (linkObject.from.nodeId && linkObject.to.nodeId === input.id)
+          ) {
+            chartStore.removeLink(linkId)
+          }
+        }
       },
     }
   }, [handleNodeMouseEnter]);
