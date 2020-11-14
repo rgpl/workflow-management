@@ -85,36 +85,12 @@ function PortCustom(props: IPortDefaultProps) {
               }
             }
 
-            nodeIdsToMove.forEach((nodeId: string) => {
-              if (chartStore.chart.nodes[nodeId] && chartStore.chart.nodes[nodeId].position.y >  props.node.position.y) {
-                if (chartStore.chart.nodes[nodeId] && chartStore.chart.nodes[nodeId].position.x <= props.node.position.x) {
-                  chartStore.chart.nodes[nodeId].position.x = chartStore.chart.nodes[nodeId].position.x - nodeWidth - horizontalIntervalWidth;
-                } else {
-                  chartStore.chart.nodes[nodeId].position.x = chartStore.chart.nodes[nodeId].position.x + nodeWidth + horizontalIntervalWidth;
-                }
-              }
-            });
-
-            if (linksCount % 2 > 0) {
-              newNode.position = {
-                x: props.node.position.x + nodeWidth + horizontalIntervalWidth,
-                y: props.node.position.y + verticalIntervalHeight,
-              }
-            } else {
-              newNode.position = {
-                x: props.node.position.x,
-                y: props.node.position.y + verticalIntervalHeight,
-              }
+            // default position to prevent "_a is undefined" error
+            newNode.position = {
+              x: props.node.position.x,
+              y: props.node.position.y + verticalIntervalHeight,
             }
           }
-
-
-
-
-
-
-
-
 
           newNode.id = newNodeId;
           chartStore.addNode(newNode, newNodeId);
@@ -133,6 +109,83 @@ function PortCustom(props: IPortDefaultProps) {
           };
 
           chartStore.addLink(newLink, newLinkId);
+
+
+
+
+          /* rearranging higher branches/divisions */
+          let higherNodeIds: string[] = [];
+
+          const searchForAllParentNodes = (currentNodeId: string) => {
+            for (let linkId in chartStore.chart.links) {
+              let linkObject: ILink = chartStore.chart.links[linkId];
+              if (linkObject.from.nodeId && linkObject.to.nodeId === currentNodeId) {
+                higherNodeIds.push(linkObject.from.nodeId);
+                searchForAllParentNodes(linkObject.from.nodeId);
+              }
+            }
+          };
+
+          const searchForAllChildrenNodes = (currentNodeId: string): string[] => {
+            let childrenNodesOfBranchIds: string[] = [];
+
+            for (let linkId in chartStore.chart.links) {
+              let linkObject: ILink = chartStore.chart.links[linkId];
+              if (linkObject.to.nodeId && linkObject.from.nodeId === currentNodeId) {
+                childrenNodesOfBranchIds.push(linkObject.to.nodeId);
+                childrenNodesOfBranchIds = childrenNodesOfBranchIds.concat(searchForAllChildrenNodes(linkObject.to.nodeId));
+              }
+            }
+
+            return childrenNodesOfBranchIds;
+          };
+
+          searchForAllParentNodes(props.node.id);
+          higherNodeIds.push(props.node.id);
+
+          let parentNodeHasMoreThanOneChild = false;
+          let parentOutcomeLinksCount = 1;
+
+          for (let linkId in chartStore.chart.links) {
+            let linkObject: ILink = chartStore.chart.links[linkId];
+            if (linkObject.from.nodeId === props.node.id && linkObject.to.nodeId !== newNodeId) {
+              parentNodeHasMoreThanOneChild = true;
+              parentOutcomeLinksCount++;
+            }
+          }
+
+          if (!parentNodeHasMoreThanOneChild) {
+            return;
+          }
+
+          higherNodeIds.forEach((nodeId: string) => {
+            for (let linkId in chartStore.chart.links) {
+              let linkObject: ILink = chartStore.chart.links[linkId];
+              // unrelated branch detected, move it
+              if (linkObject.to.nodeId && linkObject.from.nodeId === nodeId
+                && !higherNodeIds.includes(linkObject.to.nodeId)
+                && linkObject.to.nodeId !== newNodeId
+              ) {
+
+                let childrenNodesOfBranchIds: string[] = searchForAllChildrenNodes(linkObject.to.nodeId);
+                childrenNodesOfBranchIds.push(linkObject.to.nodeId);
+
+                childrenNodesOfBranchIds.forEach((childNodeId: string) => {
+                  if (newNode.position.x <= chartStore.chart.nodes[childNodeId].position.x) {
+                    chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[childNodeId].position.x + nodeWidth + horizontalIntervalWidth;
+                  } else {
+                    chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[childNodeId].position.x - nodeWidth - horizontalIntervalWidth;
+                  }
+                });
+
+                if (nodeId === props.node.id) {
+                  if (parentOutcomeLinksCount % 2 === 0) {
+                    chartStore.chart.nodes[newNodeId].position.x = chartStore.chart.nodes[newNodeId].position.x - nodeWidth - horizontalIntervalWidth;
+                  }
+                }
+              }
+            }
+          });
         }}
       >
         <PortDefaultInner
