@@ -172,7 +172,7 @@ function SketchPad() {
               config={{
                 readonly: false,
                 // smart routing looks nice but it's too heavy in terms of performance
-                smartRouting: true,
+                smartRouting: false,
                 isFreeDraggingRestricted: true,
                 zoom: {
                   maxScale: MAX_ZOOM_VALUE,

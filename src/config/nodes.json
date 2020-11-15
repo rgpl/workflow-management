@@ -14,7 +14,8 @@
         "type": "output",
         "properties": {
           "title": "Yes",
-          "linkColor": "#00ff00"
+          "linkColor": "#00ff00",
+          "align": "left"
         }
       },
       "portOutput2": {
@@ -22,7 +23,8 @@
         "type": "output",
         "properties": {
           "title": "No",
-          "linkColor": "#ff0000"
+          "linkColor": "#ff0000",
+          "align": "right"
         }
       }
     },
@@ -46,7 +48,7 @@
         "id": "portOutput1",
         "type": "output",
         "properties": {
-          "custom": "property"
+          "align": "center"
         }
       }
     },
@@ -87,14 +89,14 @@
         "id": "portOutput1",
         "type": "output",
         "properties": {
-          "custom": "property"
+          "align": "left"
         }
       },
       "portOutput2": {
         "id": "portOutput2",
         "type": "output",
         "properties": {
-          "custom": "property"
+          "align": "right"
         }
       }
     },
@@ -118,14 +120,14 @@
         "id": "portOutput1",
         "type": "output",
         "properties": {
-          "custom": "property"
+          "align": "left"
         }
       },
       "portOutput2": {
         "id": "portOutput2",
         "type": "output",
         "properties": {
-          "custom": "property"
+          "align": "right"
         }
       }
     },
@@ -149,21 +151,21 @@
         "id": "portOutput1",
         "type": "output",
         "properties": {
-          "custom": "property"
+          "align": "left"
         }
       },
       "portOutput2": {
         "id": "portOutput2",
         "type": "output",
         "properties": {
-          "custom": "property"
+          "align": "center"
         }
       },
       "portOutput3": {
         "id": "portOutput3",
         "type": "output",
         "properties": {
-          "custom": "property"
+          "align": "right"
         }
       }
     },
@@ -187,14 +189,14 @@
         "id": "portOutput1",
         "type": "output",
         "properties": {
-          "custom": "property"
+          "align": "left"
         }
       },
       "portOutput2": {
         "id": "portOutput2",
         "type": "output",
         "properties": {
-          "custom": "property"
+          "align": "right"
         }
       }
     },

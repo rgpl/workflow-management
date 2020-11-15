@@ -46,6 +46,7 @@ const createChartStore = (): IChartStore => {
               type: 'output',
               properties: {
                 value: 'yes',
+                align: "center",
               },
             },
           },

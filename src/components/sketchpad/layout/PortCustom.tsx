@@ -42,8 +42,23 @@ function PortCustom(props: IPortDefaultProps) {
             return;
           }
 
+          let outcomeHasLinkAlready: boolean = false;
+
+          for (let linkId in chartStore.chart.links) {
+            let linkObject: ILink = chartStore.chart.links[linkId];
+            if (linkObject.from.nodeId === props.node.id && linkObject.from.portId === props.port.id) {
+              outcomeHasLinkAlready = true;
+              break;
+            }
+          }
+
+          // avoid multiple links for a single outcome port (this check may be removed in the future)
+          if (outcomeHasLinkAlready) {
+            return;
+          }
+
           const nodeWidth = 100;
-          const horizontalIntervalWidth = 50;
+          const horizontalIntervalWidth = 10;
           const verticalIntervalHeight = 150;
 
           const newNode = JSON.parse(event.dataTransfer.getData("react-flow-chart")) as INode;
@@ -158,6 +173,21 @@ function PortCustom(props: IPortDefaultProps) {
             return;
           }
 
+          let hasCenterChild: boolean = false;
+
+          // check if the parent node has child node connected to its center port (if it exists)
+          for (let linkId in chartStore.chart.links) {
+            let linkObject: ILink = chartStore.chart.links[linkId];
+            if (linkObject.from.nodeId === props.node.id) {
+              if (chartStore.chart.nodes[props.node.id].ports[linkObject.from.portId].properties.align === "center") {
+                hasCenterChild = true;
+                break;
+              }
+              parentOutcomeLinksCount++;
+            }
+          }
+
+          // iteration for higher branches (excluding the closest one)
           higherNodeIds.forEach((nodeId: string) => {
             for (let linkId in chartStore.chart.links) {
               let linkObject: ILink = chartStore.chart.links[linkId];
@@ -170,18 +200,46 @@ function PortCustom(props: IPortDefaultProps) {
                 let childrenNodesOfBranchIds: string[] = searchForAllChildrenNodes(linkObject.to.nodeId);
                 childrenNodesOfBranchIds.push(linkObject.to.nodeId);
 
-                childrenNodesOfBranchIds.forEach((childNodeId: string) => {
-                  if (newNode.position.x <= chartStore.chart.nodes[childNodeId].position.x) {
-                    chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[childNodeId].position.x + nodeWidth + horizontalIntervalWidth;
-                  } else {
-                    chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[childNodeId].position.x - nodeWidth - horizontalIntervalWidth;
-                  }
-                });
-
                 if (nodeId === props.node.id) {
-                  if (parentOutcomeLinksCount % 2 === 0) {
-                    chartStore.chart.nodes[newNodeId].position.x = chartStore.chart.nodes[newNodeId].position.x - nodeWidth - horizontalIntervalWidth;
+                  // move all the existing nodes on the same row with newNode, but not newNode itself!
+                  childrenNodesOfBranchIds.forEach((childNodeId: string) => {
+                    if (hasCenterChild) {
+                      if (chartStore.chart.nodes[nodeId].ports[linkObject.from.portId].properties.align === "left") {
+                        chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[props.node.id].position.x - nodeWidth*2 - horizontalIntervalWidth;
+                      } else if (chartStore.chart.nodes[nodeId].ports[linkObject.from.portId].properties.align  === "right") {
+                        chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[props.node.id].position.x + nodeWidth*2 + horizontalIntervalWidth;
+                      }
+                    } else if (props.port.properties.align === "left") {
+                      chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[childNodeId].position.x + nodeWidth + horizontalIntervalWidth;
+                    } else if (props.port.properties.align === "right") {
+                      chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[childNodeId].position.x - nodeWidth - horizontalIntervalWidth;
+                    }
+                  });
+
+                  // move the newNode
+                  if (nodeId === props.node.id) {
+                    if (hasCenterChild) {
+                      if (props.port.properties.align === "left") {
+                        chartStore.chart.nodes[newNodeId].position.x = chartStore.chart.nodes[props.node.id].position.x - nodeWidth*2 - horizontalIntervalWidth;
+                      } else if (props.port.properties.align === "right") {
+                        chartStore.chart.nodes[newNodeId].position.x = chartStore.chart.nodes[props.node.id].position.x + nodeWidth*2 + horizontalIntervalWidth;
+                      }
+                    } else if (props.port.properties.align === "left") {
+                      chartStore.chart.nodes[newNodeId].position.x = chartStore.chart.nodes[newNodeId].position.x - nodeWidth - horizontalIntervalWidth;
+                    } else if (props.port.properties.align === "right") {
+                      chartStore.chart.nodes[newNodeId].position.x = chartStore.chart.nodes[newNodeId].position.x + nodeWidth + horizontalIntervalWidth;
+                    }
                   }
+                } else {
+                  const modifiedNodeWidth: number = hasCenterChild ? nodeWidth * 2 : nodeWidth;
+
+                  childrenNodesOfBranchIds.forEach((childNodeId: string) => {
+                    if (newNode.position.x <= chartStore.chart.nodes[childNodeId].position.x) {
+                      chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[childNodeId].position.x + modifiedNodeWidth + horizontalIntervalWidth;
+                    } else {
+                      chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[childNodeId].position.x - modifiedNodeWidth - horizontalIntervalWidth;
+                    }
+                  });
                 }
               }
             }
