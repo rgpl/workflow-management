@@ -20,6 +20,7 @@ import {
   FlowChart,
   IFlowChartCallbacks, ILink, IOnDragNodeStopInput, IOnLinkCompleteInput,
 } from "@artemantcev/react-flow-chart";
+import v4 from "uuid/v4";
 
 function SketchPad() {
   const chartStore = useChartStore();
@@ -43,7 +44,22 @@ function SketchPad() {
       onLinkStart: () => {
         setPortsAreHidden(false);
       },
-      onLinkComplete: () => {
+      onLinkComplete: (input: IOnLinkCompleteInput) => {
+        chartStore.removeLink(input.linkId);
+        const invertedLinkId = v4();
+
+        chartStore.addLink({
+          id: invertedLinkId,
+          from: {
+            nodeId: input.toNodeId,
+            portId: input.toPortId,
+          },
+          to: {
+            nodeId: input.fromNodeId,
+            portId: input.fromPortId,
+          }
+        }, invertedLinkId);
+
         setPortsAreHidden(true);
       },
       onDragNode: (input: IOnDragNodeStopInput) => {

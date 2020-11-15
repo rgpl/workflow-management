@@ -87,14 +87,6 @@ function PortCustom(props: IPortDefaultProps) {
           const newNode = JSON.parse(event.dataTransfer.getData("react-flow-chart")) as INode;
           const newNodeId = v4();
 
-
-
-
-
-
-
-
-
           let linksCount: number = 0;
 
           for (let linkId in chartStore.chart.links) {
@@ -147,10 +139,9 @@ function PortCustom(props: IPortDefaultProps) {
 
           chartStore.addLink(newLink, newLinkId);
 
-
-
-
           /* rearranging higher branches/divisions */
+          // TODO: move the arranger code into a separate service. it should be called from here.
+          // TODO: optimize MobX store calls && check for redundant iterations and unused code
           let higherNodeIds: string[] = [];
 
           const searchForAllParentNodes = (currentNodeId: string) => {
