@@ -8,13 +8,13 @@ export interface ISidebarItemProps {
   properties?: any,
 }
 
-export const PickSidebarItem = ({ type, ports, properties }: ISidebarItemProps) => {
+function PickSidebarItem({ type, ports, properties }: ISidebarItemProps) {
   return (
     <div
       draggable={true}
-      onDragStart={ (event) => {
+      onDragStart={(event) => {
         event.dataTransfer.setData(REACT_FLOW_CHART, JSON.stringify({ type, ports, properties }))
-      } }
+      }}
     >
       <div className="blockelem noselect">
         <input type="hidden" name='blockelemtype' className="blockelemtype"/>
@@ -29,5 +29,7 @@ export const PickSidebarItem = ({ type, ports, properties }: ISidebarItemProps) 
         </div>
       </div>
     </div>
-  )
-};
+  );
+}
+
+export default PickSidebarItem;

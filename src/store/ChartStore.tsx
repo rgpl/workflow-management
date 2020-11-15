@@ -2,7 +2,6 @@ import { useLocalObservable } from "mobx-react-lite";
 import React from "react";
 import {IChart, ILink, INode} from "@artemantcev/react-flow-chart";
 import { ISelectedOrHovered } from "@artemantcev/react-flow-chart/src/types/chart";
-import v4 from "uuid/v4";
 
 interface IChartStore {
   chart: IChart,
@@ -70,7 +69,7 @@ const createChartStore = (): IChartStore => {
     removeNode(nodeId: string): void {
       // remove the related links to prevent an error
       for (let linkId in this.chart.links) {
-        if (this.chart.links[linkId].from.nodeId === nodeId) {
+        if (this.chart.links[linkId].from.nodeId === nodeId || this.chart.links[linkId].to.nodeId === nodeId) {
           delete this.chart.links[linkId];
         }
       }

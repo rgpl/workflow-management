@@ -1,6 +1,6 @@
 import React from "react";
 import pickableNodes from "../../config/nodes.json";
-import { PickSidebarItem } from "./layout/PickSidebarItem";
+import PickSidebarItem from "./layout/PickSidebarItem";
 
 function NodeMenu() {
   return (

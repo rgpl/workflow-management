@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, {useCallback, useMemo, useState, useEffect} from "react";
 import { Observer } from "mobx-react-lite";
 import {
   EuiButton,
@@ -9,22 +9,21 @@ import {
   EuiHeaderSectionItem,
 } from "@elastic/eui";
 import '../../assets/css/sketchpad.css';
-import {MAX_ZOOM_VALUE, PROPERTY_NODE_IS_DISCONNECTED, useChartStore} from "../../store/ChartStore";
+import {MAX_ZOOM_VALUE, PORT_ID_INPUT, useChartStore} from "../../store/ChartStore";
 import { NodeInner } from "./layout/NodeInner";
 import NodeMenu from "./NodeMenu";
-import Flyout from "./flyout/Flyout";
 import { CanvasOuter } from "./layout/CanvasOuter";
 import { EuiFlexItem } from "@elastic/eui";
 import PortCustom from "./layout/PortCustom";
 import {
   actions,
   FlowChart,
-  IFlowChartCallbacks, ILink,
-  IOnDragNodeStopInput
+  IFlowChartCallbacks, ILink, IOnDragNodeStopInput, IOnLinkCompleteInput,
 } from "@artemantcev/react-flow-chart";
 
 function SketchPad() {
   const chartStore = useChartStore();
+  const [portsAreHidden, setPortsAreHidden] = useState(true);
 
   const handleNodeMouseEnter = (nodeId: string) => {
     // place custom click event here
@@ -40,6 +39,12 @@ function SketchPad() {
       onNodeMouseEnter: ({ nodeId }: { nodeId: string }) => {
         // console.log('Clicked!', nodeId);
         // handleNodeMouseEnter(nodeId);
+      },
+      onLinkStart: () => {
+        setPortsAreHidden(false);
+      },
+      onLinkComplete: () => {
+        setPortsAreHidden(true);
       },
       onDragNode: (input: IOnDragNodeStopInput) => {
         const removeIncomingLink = (currentLinks: any) => {
@@ -161,7 +166,15 @@ function SketchPad() {
             </EuiButton>
           </EuiHeaderSection>
         </EuiHeader>
-        <EuiFlexGroup gutterSize="none">
+        <EuiFlexGroup
+          gutterSize="none"
+          onDragOver={(event) => {
+            setPortsAreHidden(false);
+          }}
+          onDragEnd={(event) => {
+            setPortsAreHidden(true);
+          }}
+        >
           <EuiFlexItem grow={false}>
             <NodeMenu />
           </EuiFlexItem>
@@ -174,15 +187,39 @@ function SketchPad() {
                 // smart routing looks nice but it's too heavy in terms of performance
                 smartRouting: false,
                 isFreeDraggingRestricted: true,
+                portsAreHidden: portsAreHidden,
                 zoom: {
                   maxScale: MAX_ZOOM_VALUE,
                 },
                 validateLink: ({ linkId, fromNodeId, fromPortId, toNodeId, toPortId, chart }): boolean => {
+                  // a new link can start only from input port
+                  if (fromPortId !== PORT_ID_INPUT) {
+                    return false;
+                  }
+
                   // avoid incorrect links between nodes and the ports of the same node
-                  console.log(chart.nodes[fromNodeId].ports[fromPortId].type);
-                  console.log(chart.nodes[toNodeId].ports[toPortId].type);
-                  return !(fromNodeId === toNodeId
+                  const isDifferentPortTypes: boolean = !(fromNodeId === toNodeId
                     || chart.nodes[fromNodeId].ports[fromPortId].type === chart.nodes[toNodeId].ports[toPortId].type);
+
+                  let existingLinksCount: number = 0;
+                  let portsHaveNoLinksYet: boolean = true;
+
+                  // avoid multiple links of any type for any port
+                  for (let linkId in chartStore.chart.links) {
+                    let linkObject: ILink = chartStore.chart.links[linkId];
+                    if (
+                      (linkObject.from.portId === fromPortId && linkObject.from.nodeId === fromNodeId)
+                      || (linkObject.to.portId === toPortId && linkObject.to.nodeId === toNodeId)
+                    ) {
+                      existingLinksCount++;
+                    }
+                  }
+
+                  if (existingLinksCount > 1) {
+                    portsHaveNoLinksYet = false;
+                  }
+
+                  return isDifferentPortTypes && portsHaveNoLinksYet;
                 },
               }}
               Components={{

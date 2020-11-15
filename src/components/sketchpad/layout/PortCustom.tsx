@@ -1,15 +1,17 @@
 import * as React from 'react'
 import {ILink, INode, IPortDefaultProps} from "@artemantcev/react-flow-chart";
 import styled from "styled-components";
-import { Observer } from "mobx-react-lite";
-import {PORT_ID_INPUT, PROPERTY_NODE_IS_DISCONNECTED, useChartStore} from "../../../store/ChartStore";
+import {Observer, useLocalStore} from "mobx-react-lite";
+import {PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
 import v4 from "uuid/v4";
+import {useEffect, useState} from "react";
 
-const PortDefaultOuter = styled.div`
+const PortDefaultOuter = styled.div<{ visibility: string }>`
   width: 24px;
   height: 24px;
   background: white;
   cursor: pointer;
+  visibility: ${(props) => props.visibility};
   margin-left: 15px;
   margin-right: 15px;
   border-radius: 50%;
@@ -30,12 +32,33 @@ const PortDefaultInner = styled.div<{ color: string }>`
 
 function PortCustom(props: IPortDefaultProps) {
   const chartStore = useChartStore();
+  let [isPortAlreadyLinked, setIsPortAlreadyLinked] = useState(false);
+
+  useEffect(() => {
+    let isLinked: boolean = false;
+
+    for (let linkId in chartStore.chart.links) {
+      let linkObject: ILink = chartStore.chart.links[linkId];
+      if (
+        (linkObject.from.portId === props.port.id && linkObject.from.nodeId === props.node.id)
+        || (linkObject.to.portId === props.port.id && linkObject.to.nodeId === props.node.id)
+      ) {
+        isLinked = true;
+        break;
+      }
+    }
+
+    if (isLinked) {
+      setIsPortAlreadyLinked(true);
+    } else {
+      setIsPortAlreadyLinked(false);
+    }
+  }, [chartStore.chart]);
 
   return (
     <Observer>{() => (
       <PortDefaultOuter
-        onDragOver={ (event) => {console.log("WOW");}}
-        // TODO: move to the service component
+        visibility={(!props.config.portsAreHidden && !isPortAlreadyLinked) || (!isPortAlreadyLinked && props.port.type === "input") ? "visible" : "hidden" }
         onDrop={ (event) => {
           // prevent new nodes from connecting to input ports
           if (props.port.id === PORT_ID_INPUT) {
@@ -72,7 +95,6 @@ function PortCustom(props: IPortDefaultProps) {
 
 
 
-          // let linksCount = Object.keys(chartStore.chart.links).length;
           let linksCount: number = 0;
 
           for (let linkId in chartStore.chart.links) {
@@ -159,13 +181,11 @@ function PortCustom(props: IPortDefaultProps) {
           higherNodeIds.push(props.node.id);
 
           let parentNodeHasMoreThanOneChild = false;
-          let parentOutcomeLinksCount = 1;
 
           for (let linkId in chartStore.chart.links) {
             let linkObject: ILink = chartStore.chart.links[linkId];
             if (linkObject.from.nodeId === props.node.id && linkObject.to.nodeId !== newNodeId) {
               parentNodeHasMoreThanOneChild = true;
-              parentOutcomeLinksCount++;
             }
           }
 
@@ -183,7 +203,6 @@ function PortCustom(props: IPortDefaultProps) {
                 hasCenterChild = true;
                 break;
               }
-              parentOutcomeLinksCount++;
             }
           }
 
