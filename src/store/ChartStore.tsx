@@ -21,7 +21,6 @@ export const ChartStoreProvider = ({ children }: { children: any }) => {
 export const MAX_ZOOM_VALUE: number = 1;
 export const NODE_TYPE_ENTER_WORKFLOW = "Enter Workflow";
 export const PORT_ID_INPUT = "portInput";
-export const PROPERTY_NODE_IS_DISCONNECTED = "isDisconnected";
 
 const createChartStore = (): IChartStore => {
   return {

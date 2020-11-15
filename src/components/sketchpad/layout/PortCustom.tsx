@@ -58,10 +58,14 @@ function PortCustom(props: IPortDefaultProps) {
   return (
     <Observer>{() => (
       <PortDefaultOuter
-        visibility={(!props.config.portsAreHidden && !isPortAlreadyLinked) || (!isPortAlreadyLinked && props.port.type === "input") ? "visible" : "hidden" }
+        visibility={
+          (!props.config.portsAreHidden && !isPortAlreadyLinked && !props.config.readonly)
+          || (!isPortAlreadyLinked && props.port.type === "input" && !props.config.readonly)
+            ? "visible" : "hidden"
+        }
         onDrop={ (event) => {
           // prevent new nodes from connecting to input ports
-          if (props.port.id === PORT_ID_INPUT) {
+          if (props.port.id === PORT_ID_INPUT || props.config.readonly) {
             return;
           }
 

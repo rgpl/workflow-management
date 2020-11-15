@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState, useEffect} from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Observer } from "mobx-react-lite";
 import {
   EuiButton,
@@ -201,7 +201,7 @@ function SketchPad() {
               config={{
                 readonly: false,
                 // smart routing looks nice but it's too heavy in terms of performance
-                smartRouting: false,
+                smartRouting: true,
                 isFreeDraggingRestricted: true,
                 portsAreHidden: portsAreHidden,
                 zoom: {
