@@ -63,16 +63,6 @@ function SketchPad() {
         setPortsAreHidden(true);
       },
       onDragNode: (input: IOnDragNodeStopInput) => {
-        const removeIncomingLink = (currentLinks: any) => {
-          for (let linkId in currentLinks) {
-            let linkObject: ILink = currentLinks[linkId];
-
-            if (linkObject.from.nodeId && linkObject.to.nodeId === input.id) {
-              delete currentLinks[linkId];
-            }
-          }
-        };
-
         const searchForChildrenNodes = (parentNodeId: string): string[] => {
           let childNodesIds: string[] = [];
 
@@ -105,7 +95,6 @@ function SketchPad() {
         let currentNodes = Object.assign({}, chartStore.chart.nodes);
         let currentLinks = Object.assign({}, chartStore.chart.links);
 
-        removeIncomingLink(currentLinks);
         let childrenNodesIds: string[] = searchForChildrenNodes(input.id);
         moveChildrenBlocks(childrenNodesIds, currentNodes, currentLinks);
       },
