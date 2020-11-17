@@ -1,20 +1,16 @@
 import * as React from 'react'
 import {ILink, INode, IPortDefaultProps} from "@artemantcev/react-flow-chart";
 import styled from "styled-components";
-import {Observer, useLocalStore} from "mobx-react-lite";
+import { Observer } from "mobx-react-lite";
 import {PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
 import v4 from "uuid/v4";
 import {useEffect, useState} from "react";
 
-const PortDefaultOuter = styled.div<{ visibility: string }>`
-  width: 24px;
-  height: 24px;
-  background: white;
+const PortDefaultOuter = styled.div<{ visibility: string, portStyleAddition: string }>`
   cursor: pointer;
   visibility: ${(props) => props.visibility};
-  margin-left: 15px;
-  margin-right: 15px;
-  border-radius: 50%;
+  ${(props) => props.portStyleAddition}
+  border-radius: 0%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,17 +18,37 @@ const PortDefaultOuter = styled.div<{ visibility: string }>`
 
 const PORT_TYPE_OUTPUT = "output";
 
-const PortDefaultInner = styled.div<{ color: string }>`
+const PortDefaultInner = styled.div<{ color: string, isPortInput: boolean, isDraggedOver: boolean }>`
   width: 12px;
   height: 12px;
+  ${(props) => !props.isPortInput ? 'margin-top: -35px;' : '' };
   border-radius: 50%;
-  background: ${(props) => props.color };
+  background: ${(props) => props.isDraggedOver ? 'yellow' : props.color };
   cursor: pointer;
 `;
 
 function PortCustom(props: IPortDefaultProps) {
   const chartStore = useChartStore();
   let [isPortAlreadyLinked, setIsPortAlreadyLinked] = useState(false);
+  let [isDraggedOver, setIsDraggedOver] = useState(false);
+
+  const isPortInput = props.port.id === PORT_ID_INPUT;
+  let portStyleAddition: string = 'margin-top: 10px;';
+
+  // TODO: move styling away from the component!
+  if (!isPortInput) {
+    if (Object.keys(props.node.ports).length >= 4) {
+      portStyleAddition = "margin-bottom: -35px;\n padding: 20px 20px 20px 20px;";
+    } else {
+      if (props.port.properties.align === "left") {
+        portStyleAddition = "margin-bottom: -35px;\n padding: 30px 30px 30px 50px;";
+      } else if (props.port.properties.align === "right") {
+        portStyleAddition = "margin-bottom: -35px;\n padding: 30px 50px 30px 30px;";
+      } else {
+        portStyleAddition = "margin-bottom: -35px;\n padding: 30px 80px 30px 80px;";
+      }
+    }
+  }
 
   useEffect(() => {
     let isLinked: boolean = false;
@@ -53,16 +69,23 @@ function PortCustom(props: IPortDefaultProps) {
     } else {
       setIsPortAlreadyLinked(false);
     }
-  }, [chartStore.chart]);
+  }, [chartStore.chart, portStyleAddition]);
 
   return (
     <Observer>{() => (
       <PortDefaultOuter
+        portStyleAddition={portStyleAddition}
         visibility={
           (!props.config.portsAreHidden && !isPortAlreadyLinked && !props.config.readonly)
           || (!isPortAlreadyLinked && props.port.type === "input" && !props.config.readonly)
             ? "visible" : "hidden"
         }
+        onDragEnter={ (event) => {
+          setIsDraggedOver(true);
+        }}
+        onDragLeave={ (event) => {
+          setIsDraggedOver(false);
+        }}
         onDrop={ (event) => {
           // prevent new nodes from connecting to input ports
           if (props.port.id === PORT_ID_INPUT || props.config.readonly) {
@@ -261,6 +284,8 @@ function PortCustom(props: IPortDefaultProps) {
         }}
       >
         <PortDefaultInner
+          isPortInput={isPortInput}
+          isDraggedOver={isDraggedOver}
           color={props.port.properties.linkColor ?? 'cornflowerblue'}
         >
           {props.port.type === PORT_TYPE_OUTPUT
