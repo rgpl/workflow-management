@@ -33,18 +33,23 @@ function PortCustom(props: IPortDefaultProps) {
   let [isDraggedOver, setIsDraggedOver] = useState(false);
 
   const isPortInput = props.port.id === PORT_ID_INPUT;
-  let portStyleAddition: string = 'margin-top: 10px;';
+  // input port style
+  let portStyleAddition: string = 'margin-top: 7px;';
 
   // TODO: move styling away from the component!
   if (!isPortInput) {
     if (Object.keys(props.node.ports).length >= 4) {
-      portStyleAddition = "margin-bottom: -35px;\n padding: 20px 20px 20px 20px;";
+      // 3-outputs node
+      portStyleAddition = "margin-bottom: -25px;\n padding: 20px 20px 20px 20px;";
     } else {
       if (props.port.properties.align === "left") {
+        // left output
         portStyleAddition = "margin-bottom: -35px;\n padding: 30px 30px 30px 50px;";
       } else if (props.port.properties.align === "right") {
+        // right output
         portStyleAddition = "margin-bottom: -35px;\n padding: 30px 50px 30px 30px;";
       } else {
+        // an output with unspecified align property
         portStyleAddition = "margin-bottom: -35px;\n padding: 30px 80px 30px 80px;";
       }
     }

@@ -9,7 +9,7 @@ import {
   EuiHeaderSectionItem,
 } from "@elastic/eui";
 import '../../assets/css/sketchpad.css';
-import {MAX_ZOOM_VALUE, PORT_ID_INPUT, useChartStore} from "../../store/ChartStore";
+import {MAX_ZOOM_VALUE, PORT_ID_INPUT, PORT_TYPE_OUTPUT, useChartStore} from "../../store/ChartStore";
 import { NodeInner } from "./layout/NodeInner";
 import NodeMenu from "./NodeMenu";
 import { CanvasOuter } from "./layout/CanvasOuter";
@@ -21,6 +21,7 @@ import {
   IFlowChartCallbacks, ILink, IOnDragNodeStopInput, IOnLinkCompleteInput,
 } from "@artemantcev/react-flow-chart";
 import v4 from "uuid/v4";
+import {IOnLinkBaseEvent} from "@artemantcev/react-flow-chart/src/types/functions";
 
 function SketchPad() {
   const chartStore = useChartStore();
@@ -41,7 +42,7 @@ function SketchPad() {
         // console.log('Clicked!', nodeId);
         // handleNodeMouseEnter(nodeId);
       },
-      onLinkStart: () => {
+      onLinkStart: (input: IOnLinkBaseEvent) => {
         setPortsAreHidden(false);
       },
       onLinkComplete: (input: IOnLinkCompleteInput) => {
