@@ -21,9 +21,11 @@ const PORT_TYPE_OUTPUT = "output";
 const PortDefaultInner = styled.div<{ color: string, isPortInput: boolean, isDraggedOver: boolean }>`
   width: 12px;
   height: 12px;
+  transition: all .2s ease-in-out;
+  transform: ${(props) => props.isDraggedOver ? 'scale(1.7)' : 'none' };
   ${(props) => !props.isPortInput ? 'margin-top: -35px;' : '' };
   border-radius: 50%;
-  background: ${(props) => props.isDraggedOver ? 'yellow' : props.color };
+  background: ${(props) => props.color };
   cursor: pointer;
 `;
 
@@ -292,6 +294,7 @@ function PortCustom(props: IPortDefaultProps) {
           isPortInput={isPortInput}
           isDraggedOver={isDraggedOver}
           color={props.port.properties.linkColor ?? 'cornflowerblue'}
+          style={{pointerEvents: 'none'}}
         >
           {props.port.type === PORT_TYPE_OUTPUT
             ? <div className="blockyinfo" style={{ marginTop: "20px", marginLeft: "-15px" }}>{props.port.properties.title}</div>

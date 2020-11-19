@@ -190,7 +190,6 @@ function SketchPad() {
               callbacks={stateActionCallbacks}
               config={{
                 readonly: false,
-                // smart routing looks nice but it's too heavy in terms of performance
                 smartRouting: true,
                 isFreeDraggingRestricted: true,
                 portsAreHidden: portsAreHidden,
