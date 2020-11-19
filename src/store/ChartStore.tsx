@@ -27,7 +27,7 @@ const createChartStore = (): IChartStore => {
   return {
     chart: {
       offset: {
-        x: 0,
+        x: -1000,
         y: 0,
       },
       scale: MAX_ZOOM_VALUE,
@@ -36,7 +36,7 @@ const createChartStore = (): IChartStore => {
           id: 'node1',
           type: NODE_TYPE_ENTER_WORKFLOW,
           position: {
-            x: 500,
+            x: 1500,
             y: 30,
           },
           ports: {
@@ -52,7 +52,9 @@ const createChartStore = (): IChartStore => {
           properties: {
             description: "Triggers when somebody visits a specified page",
             descriptionInstance: "When a New User goes to Site 1",
-            icon: "eye"
+            icon: "eye",
+            flyoutType: "emailAction",
+            flyoutObject: {}
           }
         },
       },
