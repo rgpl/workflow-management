@@ -94,6 +94,8 @@ function PortCustom(props: IPortDefaultProps) {
           setIsDraggedOver(false);
         }}
         onDrop={ (event) => {
+          setIsDraggedOver(false);
+
           // prevent new nodes from connecting to input ports
           if (props.port.id === PORT_ID_INPUT || props.config.readonly) {
             return;
@@ -294,7 +296,7 @@ function PortCustom(props: IPortDefaultProps) {
           isPortInput={isPortInput}
           isDraggedOver={isDraggedOver}
           color={props.port.properties.linkColor ?? 'cornflowerblue'}
-          style={{pointerEvents: 'none'}}
+          style={{ pointerEvents: 'none' }}
         >
           {props.port.type === PORT_TYPE_OUTPUT
             ? <div className="blockyinfo" style={{ marginTop: "20px", marginLeft: "-15px" }}>{props.port.properties.title}</div>

@@ -17,7 +17,7 @@ function App() {
           <Switch>
             <Route exact path="/" component={Home} />
             <ChartStoreProvider>
-              <Route path="/sketchpad" component={SketchPad} />
+              <Route path="/sketchpad/:chartId?" component={SketchPad} />
             </ChartStoreProvider>
           </Switch>
         </Router>

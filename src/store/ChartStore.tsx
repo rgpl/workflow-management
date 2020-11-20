@@ -23,45 +23,47 @@ export const NODE_TYPE_ENTER_WORKFLOW = "Enter Workflow";
 export const PORT_ID_INPUT = "portInput";
 export const PORT_TYPE_OUTPUT = "output";
 
-const createChartStore = (): IChartStore => {
-  return {
-    chart: {
-      offset: {
-        x: -1000,
-        y: 0,
+export const CHART_DEFAULT: IChart = {
+  offset: {
+    x: -1000,
+    y: 0,
+  },
+  scale: MAX_ZOOM_VALUE,
+  nodes: {
+    node1: {
+      id: 'node1',
+      type: NODE_TYPE_ENTER_WORKFLOW,
+      position: {
+        x: 1500,
+        y: 30,
       },
-      scale: MAX_ZOOM_VALUE,
-      nodes: {
-        node1: {
-          id: 'node1',
-          type: NODE_TYPE_ENTER_WORKFLOW,
-          position: {
-            x: 1500,
-            y: 30,
-          },
-          ports: {
-            portOutput1: {
-              id: 'portOutput1',
-              type: PORT_TYPE_OUTPUT,
-              properties: {
-                value: 'yes',
-                align: "center",
-              },
-            },
-          },
+      ports: {
+        portOutput1: {
+          id: 'portOutput1',
+          type: PORT_TYPE_OUTPUT,
           properties: {
-            description: "Triggers when somebody visits a specified page",
-            descriptionInstance: "When a New User goes to Site 1",
-            icon: "eye",
-            flyoutType: "emailAction",
-            flyoutObject: {}
-          }
+            value: 'yes',
+            align: "center",
+          },
         },
       },
-      links: {},
-      selected: {} as ISelectedOrHovered,
-      hovered: {} as ISelectedOrHovered,
+      properties: {
+        description: "Triggers when somebody visits a specified page",
+        descriptionInstance: "When a New User goes to Site 1",
+        icon: "eye",
+        flyoutType: "emailAction",
+        flyoutObject: {}
+      }
     },
+  },
+  links: {},
+  selected: {} as ISelectedOrHovered,
+  hovered: {} as ISelectedOrHovered,
+};
+
+const createChartStore = (): IChartStore => {
+  return {
+    chart: CHART_DEFAULT,
     addNode(newNode: INode, newId: string) {
       this.chart.nodes[newId] = newNode;
     },

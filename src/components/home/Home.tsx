@@ -1,4 +1,4 @@
-import React, {Fragment, useContext, useEffect} from 'react';
+import React, {Fragment, useContext, useEffect, useState} from 'react';
 import {
     EuiPage,
     EuiPageBody,
@@ -26,12 +26,24 @@ import HeaderUserMenu from './header/HeaderUserMenu';
 import HeaderSpacesMenu from './header/HeaderSpacesMenu';
 import { EuiPageHeader } from '@elastic/eui';
 import { EuiPageHeaderSection } from '@elastic/eui';
-import { Redirect } from 'react-router-dom';
 import { Observer } from 'mobx-react-lite';
 import { useJourneyStore } from "../../store/JourneyStore";
+import axios, {AxiosResponse} from "axios";
 
 function Home() {
   const journeyStore = useJourneyStore();
+
+  useEffect(() => {
+    axios.get('http://localhost:4000/journeys')
+      .then((response: AxiosResponse<Array<any>>) => {
+        console.log("login-response->", response);
+        journeyStore.setJourneyList(response.data);
+      })
+      .catch((error) => console.log("login->", error))
+      .finally(() => {
+        // always executed
+      });
+  });
 
   const renderLogo = () => {
     return (
@@ -99,18 +111,9 @@ function Home() {
     console.log('logout-click-state-lift');
   }
 
-  const openSketchPad = (e: any, create?: boolean) => {
-    if (create) {
-      journeyStore.setEditMode(true);
-    }
-
-    journeyStore.setJourneyEdit(true);
-  }
-
   return (
     <Observer>{() => (
       <Fragment>
-        {journeyStore.editJourney ? <Redirect to="/sketchpad" /> : undefined }
         <EuiHeader>
           <EuiHeaderSection grow={false}>
             <EuiHeaderSectionItem border="right">
@@ -148,26 +151,28 @@ function Home() {
                 <EuiPageContent>
                   <EuiPageContentHeader>
                     <EuiPageContentHeaderSection>
-                      <EuiButton fill onClick={(event: any) => {
-                        openSketchPad(event, true)
-                      }}>
+                      <EuiButton
+                        href={"/journey/#/sketchpad/"}
+                        fill
+                      >
                         Create Journey
                       </EuiButton>
                     </EuiPageContentHeaderSection>
                   </EuiPageContentHeader>
                   <EuiPageContentBody>
-                    {journeyStore.journeyList.map((value: { id: string | number | undefined; displayLabel: React.ReactNode; }) => (
+                    {journeyStore.journeyList.map((value: { id: string|undefined; }) => (
                       <EuiPanel paddingSize="m" hasShadow={true} style={{marginBottom: 10}} key={value.id}>
                         <EuiFlexGroup justifyContent="spaceBetween">
                           <EuiFlexItem>
-                            <EuiText>{value.displayLabel}</EuiText>
+                            <EuiText>{value.id}</EuiText>
                           </EuiFlexItem>
                           <EuiFlexItem grow={false}>
                             <EuiButton
+                              href={"/journey/#/sketchpad/" + value.id}
                               color="secondary"
                               fill
                               size="s"
-                              onClick={openSketchPad}>
+                            >
                               View
                             </EuiButton>
                           </EuiFlexItem>

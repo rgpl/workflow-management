@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import { Observer } from "mobx-react-lite";
 import {
   EuiButton,
@@ -9,7 +9,7 @@ import {
   EuiHeaderSectionItem,
 } from "@elastic/eui";
 import '../../assets/css/sketchpad.css';
-import {MAX_ZOOM_VALUE, PORT_ID_INPUT, PORT_TYPE_OUTPUT, useChartStore} from "../../store/ChartStore";
+import {CHART_DEFAULT, MAX_ZOOM_VALUE, PORT_ID_INPUT, PORT_TYPE_OUTPUT, useChartStore} from "../../store/ChartStore";
 import { NodeInner } from "./layout/NodeInner";
 import NodeMenu from "./NodeMenu";
 import { CanvasOuter } from "./layout/CanvasOuter";
@@ -17,15 +17,55 @@ import { EuiFlexItem } from "@elastic/eui";
 import PortCustom from "./layout/PortCustom";
 import {
   actions,
-  FlowChart,
+  FlowChart, IChart,
   IFlowChartCallbacks, ILink, IOnDragNodeStopInput, IOnLinkCompleteInput,
 } from "@artemantcev/react-flow-chart";
 import v4 from "uuid/v4";
 import {IOnLinkBaseEvent} from "@artemantcev/react-flow-chart/src/types/functions";
 
-function SketchPad() {
+import axios, {AxiosResponse} from "axios";
+import {toJS} from "mobx";
+
+function SketchPad(props: any) {
   const chartStore = useChartStore();
   const [portsAreHidden, setPortsAreHidden] = useState(true);
+  const [isEditMode, setIsEditMode] = useState(props.match.params.chartId ? false : true);
+
+  useEffect(() => {
+    if (props.match.params.chartId) {
+      axios.get('http://localhost:4000/journey/' + props.match.params.chartId)
+        .then((response: AxiosResponse<IChart>) => {
+          console.log("chart-response->", response);
+          chartStore.chart = response.data;
+        })
+        .catch((error) => console.log("chart->", error))
+        .finally(() => {
+          // always executed
+        });
+    }
+  }, []);
+
+  const updateChart = () => {
+    if (props.match.params.chartId) {
+      axios.put('http://localhost:4000/journey/' + props.match.params.chartId, chartStore.chart)
+        .then((response: AxiosResponse<IChart>) => {
+          console.log("chart-update-response->", response);
+        })
+        .catch((error) => console.log("chart-update->", error))
+        .finally(() => {
+          // always executed
+        });
+    } else {
+      axios.post('http://localhost:4000/journey', chartStore.chart)
+        .then((response: AxiosResponse<IChart>) => {
+          console.log("chart-save-response->", response);
+        })
+        .catch((error) => console.log("chart-save->", error.toString()))
+        .finally(() => {
+          // always executed
+        });
+    }
+  }
 
   const handleNodeMouseEnter = (nodeId: string) => {
     // place custom click event here
@@ -135,6 +175,7 @@ function SketchPad() {
             <EuiHeaderSectionItem border="none">
               <EuiButtonEmpty
                 iconType="arrowLeft"
+                href={"/"}
               >
                 Back
               </EuiButtonEmpty>
@@ -143,30 +184,27 @@ function SketchPad() {
           <EuiHeaderBreadcrumbs breadcrumbs={[]}/>
           <EuiHeaderSection side="right" className="content-center">
             <EuiButtonToggle
-              label="Edit"
-              fill={true}
-              onChange={() => { /* editTrigger */
-              }}
+              label={"Edit " + (isEditMode ? "off" : "on")}
+              fill={isEditMode}
+              onChange={() => { setIsEditMode(!isEditMode) }}
               isSelected={true}
               size="s"
             />
             <EuiButton
               fill
-              onClick={() => { /* exportData */
-              }}
+              onClick={updateChart}
               size="s"
               color="secondary"
-              style={{marginLeft: 10}}
+              style={{ marginLeft: 10 }}
             >
               Save
             </EuiButton>
             <EuiButton
               fill
-              onClick={() => { /* clearSketch */
-              }}
+              onClick={() => { chartStore.chart = CHART_DEFAULT; }}
               size="s"
               color="danger"
-              style={{marginLeft: 10, marginRight: 10}}
+              style={{ marginLeft: 10, marginRight: 10 }}
             >
               Clear
             </EuiButton>
@@ -189,7 +227,7 @@ function SketchPad() {
               chart={chartStore.chart}
               callbacks={stateActionCallbacks}
               config={{
-                readonly: false,
+                readonly: !isEditMode,
                 smartRouting: true,
                 isFreeDraggingRestricted: true,
                 portsAreHidden: portsAreHidden,
