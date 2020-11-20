@@ -39,7 +39,7 @@ const start = async () => {
     method: 'GET',
     path: '/journey/{journeyId}',
     handler(req, h) {
-      return journey.getJourney()
+      return journey.getJourney(req.params.journeyId)
     },
     config: {
       cors: {

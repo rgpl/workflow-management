@@ -13,8 +13,10 @@ const getJourneyIds = async () => {
 
     let journeyIds = [];
 
-    for (let i = 0; i < result.body.hits.hits.length; i++) {
-      journeyIds.push({ id: result.body.hits.hits[i]["_id"] });
+    if (result.body.hits && result.body.hits.hits) {
+      for (let i = 0; i < result.body.hits.hits.length; i++) {
+        journeyIds.push({id: result.body.hits.hits[i]["_id"]});
+      }
     }
 
     return journeyIds;
@@ -26,15 +28,17 @@ const getJourneyIds = async () => {
 
 const getJourney = async (journeyId) => {
   try {
-    const result = await client.search({
+    const result = await client.get({
       index: INDEX,
-      body: {_id: journeyId},
+      id: journeyId,
     }, {
       ignore: [404],
       maxRetries: 3
     });
 
-    return result.body.hits.hits[0]["_source"];
+    console.log("getJourney");
+    console.log(result);
+    return result.body["_source"];
   } catch (e) {
     console.log(e);
     throw e
