@@ -9,7 +9,7 @@ import {
   EuiHeaderSectionItem,
 } from "@elastic/eui";
 import '../../assets/css/sketchpad.css';
-import {CHART_DEFAULT, MAX_ZOOM_VALUE, PORT_ID_INPUT, PORT_TYPE_OUTPUT, useChartStore} from "../../store/ChartStore";
+import {CHART_DEFAULT, MAX_ZOOM_VALUE, PORT_ID_INPUT, useChartStore} from "../../store/ChartStore";
 import { NodeInner } from "./layout/NodeInner";
 import NodeMenu from "./NodeMenu";
 import { CanvasOuter } from "./layout/CanvasOuter";
@@ -21,22 +21,22 @@ import {
   IFlowChartCallbacks, ILink, IOnDragNodeStopInput, IOnLinkCompleteInput,
 } from "@artemantcev/react-flow-chart";
 import v4 from "uuid/v4";
-import {IOnLinkBaseEvent} from "@artemantcev/react-flow-chart/src/types/functions";
-
-import axios, {AxiosResponse} from "axios";
-import {toJS} from "mobx";
+import { IOnLinkBaseEvent } from "@artemantcev/react-flow-chart/src/types/functions";
+import axios, { AxiosResponse } from "axios";
+import { Redirect } from "react-router-dom";
 
 function SketchPad(props: any) {
   const chartStore = useChartStore();
   const [portsAreHidden, setPortsAreHidden] = useState(true);
   const [isEditMode, setIsEditMode] = useState(props.match.params.chartId ? false : true);
+  const [redirectToId, setRedirectToId] = useState("");
 
   useEffect(() => {
     if (props.match.params.chartId) {
       axios.get('http://localhost:4000/journey/' + props.match.params.chartId)
         .then((response: AxiosResponse<IChart>) => {
           console.log("chart-response->", response);
-          chartStore.chart = response.data;
+          chartStore.chart = response.data as IChart;
         })
         .catch((error) => console.log("chart->", error))
         .finally(() => {
@@ -51,19 +51,14 @@ function SketchPad(props: any) {
         .then((response: AxiosResponse<IChart>) => {
           console.log("chart-update-response->", response);
         })
-        .catch((error) => console.log("chart-update->", error))
-        .finally(() => {
-          // always executed
-        });
+        .catch((error) => console.log("chart-update->", error));
     } else {
       axios.post('http://localhost:4000/journey', chartStore.chart)
-        .then((response: AxiosResponse<IChart>) => {
-          console.log("chart-save-response->", response);
+        .then((response: AxiosResponse<any>) => {
+          console.log("chart-save-response->", response.data);
+          setRedirectToId(response.data);
         })
-        .catch((error) => console.log("chart-save->", error.toString()))
-        .finally(() => {
-          // always executed
-        });
+        .catch((error) => console.log("chart-save->", error.toString()));
     }
   }
 
@@ -170,6 +165,7 @@ function SketchPad(props: any) {
   return (
     <Observer>{() =>
       <>
+        { redirectToId && redirectToId.length > 0 ? <Redirect to={"/sketchpad/" + redirectToId} /> : "" }
         <EuiHeader>
           <EuiHeaderSection grow={false}>
             <EuiHeaderSectionItem border="none">
@@ -184,7 +180,7 @@ function SketchPad(props: any) {
           <EuiHeaderBreadcrumbs breadcrumbs={[]}/>
           <EuiHeaderSection side="right" className="content-center">
             <EuiButtonToggle
-              label={"Edit " + (isEditMode ? "off" : "on")}
+              label={"Edit"}
               fill={isEditMode}
               onChange={() => { setIsEditMode(!isEditMode) }}
               isSelected={true}

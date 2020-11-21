@@ -54,10 +54,10 @@ const addJourney = async (payload) => {
       body: payload,
     });
 
-    console.log(result.body);
-    return result.body;
+    console.log(result);
+    return result.body["_id"];
   } catch (e) {
-    console.log(e);
+    console.error(e.body.error);
     throw e
   }
 }
@@ -65,18 +65,21 @@ const addJourney = async (payload) => {
 const updateJourney = async (journeyId, payload) => {
   try {
     console.warn("updating journey");
+    console.warn(payload.nodes);
 
-    const result = await client.update({
+    /* const result0 = await client.delete({
+      index: INDEX,
+      id: journeyId
+    }); */
+
+
+    const result = await client.index({
       index: INDEX,
       id: journeyId,
-      body: {
-        doc: payload,
-      },
+      body: payload
     });
 
-    console.warn(result);
-
-    return result.statusCode;
+    return result.body;
   } catch (e) {
     console.error(e.body.error);
     throw e
