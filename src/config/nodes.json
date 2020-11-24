@@ -1,0 +1,218 @@
+[
+  {
+    "type": "Event occurred",
+    "ports": {
+      "portInput": {
+        "id": "portInput",
+        "type": "input",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "portOutput1": {
+        "id": "portOutput1",
+        "type": "output",
+        "properties": {
+          "title": "Yes",
+          "linkColor": "#00ff00",
+          "align": "left"
+        }
+      },
+      "portOutput2": {
+        "id": "portOutput2",
+        "type": "output",
+        "properties": {
+          "title": "No",
+          "linkColor": "#ff0000",
+          "align": "right"
+        }
+      }
+    },
+    "properties": {
+      "description": "Triggers when somebody performs a specified action",
+      "descriptionInstance": "When a Action 1 is performed",
+      "icon": "action"
+    }
+  },
+  {
+    "type": "Time has passed",
+    "ports": {
+      "portInput": {
+        "id": "portInput",
+        "type": "input",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "portOutput1": {
+        "id": "portOutput1",
+        "type": "output",
+        "properties": {
+          "align": "center"
+        }
+      }
+    },
+    "properties": {
+      "description": "Triggers after a specified amount of time",
+      "descriptionInstance": "When 10 seconds have passed",
+      "icon": "time"
+    }
+  },
+  {
+    "type": "Exit Workflow",
+    "ports": {
+      "portInput": {
+        "id": "portInput",
+        "type": "input",
+        "properties": {
+          "custom": "property"
+        }
+      }
+    },
+    "properties": {
+      "description": "Triggers when a specified error happens",
+      "descriptionInstance": "...",
+      "icon": "error"
+    }
+  },
+  {
+    "type": "Push Action",
+    "ports": {
+      "portInput": {
+        "id": "portInput",
+        "type": "input",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "portOutput1": {
+        "id": "portOutput1",
+        "type": "output",
+        "properties": {
+          "title": "Sent",
+          "align": "left"
+        }
+      },
+      "portOutput2": {
+        "id": "portOutput2",
+        "type": "output",
+        "properties": {
+          "title": "Delivered",
+          "align": "right"
+        }
+      }
+    },
+    "properties": {
+      "description": "Push notification based on the action definition",
+      "descriptionInstance": "Perform Action 1",
+      "icon": "action"
+    }
+  },
+  {
+    "type": "SMS Action",
+    "ports": {
+      "portInput": {
+        "id": "portInput",
+        "type": "input",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "portOutput1": {
+        "id": "portOutput1",
+        "type": "output",
+        "properties": {
+          "title": "Sent",
+          "align": "left"
+        }
+      },
+      "portOutput2": {
+        "id": "portOutput2",
+        "type": "output",
+        "properties": {
+          "title": "Delivered",
+          "align": "right"
+        }
+      }
+    },
+    "properties": {
+      "description": "SMS Messages will be sent out based on the action definition",
+      "descriptionInstance": "Perform Action 2",
+      "icon": "action"
+    }
+  },
+  {
+    "type": "E-mail Action",
+    "ports": {
+      "portInput": {
+        "id": "portInput",
+        "type": "input",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "portOutput1": {
+        "id": "portOutput1",
+        "type": "output",
+        "properties": {
+          "title": "Sent",
+          "align": "left"
+        }
+      },
+      "portOutput2": {
+        "id": "portOutput2",
+        "type": "output",
+        "properties": {
+          "title": "Delivered",
+          "align": "center"
+        }
+      },
+      "portOutput3": {
+        "id": "portOutput3",
+        "type": "output",
+        "properties": {
+          "title": "Opened",
+          "align": "right"
+        }
+      }
+    },
+    "properties": {
+      "description": "Email Communication will be sent out based on the action definition",
+      "descriptionInstance": "Perform Action 3",
+      "icon": "action"
+    }
+  },
+  {
+    "type": "Web Action",
+    "ports": {
+      "portInput": {
+        "id": "portInput",
+        "type": "input",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "portOutput1": {
+        "id": "portOutput1",
+        "type": "output",
+        "properties": {
+          "title": "Sent",
+          "align": "left"
+        }
+      },
+      "portOutput2": {
+        "id": "portOutput2",
+        "type": "output",
+        "properties": {
+          "title": "Delivered",
+          "align": "right"
+        }
+      }
+    },
+    "properties": {
+      "description": "Web Api will be sent out based on the action definition",
+      "descriptionInstance": "Perform Action 4",
+      "icon": "action"
+    }
+  }
+]
