@@ -24,6 +24,8 @@ import v4 from "uuid/v4";
 import { IOnLinkBaseEvent } from "@artemantcev/react-flow-chart/src/types/functions";
 import axios, { AxiosResponse } from "axios";
 import { Redirect } from "react-router-dom";
+import Flyout from "./flyout/Flyout";
+import TreeRearranger from "./service/TreeRearranger";
 
 function SketchPad(props: any) {
   const chartStore = useChartStore();
@@ -60,6 +62,11 @@ function SketchPad(props: any) {
         })
         .catch((error) => console.log("chart-save->", error.toString()));
     }
+  }
+
+  const rearrangeChart = () => {
+    const treeRearranger = new TreeRearranger(chartStore.chart, "root");
+    chartStore.chart = treeRearranger.calculateRearrangedTree();
   }
 
   const handleNodeMouseEnter = (nodeId: string) => {
@@ -179,11 +186,20 @@ function SketchPad(props: any) {
           </EuiHeaderSection>
           <EuiHeaderBreadcrumbs breadcrumbs={[]}/>
           <EuiHeaderSection side="right" className="content-center">
+            <EuiButton
+              fill
+              onClick={rearrangeChart}
+              size="s"
+              color="text"
+            >
+              Re-arrange
+            </EuiButton>
             <EuiButtonToggle
               label={"Edit"}
               fill={isEditMode}
               onChange={() => { setIsEditMode(!isEditMode) }}
               isSelected={true}
+              style={{ marginLeft: 10 }}
               size="s"
             />
             <EuiButton
@@ -269,9 +285,7 @@ function SketchPad(props: any) {
             />
           </EuiFlexItem>
           {chartStore.chart.selected.type
-            // IN PROGRESS; TEMPORARILY DISABLED
-            // ? <Flyout closeSettings={() => { }} />
-            ? ''
+            ? <Flyout closeSettings={() => { }} />
             : ''}
         </EuiFlexGroup>
       </>

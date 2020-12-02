@@ -15,7 +15,8 @@
         "properties": {
           "title": "Yes",
           "linkColor": "#00ff00",
-          "align": "left"
+          "align": "left",
+          "treeRearrangerPosition": 1
         }
       },
       "portOutput2": {
@@ -24,7 +25,8 @@
         "properties": {
           "title": "No",
           "linkColor": "#ff0000",
-          "align": "right"
+          "align": "right",
+          "treeRearrangerPosition": 2
         }
       }
     },
@@ -48,7 +50,8 @@
         "id": "portOutput1",
         "type": "output",
         "properties": {
-          "align": "center"
+          "align": "center",
+          "treeRearrangerPosition": 1
         }
       }
     },
@@ -90,7 +93,8 @@
         "type": "output",
         "properties": {
           "title": "Sent",
-          "align": "left"
+          "align": "left",
+          "treeRearrangerPosition": 1
         }
       },
       "portOutput2": {
@@ -98,7 +102,8 @@
         "type": "output",
         "properties": {
           "title": "Delivered",
-          "align": "right"
+          "align": "right",
+          "treeRearrangerPosition": 2
         }
       }
     },
@@ -123,7 +128,8 @@
         "type": "output",
         "properties": {
           "title": "Sent",
-          "align": "left"
+          "align": "left",
+          "treeRearrangerPosition": 1
         }
       },
       "portOutput2": {
@@ -131,7 +137,8 @@
         "type": "output",
         "properties": {
           "title": "Delivered",
-          "align": "right"
+          "align": "right",
+          "treeRearrangerPosition": 2
         }
       }
     },
@@ -156,7 +163,8 @@
         "type": "output",
         "properties": {
           "title": "Sent",
-          "align": "left"
+          "align": "left",
+          "treeRearrangerPosition": 1
         }
       },
       "portOutput2": {
@@ -164,7 +172,8 @@
         "type": "output",
         "properties": {
           "title": "Delivered",
-          "align": "center"
+          "align": "center",
+          "treeRearrangerPosition": 2
         }
       },
       "portOutput3": {
@@ -172,7 +181,8 @@
         "type": "output",
         "properties": {
           "title": "Opened",
-          "align": "right"
+          "align": "right",
+          "treeRearrangerPosition": 3
         }
       }
     },
@@ -197,7 +207,8 @@
         "type": "output",
         "properties": {
           "title": "Sent",
-          "align": "left"
+          "align": "left",
+          "treeRearrangerPosition": 1
         }
       },
       "portOutput2": {
@@ -205,13 +216,71 @@
         "type": "output",
         "properties": {
           "title": "Delivered",
-          "align": "right"
+          "align": "right",
+          "treeRearrangerPosition": 2
         }
       }
     },
     "properties": {
       "description": "Web Api will be sent out based on the action definition",
       "descriptionInstance": "Perform Action 4",
+      "icon": "action"
+    }
+  },
+  {
+    "type": "Filter Group",
+    "ports": {
+      "portInput": {
+        "id": "portInput",
+        "type": "input",
+        "properties": {
+          "custom": "property"
+        }
+      },
+      "portOutput1": {
+        "id": "portOutput1",
+        "type": "output",
+        "properties": {
+          "align": "left",
+          "treeRearrangerPosition": 1
+        }
+      },
+      "portOutput2": {
+        "id": "portOutput2",
+        "type": "output",
+        "properties": {
+          "align": "center",
+          "treeRearrangerPosition": 2
+        }
+      },
+      "portOutput3": {
+        "id": "portOutput3",
+        "type": "output",
+        "properties": {
+          "align": "center",
+          "treeRearrangerPosition": 3
+        }
+      },
+      "portOutput4": {
+        "id": "portOutput4",
+        "type": "output",
+        "properties": {
+          "align": "center",
+          "treeRearrangerPosition": 4
+        }
+      },
+      "portOutput5": {
+        "id": "portOutput5",
+        "type": "output",
+        "properties": {
+          "align": "center",
+          "treeRearrangerPosition": 5
+        }
+      }
+    },
+    "properties": {
+      "description": "Filter group can have 1-5 output ports",
+      "descriptionInstance": "Use filter group 1-5",
       "icon": "action"
     }
   }

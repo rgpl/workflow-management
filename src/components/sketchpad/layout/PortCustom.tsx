@@ -5,6 +5,7 @@ import { Observer } from "mobx-react-lite";
 import {PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
 import v4 from "uuid/v4";
 import {useEffect, useState} from "react";
+import TreeRearranger from "../service/TreeRearranger";
 
 const PortDefaultOuter = styled.div<{ visibility: string, portStyleAddition: string }>`
   cursor: pointer;
@@ -116,10 +117,6 @@ function PortCustom(props: IPortDefaultProps) {
             return;
           }
 
-          const nodeWidth = 100;
-          const horizontalIntervalWidth = 10;
-          const verticalIntervalHeight = 150;
-
           const newNode = JSON.parse(event.dataTransfer.getData("react-flow-chart")) as INode;
           const newNodeId = v4();
 
@@ -135,7 +132,7 @@ function PortCustom(props: IPortDefaultProps) {
           if (linksCount === 0) {
             newNode.position = {
               x: props.node.position.x,
-              y: props.node.position.y + verticalIntervalHeight,
+              y: props.node.position.y,
             }
           } else {
             let nodeIdsToMove: string[] = [];
@@ -153,7 +150,7 @@ function PortCustom(props: IPortDefaultProps) {
             // default position to prevent "_a is undefined" error
             newNode.position = {
               x: props.node.position.x,
-              y: props.node.position.y + verticalIntervalHeight,
+              y: props.node.position.y,
             }
           }
 
@@ -175,121 +172,8 @@ function PortCustom(props: IPortDefaultProps) {
 
           chartStore.addLink(newLink, newLinkId);
 
-          /* rearranging higher branches/divisions */
-          // TODO: move the arranger code into a separate service. it should be called from here.
-          // TODO: optimize MobX store calls && check for redundant iterations and unused code
-          let higherNodeIds: string[] = [];
-
-          const searchForAllParentNodes = (currentNodeId: string) => {
-            for (let linkId in chartStore.chart.links) {
-              let linkObject: ILink = chartStore.chart.links[linkId];
-              if (linkObject.from.nodeId && linkObject.to.nodeId === currentNodeId) {
-                higherNodeIds.push(linkObject.from.nodeId);
-                searchForAllParentNodes(linkObject.from.nodeId);
-              }
-            }
-          };
-
-          const searchForAllChildrenNodes = (currentNodeId: string): string[] => {
-            let childrenNodesOfBranchIds: string[] = [];
-
-            for (let linkId in chartStore.chart.links) {
-              let linkObject: ILink = chartStore.chart.links[linkId];
-              if (linkObject.to.nodeId && linkObject.from.nodeId === currentNodeId) {
-                childrenNodesOfBranchIds.push(linkObject.to.nodeId);
-                childrenNodesOfBranchIds = childrenNodesOfBranchIds.concat(searchForAllChildrenNodes(linkObject.to.nodeId));
-              }
-            }
-
-            return childrenNodesOfBranchIds;
-          };
-
-          searchForAllParentNodes(props.node.id);
-          higherNodeIds.push(props.node.id);
-
-          let parentNodeHasMoreThanOneChild = false;
-
-          for (let linkId in chartStore.chart.links) {
-            let linkObject: ILink = chartStore.chart.links[linkId];
-            if (linkObject.from.nodeId === props.node.id && linkObject.to.nodeId !== newNodeId) {
-              parentNodeHasMoreThanOneChild = true;
-            }
-          }
-
-          if (!parentNodeHasMoreThanOneChild) {
-            return;
-          }
-
-          let hasCenterChild: boolean = false;
-
-          // check if the parent node has child node connected to its center port (if it exists)
-          for (let linkId in chartStore.chart.links) {
-            let linkObject: ILink = chartStore.chart.links[linkId];
-            if (linkObject.from.nodeId === props.node.id) {
-              if (chartStore.chart.nodes[props.node.id].ports[linkObject.from.portId].properties.align === "center") {
-                hasCenterChild = true;
-                break;
-              }
-            }
-          }
-
-          // iteration for higher branches (excluding the closest one)
-          higherNodeIds.forEach((nodeId: string) => {
-            for (let linkId in chartStore.chart.links) {
-              let linkObject: ILink = chartStore.chart.links[linkId];
-              // unrelated branch detected, move it
-              if (linkObject.to.nodeId && linkObject.from.nodeId === nodeId
-                && !higherNodeIds.includes(linkObject.to.nodeId)
-                && linkObject.to.nodeId !== newNodeId
-              ) {
-
-                let childrenNodesOfBranchIds: string[] = searchForAllChildrenNodes(linkObject.to.nodeId);
-                childrenNodesOfBranchIds.push(linkObject.to.nodeId);
-
-                if (nodeId === props.node.id) {
-                  // move all the existing nodes on the same row with newNode, but not newNode itself!
-                  childrenNodesOfBranchIds.forEach((childNodeId: string) => {
-                    if (hasCenterChild) {
-                      if (chartStore.chart.nodes[nodeId].ports[linkObject.from.portId].properties.align === "left") {
-                        chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[props.node.id].position.x - nodeWidth*2 - horizontalIntervalWidth;
-                      } else if (chartStore.chart.nodes[nodeId].ports[linkObject.from.portId].properties.align  === "right") {
-                        chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[props.node.id].position.x + nodeWidth*2 + horizontalIntervalWidth;
-                      }
-                    } else if (props.port.properties.align === "left") {
-                      chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[childNodeId].position.x + nodeWidth + horizontalIntervalWidth;
-                    } else if (props.port.properties.align === "right") {
-                      chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[childNodeId].position.x - nodeWidth - horizontalIntervalWidth;
-                    }
-                  });
-
-                  // move the newNode
-                  if (nodeId === props.node.id) {
-                    if (hasCenterChild) {
-                      if (props.port.properties.align === "left") {
-                        chartStore.chart.nodes[newNodeId].position.x = chartStore.chart.nodes[props.node.id].position.x - nodeWidth*2 - horizontalIntervalWidth;
-                      } else if (props.port.properties.align === "right") {
-                        chartStore.chart.nodes[newNodeId].position.x = chartStore.chart.nodes[props.node.id].position.x + nodeWidth*2 + horizontalIntervalWidth;
-                      }
-                    } else if (props.port.properties.align === "left") {
-                      chartStore.chart.nodes[newNodeId].position.x = chartStore.chart.nodes[newNodeId].position.x - nodeWidth - horizontalIntervalWidth;
-                    } else if (props.port.properties.align === "right") {
-                      chartStore.chart.nodes[newNodeId].position.x = chartStore.chart.nodes[newNodeId].position.x + nodeWidth + horizontalIntervalWidth;
-                    }
-                  }
-                } else {
-                  const modifiedNodeWidth: number = hasCenterChild ? nodeWidth * 2 : nodeWidth;
-
-                  childrenNodesOfBranchIds.forEach((childNodeId: string) => {
-                    if (newNode.position.x <= chartStore.chart.nodes[childNodeId].position.x) {
-                      chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[childNodeId].position.x + modifiedNodeWidth + horizontalIntervalWidth;
-                    } else {
-                      chartStore.chart.nodes[childNodeId].position.x = chartStore.chart.nodes[childNodeId].position.x - modifiedNodeWidth - horizontalIntervalWidth;
-                    }
-                  });
-                }
-              }
-            }
-          });
+          const treeRearranger = new TreeRearranger(chartStore.chart, "root");
+          chartStore.chart = treeRearranger.calculateRearrangedTree();
         }}
       >
         <PortDefaultInner

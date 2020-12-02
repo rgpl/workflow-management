@@ -4,6 +4,7 @@ import { EuiIcon } from "@elastic/eui";
 import NodeIconWrapper from "./icon/NodeIconWrapper";
 import { Observer } from "mobx-react-lite";
 import {NODE_TYPE_ENTER_WORKFLOW, useChartStore} from "../../../store/ChartStore";
+import TreeRearranger from "../service/TreeRearranger";
 
 export interface INodeInnerDefaultProps {
   node: INode,
@@ -13,6 +14,12 @@ export interface INodeInnerDefaultProps {
 export const NodeInner = ({ node, config }: INodeInnerDefaultProps) => {
   const chartStore = useChartStore();
 
+  const removeNode = (nodeId: string) => {
+    chartStore.removeNode(nodeId);
+    const treeRearranger = new TreeRearranger(chartStore.chart, "root");
+    chartStore.chart = treeRearranger.calculateRearrangedTree();
+  }
+
   return (
     <Observer>{() => (
       <div className="blockinstance lock">
@@ -20,7 +27,7 @@ export const NodeInner = ({ node, config }: INodeInnerDefaultProps) => {
           <NodeIconWrapper iconName={node.properties.icon}/>
           <p className='blockyname'>{node.type}</p>
           { (node.type !== NODE_TYPE_ENTER_WORKFLOW && !config.readonly)
-            ? <EuiIcon type="cross" size="s" className="delete-icon" onClick={() => chartStore.removeNode(node.id)}/>
+            ? <EuiIcon type="cross" size="s" className="delete-icon" onClick={() => removeNode(node.id)}/>
             : ''
           }
         </div>

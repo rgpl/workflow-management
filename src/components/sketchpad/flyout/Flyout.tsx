@@ -147,6 +147,7 @@ function Flyout(props: FlyProps) {
   return (
     <Observer>{() =>
       <EuiFlyout
+        size="l"
         onClose={closeFlyout}
         hideCloseButton
         aria-labelledby="flyoutComplicatedTitle">

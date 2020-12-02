@@ -30,8 +30,8 @@ export const CHART_DEFAULT: IChart = {
   },
   scale: MAX_ZOOM_VALUE,
   nodes: {
-    node1: {
-      id: 'node1',
+    root: {
+      id: 'root',
       type: NODE_TYPE_ENTER_WORKFLOW,
       position: {
         x: 1500,
