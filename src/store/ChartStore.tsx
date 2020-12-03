@@ -20,6 +20,7 @@ export const ChartStoreProvider = ({ children }: { children: any }) => {
 
 export const MAX_ZOOM_VALUE: number = 1;
 export const NODE_TYPE_ENTER_WORKFLOW = "Enter Workflow";
+export const NODE_ID_ROOT = "root";
 export const PORT_ID_INPUT = "portInput";
 export const PORT_TYPE_OUTPUT = "output";
 
@@ -30,8 +31,8 @@ export const CHART_DEFAULT: IChart = {
   },
   scale: MAX_ZOOM_VALUE,
   nodes: {
-    root: {
-      id: 'root',
+    [NODE_ID_ROOT]: {
+      id: NODE_ID_ROOT,
       type: NODE_TYPE_ENTER_WORKFLOW,
       position: {
         x: 1500,
@@ -44,6 +45,7 @@ export const CHART_DEFAULT: IChart = {
           properties: {
             value: 'yes',
             align: "center",
+            treeRearrangerPosition: 1
           },
         },
       },

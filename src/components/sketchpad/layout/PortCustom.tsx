@@ -2,10 +2,11 @@ import * as React from 'react'
 import {ILink, INode, IPortDefaultProps} from "@artemantcev/react-flow-chart";
 import styled from "styled-components";
 import { Observer } from "mobx-react-lite";
-import {PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
+import {NODE_ID_ROOT, PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
 import v4 from "uuid/v4";
 import {useEffect, useState} from "react";
 import TreeRearranger from "../service/TreeRearranger";
+import {toJS} from "mobx";
 
 const PortDefaultOuter = styled.div<{ visibility: string, portStyleAddition: string }>`
   cursor: pointer;
@@ -158,6 +159,7 @@ function PortCustom(props: IPortDefaultProps) {
           chartStore.addNode(newNode, newNodeId);
 
           const newLinkId = v4();
+
           const newLink: ILink = {
             id: newLinkId,
             from: {
@@ -170,9 +172,9 @@ function PortCustom(props: IPortDefaultProps) {
             },
           };
 
-          chartStore.addLink(newLink, newLinkId);
+          chartStore.addLink(newLink, newLink.id);
 
-          const treeRearranger = new TreeRearranger(chartStore.chart, "root");
+          const treeRearranger = new TreeRearranger(chartStore.chart, NODE_ID_ROOT, props.node.id);
           chartStore.chart = treeRearranger.calculateRearrangedTree();
         }}
       >

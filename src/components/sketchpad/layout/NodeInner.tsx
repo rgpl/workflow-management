@@ -3,7 +3,7 @@ import {IConfig, INode} from "@artemantcev/react-flow-chart";
 import { EuiIcon } from "@elastic/eui";
 import NodeIconWrapper from "./icon/NodeIconWrapper";
 import { Observer } from "mobx-react-lite";
-import {NODE_TYPE_ENTER_WORKFLOW, useChartStore} from "../../../store/ChartStore";
+import {NODE_ID_ROOT, NODE_TYPE_ENTER_WORKFLOW, useChartStore} from "../../../store/ChartStore";
 import TreeRearranger from "../service/TreeRearranger";
 
 export interface INodeInnerDefaultProps {
@@ -16,7 +16,7 @@ export const NodeInner = ({ node, config }: INodeInnerDefaultProps) => {
 
   const removeNode = (nodeId: string) => {
     chartStore.removeNode(nodeId);
-    const treeRearranger = new TreeRearranger(chartStore.chart, "root");
+    const treeRearranger = new TreeRearranger(chartStore.chart, NODE_ID_ROOT, undefined);
     chartStore.chart = treeRearranger.calculateRearrangedTree();
   }
 

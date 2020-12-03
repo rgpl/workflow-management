@@ -9,7 +9,7 @@ import {
   EuiHeaderSectionItem,
 } from "@elastic/eui";
 import '../../assets/css/sketchpad.css';
-import {CHART_DEFAULT, MAX_ZOOM_VALUE, PORT_ID_INPUT, useChartStore} from "../../store/ChartStore";
+import {CHART_DEFAULT, MAX_ZOOM_VALUE, NODE_ID_ROOT, PORT_ID_INPUT, useChartStore} from "../../store/ChartStore";
 import { NodeInner } from "./layout/NodeInner";
 import NodeMenu from "./NodeMenu";
 import { CanvasOuter } from "./layout/CanvasOuter";
@@ -31,6 +31,7 @@ function SketchPad(props: any) {
   const chartStore = useChartStore();
   const [portsAreHidden, setPortsAreHidden] = useState(true);
   const [isEditMode, setIsEditMode] = useState(props.match.params.chartId ? false : true);
+  const [isRearrangeRequested, setIsRearrangeRequested] = useState(false);
   const [redirectToId, setRedirectToId] = useState("");
 
   useEffect(() => {
@@ -62,11 +63,6 @@ function SketchPad(props: any) {
         })
         .catch((error) => console.log("chart-save->", error.toString()));
     }
-  }
-
-  const rearrangeChart = () => {
-    const treeRearranger = new TreeRearranger(chartStore.chart, "root");
-    chartStore.chart = treeRearranger.calculateRearrangedTree();
   }
 
   const handleNodeMouseEnter = (nodeId: string) => {
@@ -103,6 +99,8 @@ function SketchPad(props: any) {
           }
         }, invertedLinkId);
 
+        const treeRearranger = new TreeRearranger(chartStore.chart, NODE_ID_ROOT, input.toNodeId);
+        chartStore.chart = treeRearranger.calculateRearrangedTree();
         setPortsAreHidden(true);
       },
       onDragNode: (input: IOnDragNodeStopInput) => {
@@ -169,6 +167,12 @@ function SketchPad(props: any) {
     ) as IFlowChartCallbacks
   }, [chartStore.chart, customCallbacks]);
 
+  if (isRearrangeRequested) {
+    const treeRearranger = new TreeRearranger(chartStore.chart, NODE_ID_ROOT, undefined);
+    chartStore.chart = treeRearranger.calculateRearrangedTree();
+    setIsRearrangeRequested(false);
+  }
+
   return (
     <Observer>{() =>
       <>
@@ -188,7 +192,7 @@ function SketchPad(props: any) {
           <EuiHeaderSection side="right" className="content-center">
             <EuiButton
               fill
-              onClick={rearrangeChart}
+              onClick={() => {setIsRearrangeRequested(true)}}
               size="s"
               color="text"
             >
@@ -240,7 +244,7 @@ function SketchPad(props: any) {
               callbacks={stateActionCallbacks}
               config={{
                 readonly: !isEditMode,
-                smartRouting: true,
+                smartRouting: false,
                 isFreeDraggingRestricted: true,
                 portsAreHidden: portsAreHidden,
                 zoom: {
@@ -284,9 +288,6 @@ function SketchPad(props: any) {
               }}
             />
           </EuiFlexItem>
-          {chartStore.chart.selected.type
-            ? <Flyout closeSettings={() => { }} />
-            : ''}
         </EuiFlexGroup>
       </>
     }</Observer>
