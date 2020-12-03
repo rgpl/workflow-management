@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@artemantcev/react-flow-chart@^0.0.19":
-  version "0.0.19"
-  resolved "https://registry.yarnpkg.com/@artemantcev/react-flow-chart/-/react-flow-chart-0.0.19.tgz#1d66df7319498ec26f03a07772f17a6cd3e958bc"
-  integrity sha512-Xmv5hWwjJRoDImJ9Bcx48mTQiWtcs6TpL4heWrhZbzTeE041D+U0cU2FU0cNv6cbuhJhnaZ5rkVXV5wT8MRPeQ==
+"@artemantcev/react-flow-chart@^0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@artemantcev/react-flow-chart/-/react-flow-chart-0.0.20.tgz#61a723d76cbd56b10c85bf84980af2fe875e0aac"
+  integrity sha512-EyZt2AIODBy7hJSkYkD9q51I5F02+imRydxcQnlredVVVVM7puj19tQL7gp8BYDzuT5M/8kYJTyxlImL34KB8Q==
   dependencies:
     pathfinding "^0.4.18"
     react-draggable "^4.4.3"

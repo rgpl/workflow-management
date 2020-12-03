@@ -117,7 +117,7 @@ function PortCustom(props: IPortDefaultProps) {
 
           // add a new node to the canvas and connect it
           const newNode = JSON.parse(event.dataTransfer.getData("react-flow-chart")) as INode;
-          chartStore.chart = PortDropUtils.initializeNewNodeAndConnect(chartStore.chart, props.node, props.port, newNode);
+          chartStore.setChart(PortDropUtils.initializeNewNodeAndConnect(chartStore.chart, props.node, props.port, newNode));
         }}
       >
         <PortDefaultInner

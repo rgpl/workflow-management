@@ -31,7 +31,7 @@ export const NodeInner = ({ node, config }: INodeInnerDefaultProps) => {
     if (parentNodeId) {
       const treeRootNodeId: string = PortDropUtils.findTreeRootNode(chartStore.chart, parentNodeId);
       const treeRearranger = new TreeRearranger(chartStore.chart, treeRootNodeId, undefined);
-      chartStore.chart = treeRearranger.calculateRearrangedTree();
+      chartStore.setChart(treeRearranger.calculateRearrangedTree());
     }
   }
 

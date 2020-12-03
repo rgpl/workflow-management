@@ -7,6 +7,7 @@ interface IChartStore {
   chart: IChart,
   removeNode: (nodeId: string) => void,
   removeLink: (linkId: string) => void,
+  setChart: (chart: IChart) => void,
   addNode: (newNode: INode, newId: string) => void,
   addLink: (newLink: ILink, newId: string) => void,
 }
@@ -45,7 +46,8 @@ export const CHART_DEFAULT: IChart = {
           properties: {
             value: 'yes',
             align: "center",
-            treeRearrangerPosition: 1
+            treeRearrangerPosition: 1,
+            restrictOutcomingManualLinks: true,
           },
         },
       },
@@ -66,6 +68,9 @@ export const CHART_DEFAULT: IChart = {
 const createChartStore = (): IChartStore => {
   return {
     chart: CHART_DEFAULT,
+    setChart(chart: IChart) {
+      this.chart = chart;
+    },
     addNode(newNode: INode, newId: string) {
       this.chart.nodes[newId] = newNode;
     },

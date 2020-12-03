@@ -17,8 +17,12 @@ import { EuiFlexItem } from "@elastic/eui";
 import PortCustom from "./layout/PortCustom";
 import {
   actions,
-  FlowChart, IChart,
-  IFlowChartCallbacks, ILink, IOnDragNodeStopInput, IOnLinkCompleteInput,
+  FlowChart,
+  IChart,
+  IFlowChartCallbacks,
+  ILink,
+  IOnDragNodeStopInput, IOnLinkCancel,
+  IOnLinkCompleteInput,
 } from "@artemantcev/react-flow-chart";
 import v4 from "uuid/v4";
 import { IOnLinkBaseEvent } from "@artemantcev/react-flow-chart/src/types/functions";
@@ -27,6 +31,8 @@ import { Redirect } from "react-router-dom";
 import Flyout from "./flyout/Flyout";
 import TreeRearranger from "./service/TreeRearranger";
 import CanvasInner from "./layout/CanvasInner";
+import PortDropUtils from "./service/PortDropUtils";
+import {ACTION_ON_DELETE_KEY, onDeleteKeyAction} from "./service/ChartActions";
 
 function SketchPad(props: any) {
   const chartStore = useChartStore();
@@ -40,7 +46,7 @@ function SketchPad(props: any) {
       axios.get('http://localhost:4000/journey/' + props.match.params.chartId)
         .then((response: AxiosResponse<IChart>) => {
           console.log("chart-response->", response);
-          chartStore.chart = response.data as IChart;
+          chartStore.setChart(response.data as IChart);
         })
         .catch((error) => console.log("chart->", error))
         .finally(() => {
@@ -66,27 +72,33 @@ function SketchPad(props: any) {
     }
   }
 
-  const handleNodeMouseEnter = (nodeId: string) => {
-    // place custom click event here
-  };
-
-  const NodeInnerCustom = useCallback(
-    (props) => <NodeInner {...props} handleNodeMouseEnter={handleNodeMouseEnter} />,
-    [handleNodeMouseEnter]
-  );
-
   const customCallbacks = useMemo<{ [key: string]: any }>(() => {
     return {
-      onNodeMouseEnter: ({ nodeId }: { nodeId: string }) => {
-        // console.log('Clicked!', nodeId);
-        // handleNodeMouseEnter(nodeId);
-      },
       onLinkStart: (input: IOnLinkBaseEvent) => {
         setPortsAreHidden(false);
       },
       onLinkComplete: (input: IOnLinkCompleteInput) => {
         chartStore.removeLink(input.linkId);
         const invertedLinkId = v4();
+
+        if (input.toPortId === input.fromPortId) {
+          setPortsAreHidden(true);
+          return;
+        }
+
+        // avoid multiple links of any type for any port
+        for (let linkId in chartStore.chart.links) {
+          let linkObject: ILink = chartStore.chart.links[linkId];
+          if (
+            (linkObject.from.portId === input.fromPortId && linkObject.from.nodeId === input.fromNodeId)
+            || (linkObject.to.portId === input.toPortId && linkObject.to.nodeId === input.toNodeId)
+            || (linkObject.to.portId === input.fromPortId && linkObject.to.nodeId === input.fromNodeId)
+            || (linkObject.from.portId === input.toPortId && linkObject.from.nodeId === input.toNodeId)
+          ) {
+            setPortsAreHidden(true);
+            return;
+          }
+        }
 
         chartStore.addLink({
           id: invertedLinkId,
@@ -100,8 +112,12 @@ function SketchPad(props: any) {
           }
         }, invertedLinkId);
 
-        const treeRearranger = new TreeRearranger(chartStore.chart, NODE_ID_ROOT, input.toNodeId);
-        chartStore.chart = treeRearranger.calculateRearrangedTree();
+        const treeRootNodeId: string = PortDropUtils.findTreeRootNode(chartStore.chart, input.toNodeId);
+        const treeRearranger = new TreeRearranger(chartStore.chart, treeRootNodeId, input.toNodeId);
+        chartStore.setChart(treeRearranger.calculateRearrangedTree());
+        setPortsAreHidden(true);
+      },
+      onLinkCancel: (input: IOnLinkCancel) => {
         setPortsAreHidden(true);
       },
       onDragNode: (input: IOnDragNodeStopInput) => {
@@ -141,7 +157,7 @@ function SketchPad(props: any) {
         moveChildrenBlocks(childrenNodesIds, currentNodes, currentLinks);
       },
     }
-  }, [handleNodeMouseEnter]);
+  }, []);
 
   const stateActionCallbacks = useMemo(() => {
     return Object.entries(actions).reduce(
@@ -150,14 +166,22 @@ function SketchPad(props: any) {
         [actionKey, action]: [string, (...args: any) => any]
       ) => {
         acc[actionKey] = (...args: any) => {
-          const newChartTransformer = action(...args);
+          let newChartTransformer;
+
+          if (actionKey === ACTION_ON_DELETE_KEY) {
+            // @ts-ignore
+            newChartTransformer = onDeleteKeyAction(...args);
+          } else {
+            newChartTransformer = action(...args);
+          }
+
           const newChart = newChartTransformer(chartStore.chart);
 
           if (customCallbacks[actionKey]) {
             customCallbacks[actionKey](...args);
           }
 
-          chartStore.chart = ({ ...newChart });
+          chartStore.setChart({ ...newChart });
 
           return newChart;
         }
@@ -170,7 +194,7 @@ function SketchPad(props: any) {
 
   if (isRearrangeRequested) {
     const treeRearranger = new TreeRearranger(chartStore.chart, NODE_ID_ROOT, undefined);
-    chartStore.chart = treeRearranger.calculateRearrangedTree();
+    chartStore.setChart(treeRearranger.calculateRearrangedTree());
     setIsRearrangeRequested(false);
   }
 
@@ -218,7 +242,7 @@ function SketchPad(props: any) {
             </EuiButton>
             <EuiButton
               fill
-              onClick={() => { chartStore.chart = CHART_DEFAULT; }}
+              onClick={() => { chartStore.setChart(CHART_DEFAULT); }}
               size="s"
               color="danger"
               style={{ marginLeft: 10, marginRight: 10 }}
@@ -251,39 +275,9 @@ function SketchPad(props: any) {
                 zoom: {
                   maxScale: MAX_ZOOM_VALUE,
                 },
-                validateLink: ({ linkId, fromNodeId, fromPortId, toNodeId, toPortId, chart }): boolean => {
-                  // a new link can start only from input port
-                  if (fromPortId !== PORT_ID_INPUT) {
-                    return false;
-                  }
-
-                  // avoid incorrect links between nodes and the ports of the same node
-                  const isDifferentPortTypes: boolean = !(fromNodeId === toNodeId
-                    || chart.nodes[fromNodeId].ports[fromPortId].type === chart.nodes[toNodeId].ports[toPortId].type);
-
-                  let existingLinksCount: number = 0;
-                  let portsHaveNoLinksYet: boolean = true;
-
-                  // avoid multiple links of any type for any port
-                  for (let linkId in chartStore.chart.links) {
-                    let linkObject: ILink = chartStore.chart.links[linkId];
-                    if (
-                      (linkObject.from.portId === fromPortId && linkObject.from.nodeId === fromNodeId)
-                      || (linkObject.to.portId === toPortId && linkObject.to.nodeId === toNodeId)
-                    ) {
-                      existingLinksCount++;
-                    }
-                  }
-
-                  if (existingLinksCount > 1) {
-                    portsHaveNoLinksYet = false;
-                  }
-
-                  return isDifferentPortTypes && portsHaveNoLinksYet;
-                },
               }}
               Components={{
-                NodeInner: NodeInnerCustom,
+                NodeInner: NodeInner,
                 CanvasOuter: CanvasOuter,
                 CanvasInner: CanvasInner,
                 Port: PortCustom,
