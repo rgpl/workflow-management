@@ -45,14 +45,16 @@ export default class TreeRearranger {
         continue;
       }
 
-      console.log("setEdge:" + linkId);
-
       graph.setEdge(fromNode, toNode);
     }
 
     dagre.layout(graph);
 
     graph.nodes().forEach(nodeId => {
+      if (graph.node(nodeId) === undefined) {
+        return;
+      }
+
       this.chart.nodes[nodeId].position = {
         x: graph.node(nodeId).x,
         y: graph.node(nodeId).y,
@@ -75,6 +77,7 @@ export default class TreeRearranger {
       }
 
       this.chart.nodes[nodeId].position.x = this.chart.nodes[this.treeRootNodeId].position.x + this.chart.nodes[nodeId].position.x - incorrectRootNodePosition.x;
+      this.chart.nodes[nodeId].position.y = this.chart.nodes[this.treeRootNodeId].position.y + this.chart.nodes[nodeId].position.y - incorrectRootNodePosition.y;
     })
   }
 

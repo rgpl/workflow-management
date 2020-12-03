@@ -2,11 +2,9 @@ import * as React from 'react'
 import {ILink, INode, IPortDefaultProps} from "@artemantcev/react-flow-chart";
 import styled from "styled-components";
 import { Observer } from "mobx-react-lite";
-import {NODE_ID_ROOT, PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
-import v4 from "uuid/v4";
+import {PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
 import {useEffect, useState} from "react";
-import TreeRearranger from "../service/TreeRearranger";
-import {toJS} from "mobx";
+import PortDropUtils from "../service/PortDropUtils";
 
 const PortDefaultOuter = styled.div<{ visibility: string, portStyleAddition: string }>`
   cursor: pointer;
@@ -40,7 +38,6 @@ function PortCustom(props: IPortDefaultProps) {
   // input port style
   let portStyleAddition: string = 'margin-top: 7px;';
 
-  // TODO: move styling away from the component!
   if (!isPortInput) {
     if (Object.keys(props.node.ports).length >= 4) {
       // 3-outputs node
@@ -118,64 +115,9 @@ function PortCustom(props: IPortDefaultProps) {
             return;
           }
 
+          // add a new node to the canvas and connect it
           const newNode = JSON.parse(event.dataTransfer.getData("react-flow-chart")) as INode;
-          const newNodeId = v4();
-
-          let linksCount: number = 0;
-
-          for (let linkId in chartStore.chart.links) {
-            let linkObject: ILink = chartStore.chart.links[linkId];
-            if (linkObject.to.nodeId && linkObject.from.nodeId === props.node.id) {
-              linksCount++;
-            }
-          }
-
-          if (linksCount === 0) {
-            newNode.position = {
-              x: props.node.position.x,
-              y: props.node.position.y,
-            }
-          } else {
-            let nodeIdsToMove: string[] = [];
-
-            for (let linkId in chartStore.chart.links) {
-              let linkObject: ILink = chartStore.chart.links[linkId];
-              if (linkObject.to.nodeId && linkObject.from.nodeId === props.node.id) {
-                nodeIdsToMove.push(linkObject.to.nodeId)
-              }
-              if (linkObject.from.nodeId && linkObject.to.nodeId === props.node.id) {
-                nodeIdsToMove.push(linkObject.from.nodeId)
-              }
-            }
-
-            // default position to prevent "_a is undefined" error
-            newNode.position = {
-              x: props.node.position.x,
-              y: props.node.position.y,
-            }
-          }
-
-          newNode.id = newNodeId;
-          chartStore.addNode(newNode, newNodeId);
-
-          const newLinkId = v4();
-
-          const newLink: ILink = {
-            id: newLinkId,
-            from: {
-              nodeId: props.node.id,
-              portId: props.port.id,
-            },
-            to: {
-              nodeId: newNode.id,
-              portId: newNode.ports[PORT_ID_INPUT].id,
-            },
-          };
-
-          chartStore.addLink(newLink, newLink.id);
-
-          const treeRearranger = new TreeRearranger(chartStore.chart, NODE_ID_ROOT, props.node.id);
-          chartStore.chart = treeRearranger.calculateRearrangedTree();
+          chartStore.chart = PortDropUtils.initializeNewNodeAndConnect(chartStore.chart, props.node, props.port, newNode);
         }}
       >
         <PortDefaultInner

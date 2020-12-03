@@ -26,6 +26,7 @@ import axios, { AxiosResponse } from "axios";
 import { Redirect } from "react-router-dom";
 import Flyout from "./flyout/Flyout";
 import TreeRearranger from "./service/TreeRearranger";
+import CanvasInner from "./layout/CanvasInner";
 
 function SketchPad(props: any) {
   const chartStore = useChartStore();
@@ -284,6 +285,7 @@ function SketchPad(props: any) {
               Components={{
                 NodeInner: NodeInnerCustom,
                 CanvasOuter: CanvasOuter,
+                CanvasInner: CanvasInner,
                 Port: PortCustom,
               }}
             />

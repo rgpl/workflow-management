@@ -3,8 +3,9 @@ import {IConfig, INode} from "@artemantcev/react-flow-chart";
 import { EuiIcon } from "@elastic/eui";
 import NodeIconWrapper from "./icon/NodeIconWrapper";
 import { Observer } from "mobx-react-lite";
-import {NODE_ID_ROOT, NODE_TYPE_ENTER_WORKFLOW, useChartStore} from "../../../store/ChartStore";
+import {NODE_TYPE_ENTER_WORKFLOW, useChartStore} from "../../../store/ChartStore";
 import TreeRearranger from "../service/TreeRearranger";
+import PortDropUtils from "../service/PortDropUtils";
 
 export interface INodeInnerDefaultProps {
   node: INode,
@@ -15,9 +16,23 @@ export const NodeInner = ({ node, config }: INodeInnerDefaultProps) => {
   const chartStore = useChartStore();
 
   const removeNode = (nodeId: string) => {
+    let parentNodeId: string|undefined = undefined;
+
+    for (const linkId in chartStore.chart.links) {
+      // if the node being removed had any parent
+      if (chartStore.chart.links[linkId].to.nodeId === nodeId) {
+        parentNodeId = chartStore.chart.links[linkId].from.nodeId;
+        break;
+      }
+    }
+
     chartStore.removeNode(nodeId);
-    const treeRearranger = new TreeRearranger(chartStore.chart, NODE_ID_ROOT, undefined);
-    chartStore.chart = treeRearranger.calculateRearrangedTree();
+
+    if (parentNodeId) {
+      const treeRootNodeId: string = PortDropUtils.findTreeRootNode(chartStore.chart, parentNodeId);
+      const treeRearranger = new TreeRearranger(chartStore.chart, treeRootNodeId, undefined);
+      chartStore.chart = treeRearranger.calculateRearrangedTree();
+    }
   }
 
   return (
