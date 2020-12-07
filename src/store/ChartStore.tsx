@@ -7,6 +7,7 @@ interface IChartStore {
   chart: IChart,
   removeNode: (nodeId: string) => void,
   removeLink: (linkId: string) => void,
+  removeSelected: () => void,
   setChart: (chart: IChart) => void,
   addNode: (newNode: INode, newId: string) => void,
   addLink: (newLink: ILink, newId: string) => void,
@@ -19,7 +20,7 @@ export const ChartStoreProvider = ({ children }: { children: any }) => {
   return <ChartStoreContext.Provider value={store}>{children}</ChartStoreContext.Provider>;
 };
 
-export const MAX_ZOOM_VALUE: number = 1;
+export const MAX_ZOOM_VALUE: number = 0.9;
 export const NODE_TYPE_ENTER_WORKFLOW = "Enter Workflow";
 export const NODE_ID_ROOT = "root";
 export const PORT_ID_INPUT = "portInput";
@@ -27,7 +28,7 @@ export const PORT_TYPE_OUTPUT = "output";
 
 export const CHART_DEFAULT: IChart = {
   offset: {
-    x: -1000,
+    x: -900,
     y: 0,
   },
   scale: MAX_ZOOM_VALUE,
@@ -89,7 +90,10 @@ const createChartStore = (): IChartStore => {
     },
     removeLink(linkId: string): void {
       delete this.chart.links[linkId];
-    }
+    },
+    removeSelected(): void {
+      this.chart.selected = {} as ISelectedOrHovered;
+    },
   };
 };
 

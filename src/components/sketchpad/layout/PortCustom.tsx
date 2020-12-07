@@ -39,9 +39,15 @@ function PortCustom(props: IPortDefaultProps) {
   let portStyleAddition: string = 'margin-top: 7px;';
 
   if (!isPortInput) {
-    if (Object.keys(props.node.ports).length >= 4) {
+    if (Object.keys(props.node.ports).length === 4) {
       // 3-outputs node
       portStyleAddition = "margin-bottom: -25px;\n padding: 20px 20px 20px 20px;";
+    } else if (Object.keys(props.node.ports).length === 5) {
+      // 4-outputs node
+      portStyleAddition = "margin-bottom: -35px;\n padding: 30px 15px 30px 15px;";
+    } else if (Object.keys(props.node.ports).length >= 6) {
+      // 5-outputs node (may work for larger numbers too, but not required at the moment)
+      portStyleAddition = "margin-bottom: -35px;\n padding: 30px 10px 30px 10px;";
     } else {
       if (props.port.properties.align === "left") {
         // left output

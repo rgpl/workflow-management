@@ -3,6 +3,7 @@ import actionIcon from '../../../../assets/images/action.svg';
 import eyeIcon from '../../../../assets/images/eye.svg';
 import timeIcon from '../../../../assets/images/time.svg';
 import errorIcon from '../../../../assets/images/error.svg';
+import searchIcon from '../../../../assets/images/search.svg';
 
 interface IPickItemIconWrapperProps {
   iconName: string;
@@ -23,6 +24,9 @@ function PickItemIconWrapper(props: IPickItemIconWrapperProps) {
       break;
     case "error":
       path = errorIcon;
+      break;
+    case "filter":
+      path = searchIcon;
       break;
   }
 

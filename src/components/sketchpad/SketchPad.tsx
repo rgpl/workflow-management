@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import { Observer } from "mobx-react-lite";
 import {
   EuiButton,
@@ -9,7 +9,7 @@ import {
   EuiHeaderSectionItem,
 } from "@elastic/eui";
 import '../../assets/css/sketchpad.css';
-import {CHART_DEFAULT, MAX_ZOOM_VALUE, NODE_ID_ROOT, PORT_ID_INPUT, useChartStore} from "../../store/ChartStore";
+import {CHART_DEFAULT, MAX_ZOOM_VALUE, NODE_ID_ROOT, useChartStore} from "../../store/ChartStore";
 import { NodeInner } from "./layout/NodeInner";
 import NodeMenu from "./NodeMenu";
 import { CanvasOuter } from "./layout/CanvasOuter";
@@ -81,7 +81,7 @@ function SketchPad(props: any) {
         chartStore.removeLink(input.linkId);
         const invertedLinkId = v4();
 
-        if (input.toPortId === input.fromPortId) {
+        if (input.toPortId === input.fromPortId || input.toNodeId === input.fromNodeId) {
           setPortsAreHidden(true);
           return;
         }
@@ -284,6 +284,12 @@ function SketchPad(props: any) {
               }}
             />
           </EuiFlexItem>
+          {chartStore.chart.selected.type === "node"
+              && chartStore.chart.selected.id
+              && chartStore.chart.nodes[chartStore.chart.selected.id]
+              && chartStore.chart.nodes[chartStore.chart.selected.id].type === "Filter Group"
+            ? <Flyout node={chartStore.chart.nodes[chartStore.chart.selected.id]} isVisible={true} />
+            : ''}
         </EuiFlexGroup>
       </>
     }</Observer>

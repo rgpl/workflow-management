@@ -1,56 +1,147 @@
 import React, {Component, Fragment, useState} from 'react';
 import { EuiSuperSelect, EuiText } from '@elastic/eui';
+import {PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
+import {INode} from "@artemantcev/react-flow-chart";
+import {toJS} from "mobx";
+import v4 from "uuid/v4";
+import {ILink} from "@artemantcev/react-flow-chart/src/types/chart";
+import {IPosition} from "@artemantcev/react-flow-chart/src/types/generics";
+import PortDropUtils from "../service/PortDropUtils";
+import TreeRearranger from "../service/TreeRearranger";
 
-function SuperSelectComplex() {
+interface SuperSelectProps {
+  node: INode;
+  colorPorts: { }
+}
+
+interface RemovedLinkInfo {
+  toNodeId: string|undefined,
+  toPortId: string|undefined
+}
+
+function SuperSelectComplex(props: SuperSelectProps) {
+  const chartStore = useChartStore();
+
   let options: Array<any> = [
     {
-      value: 'option_one',
-      inputDisplay: 'Option one',
+      value: '1',
+      inputDisplay: '1',
       dropdownDisplay: (
         <Fragment>
-          <strong>Option one</strong>
-          <EuiText size="s" color="subdued">
-            <p className="euiTextColor--subdued">
-              Has a short description giving more detail to the option.
-            </p>
-          </EuiText>
+          <strong>1</strong>
         </Fragment>
       ),
     },
     {
-      value: 'option_two',
-      inputDisplay: 'Option two',
+      value: '2',
+      inputDisplay: '2',
       dropdownDisplay: (
         <Fragment>
-          <strong>Option two</strong>
-          <EuiText size="s" color="subdued">
-            <p className="euiTextColor--subdued">
-              Has a short description giving more detail to the option.
-            </p>
-          </EuiText>
+          <strong>2</strong>
         </Fragment>
       ),
     },
     {
-      value: 'option_three',
-      inputDisplay: 'Option three',
+      value: '3',
+      inputDisplay: '3',
       dropdownDisplay: (
         <Fragment>
-          <strong>Option three</strong>
-          <EuiText size="s" color="subdued">
-            <p className="euiTextColor--subdued">
-              Has a short description giving more detail to the option.
-            </p>
-          </EuiText>
+          <strong>3</strong>
+        </Fragment>
+      ),
+    },
+    {
+      value: '4',
+      inputDisplay: '4',
+      dropdownDisplay: (
+        <Fragment>
+          <strong>4</strong>
+        </Fragment>
+      ),
+    },
+    {
+      value: '5',
+      inputDisplay: '5',
+      dropdownDisplay: (
+        <Fragment>
+          <strong>5</strong>
         </Fragment>
       ),
     },
   ];
 
-  const [value, setValue] = useState('option_one');
+  const [value, setValue] = useState(props.node.properties["customizablePortsCount"].toString());
 
+  // TODO: move the code or rename the select component more specifically
   const onChange = (value: string) => {
     setValue(value);
+
+    let removedLinks: Map<number, RemovedLinkInfo> = new Map<number, RemovedLinkInfo>();
+
+    for (const linkId in chartStore.chart.links) {
+      if (chartStore.chart.links[linkId].from.nodeId === props.node.id) {
+
+        let key: number = parseInt(chartStore.chart.links[linkId].from.portId.substring(chartStore.chart.links[linkId].from.portId.lastIndexOf('portOutput') + 'portOutput'.length));
+
+        removedLinks.set(key, {
+          toNodeId: chartStore.chart.links[linkId].to.nodeId,
+          toPortId: chartStore.chart.links[linkId].to.portId
+        });
+
+        chartStore.removeLink(linkId);
+      }
+
+    }
+
+    chartStore.chart.nodes[props.node.id].properties["customizablePortsCount"] = value as unknown as number;
+    chartStore.chart.nodes[props.node.id].ports = {
+      [PORT_ID_INPUT]: chartStore.chart.nodes[props.node.id].ports[PORT_ID_INPUT]
+    };
+
+    for (let i = 1; i <= chartStore.chart.nodes[props.node.id].properties["customizablePortsCount"]; i++) {
+      let align: string = "center";
+
+      if (chartStore.chart.nodes[props.node.id].properties["customizablePortsCount"] > 1 && i === 1) {
+        align = "left";
+      } else if (chartStore.chart.nodes[props.node.id].properties["customizablePortsCount"] > 1
+        && i === parseInt(chartStore.chart.nodes[props.node.id].properties["customizablePortsCount"])) {
+
+        align = "right";
+      }
+
+      const newPortId: string = "portOutput" + i + "_" + v4();
+
+      chartStore.chart.nodes[props.node.id].ports[newPortId] = {
+        id: newPortId,
+          type: "output",
+          properties: {
+            align: align,
+            treeRearrangerPosition: i,
+            restrictOutcomingManualLinks: true,
+            // @ts-ignore
+            linkColor: props.colorPorts[i],
+        }
+      }
+
+      if (removedLinks.has(i)) {
+        const newLinkId: string = v4();
+        chartStore.chart.links[newLinkId] = {
+          id: newLinkId,
+          from: {
+            nodeId: props.node.id,
+            portId: newPortId,
+          },
+          to: {
+            nodeId: removedLinks.get(i)?.toNodeId,
+            portId: removedLinks.get(i)?.toPortId,
+          }
+        } as ILink;
+      }
+
+      const treeRootNodeId: string = PortDropUtils.findTreeRootNode(chartStore.chart, props.node.id);
+      const treeRearranger = new TreeRearranger(chartStore.chart, treeRootNodeId, props.node.id);
+      chartStore.setChart(treeRearranger.calculateRearrangedTree());
+    }
   };
 
   return (

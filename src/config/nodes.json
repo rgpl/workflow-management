@@ -275,30 +275,13 @@
           "treeRearrangerPosition": 3,
           "restrictOutcomingManualLinks": true
         }
-      },
-      "portOutput4": {
-        "id": "portOutput4",
-        "type": "output",
-        "properties": {
-          "align": "center",
-          "treeRearrangerPosition": 4,
-          "restrictOutcomingManualLinks": true
-        }
-      },
-      "portOutput5": {
-        "id": "portOutput5",
-        "type": "output",
-        "properties": {
-          "align": "center",
-          "treeRearrangerPosition": 5,
-          "restrictOutcomingManualLinks": true
-        }
       }
     },
     "properties": {
       "description": "Filter group can have 1-5 output ports",
       "descriptionInstance": "Use filter group 1-5",
-      "icon": "action"
+      "icon": "filter",
+      "customizablePortsCount": 3
     }
   }
 ]
