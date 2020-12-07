@@ -11,7 +11,6 @@ import TreeRearranger from "../service/TreeRearranger";
 
 interface SuperSelectProps {
   node: INode;
-  colorPorts: { }
 }
 
 interface RemovedLinkInfo {
@@ -77,6 +76,17 @@ function SuperSelectComplex(props: SuperSelectProps) {
     setValue(value);
 
     let removedLinks: Map<number, RemovedLinkInfo> = new Map<number, RemovedLinkInfo>();
+    let portsColors: Map<number, string> = new Map<number, string>();
+
+    for (const portId in props.node.ports) {
+      let key: number = parseInt(portId.substring(portId.lastIndexOf('portOutput') + 'portOutput'.length));
+
+      if (props.node.ports[portId].properties.linkColor) {
+        portsColors.set(key, props.node.ports[portId].properties.linkColor);
+      } else {
+        portsColors.set(key, "");
+      }
+    }
 
     for (const linkId in chartStore.chart.links) {
       if (chartStore.chart.links[linkId].from.nodeId === props.node.id) {
@@ -118,8 +128,7 @@ function SuperSelectComplex(props: SuperSelectProps) {
             align: align,
             treeRearrangerPosition: i,
             restrictOutcomingManualLinks: true,
-            // @ts-ignore
-            linkColor: props.colorPorts[i],
+            linkColor: portsColors.get(i),
         }
       }
 
