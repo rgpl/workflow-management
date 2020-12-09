@@ -2,7 +2,7 @@ import * as React from 'react'
 import {ILink, INode, IPortDefaultProps} from "@artemantcev/react-flow-chart";
 import styled from "styled-components";
 import { Observer } from "mobx-react-lite";
-import {PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
+import {PORT_DEFAULT_COLOR, PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
 import {useEffect, useState} from "react";
 import PortDropUtils from "../service/PortDropUtils";
 
@@ -129,7 +129,7 @@ function PortCustom(props: IPortDefaultProps) {
         <PortDefaultInner
           isPortInput={isPortInput}
           isDraggedOver={isDraggedOver}
-          color={props.port.properties.linkColor ?? 'cornflowerblue'}
+          color={props.port.properties.linkColor ?? PORT_DEFAULT_COLOR}
           style={{ pointerEvents: 'none' }}
         >
           {props.port.type === PORT_TYPE_OUTPUT

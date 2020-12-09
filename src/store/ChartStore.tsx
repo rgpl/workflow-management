@@ -26,6 +26,8 @@ export const NODE_ID_ROOT = "root";
 export const PORT_ID_INPUT = "portInput";
 export const PORT_TYPE_OUTPUT = "output";
 
+export const PORT_DEFAULT_COLOR = "cornflowerblue";
+
 export const CHART_DEFAULT: IChart = {
   offset: {
     x: -900,

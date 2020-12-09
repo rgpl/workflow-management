@@ -1,6 +1,6 @@
 import React, {Component, Fragment, useState} from 'react';
 import { EuiSuperSelect, EuiText } from '@elastic/eui';
-import {PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
+import {PORT_DEFAULT_COLOR, PORT_ID_INPUT, useChartStore} from "../../../store/ChartStore";
 import {INode} from "@artemantcev/react-flow-chart";
 import {toJS} from "mobx";
 import v4 from "uuid/v4";
@@ -84,7 +84,7 @@ function SuperSelectComplex(props: SuperSelectProps) {
       if (props.node.ports[portId].properties.linkColor) {
         portsColors.set(key, props.node.ports[portId].properties.linkColor);
       } else {
-        portsColors.set(key, "");
+        portsColors.set(key, PORT_DEFAULT_COLOR);
       }
     }
 

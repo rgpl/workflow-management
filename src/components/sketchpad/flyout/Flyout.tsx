@@ -18,7 +18,7 @@ import {
 import SuperSelectComplex from './SuperSelectComplex';
 import { Observer } from "mobx-react-lite";
 import { INode } from "@artemantcev/react-flow-chart";
-import { useChartStore } from "../../../store/ChartStore";
+import {PORT_DEFAULT_COLOR, useChartStore} from "../../../store/ChartStore";
 
 type FlyProps = {
   node: INode;
@@ -88,35 +88,35 @@ function Flyout(props: FlyProps) {
             </EuiFormRow>
             { props.node.properties["customizablePortsCount"] >= 1 ?
               <EuiFormRow label="Color of port #1">
-                <input type="text" name="color_port_1" defaultValue={findValueByPrefix(props.node.ports, "portOutput1").properties.linkColor} onBlur={(e) => {
+                <input type="text" name="color_port_1" defaultValue={findValueByPrefix(props.node.ports, "portOutput1").properties.linkColor ?? PORT_DEFAULT_COLOR} onBlur={(e) => {
                   chartStore.chart.nodes[props.node.id].ports[findFullKeyByPrefix(props.node.ports, "portOutput1")].properties.linkColor = e.target.value;
                 }}/>
               </EuiFormRow> : ""
             }
             {props.node.properties["customizablePortsCount"] >= 2 ?
               <EuiFormRow label="Color of port #2">
-                <input type="text" name="color_port_2" defaultValue={findValueByPrefix(props.node.ports, "portOutput2").properties.linkColor} onBlur={(e) => {
+                <input type="text" name="color_port_2" defaultValue={findValueByPrefix(props.node.ports, "portOutput2").properties.linkColor  ?? PORT_DEFAULT_COLOR} onBlur={(e) => {
                   chartStore.chart.nodes[props.node.id].ports[findFullKeyByPrefix(props.node.ports, "portOutput2")].properties.linkColor = e.target.value;
                 }}/>
               </EuiFormRow> : ""
             }
             {props.node.properties["customizablePortsCount"] >= 3 ?
               <EuiFormRow label="Color of port #3">
-                <input type="text" name="color_port_3" defaultValue={findValueByPrefix(props.node.ports, "portOutput3").properties.linkColor} onBlur={(e) => {
+                <input type="text" name="color_port_3" defaultValue={findValueByPrefix(props.node.ports, "portOutput3").properties.linkColor ?? PORT_DEFAULT_COLOR} onBlur={(e) => {
                   chartStore.chart.nodes[props.node.id].ports[findFullKeyByPrefix(props.node.ports, "portOutput3")].properties.linkColor = e.target.value;
                 }}/>
               </EuiFormRow> : ""
             }
             {props.node.properties["customizablePortsCount"] >= 4 ?
               <EuiFormRow label="Color of port #4">
-                <input type="text" name="color_port_4" defaultValue={findValueByPrefix(props.node.ports, "portOutput4").properties.linkColor} onBlur={(e) => {
+                <input type="text" name="color_port_4" defaultValue={findValueByPrefix(props.node.ports, "portOutput4").properties.linkColor ?? PORT_DEFAULT_COLOR} onBlur={(e) => {
                   chartStore.chart.nodes[props.node.id].ports[findFullKeyByPrefix(props.node.ports, "portOutput4")].properties.linkColor = e.target.value;
                 }}/>
               </EuiFormRow> : ""
             }
             {props.node.properties["customizablePortsCount"] >= 5 ?
               <EuiFormRow label="Color of port #5">
-                <input type="text" name="color_port_5" defaultValue={findValueByPrefix(props.node.ports, "portOutput5").properties.linkColor} onBlur={(e) => {
+                <input type="text" name="color_port_5" defaultValue={findValueByPrefix(props.node.ports, "portOutput5").properties.linkColor ?? PORT_DEFAULT_COLOR} onBlur={(e) => {
                   chartStore.chart.nodes[props.node.id].ports[findFullKeyByPrefix(props.node.ports, "portOutput5")].properties.linkColor = e.target.value;
                 }}/>
               </EuiFormRow> : ""
